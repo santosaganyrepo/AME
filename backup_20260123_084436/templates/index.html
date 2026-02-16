@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Upload System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Exam Script Upload System</h1>
+            <p>Upload student exam scripts for automated marking</p>
+            <nav>
+                <a href="{{ url_for('index') }}" class="active">Upload</a>
+                <a href="{{ url_for('view_students') }}">View Students</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="upload-card">
+                <h2>Student Information</h2>
+                
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="student_id">Student ID *</label>
+                            <input type="text" id="student_id" name="student_id" required placeholder="e.g., S4A-001">
+                        </div>
+                        <div class="form-group">
+                            <label for="student_name">Full Name *</label>
+                            <input type="text" id="student_name" name="student_name" required placeholder="e.g., John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Class *</label>
+                            <select id="class" name="class" required>
+                                <option value="">Select Class</option>
+                                {% for class_name in classes %}
+                                <option value="{{ class_name }}">{{ class_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select Subject</option>
+                                {% for subject in subjects %}
+                                <option value="{{ subject }}">{{ subject }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exam_type">Exam Type *</label>
+                            <select id="exam_type" name="exam_type" required>
+                                <option value="">Select Type</option>
+                                {% for exam_type in exam_types %}
+                                <option value="{{ exam_type }}">{{ exam_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="term">Term *</label>
+                            <select id="term" name="term" required>
+                                <option value="">Select Term</option>
+                                <option value="Term 1">Term 1</option>
+                                <option value="Term 2">Term 2</option>
+                                <option value="Term 3">Term 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="year">Year *</label>
+                            <input type="number" id="year" name="year" required value="2024" min="2020" max="2030">
+                        </div>
+                    </div>
+
+                    <div class="form-group upload-section">
+                        <label for="files">Upload Exam Scripts *</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="files" name="files[]" multiple accept="image/*,.pdf" required>
+                            <div class="file-upload-box">
+                                <div class="upload-icon">📤</div>
+                                <p>Click to select files or drag and drop</p>
+                                <small>Supports: JPG, PNG, PDF (Max 10MB per file)</small>
+                            </div>
+                        </div>
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+
+                    <div id="progressBar" class="progress-bar" style="display: none;">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <span id="progressText">0%</span>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">Upload Scripts</button>
+                </form>
+
+                <div id="resultMessage" class="message" style="display: none;"></div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>

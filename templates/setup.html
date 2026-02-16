@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Setup - Configure & Mark</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .setup-card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 15px; 
+            max-width: 720px; 
+            margin: 30px auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25); 
+        }
+        h1 { 
+            color: #667eea; 
+            text-align: center; 
+            margin-bottom: 8px; 
+            font-size: 2.1em;
+        }
+        .subtitle { 
+            text-align: center; 
+            color: #666; 
+            margin-bottom: 25px; 
+            font-size: 1.1em;
+        }
+        .warning { 
+            background: #fff3cd; 
+            border-left: 4px solid #ffc107; 
+            padding: 15px; 
+            margin: 0 0 25px 0; 
+            border-radius: 6px; 
+        }
+        .warning strong { color: #856404; }
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 15px;
+            margin: 0 0 25px 0;
+            border-radius: 6px;
+        }
+        .info-box strong { color: #0c5460; }
+        .form-section {
+            margin-bottom: 32px;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .form-section:last-of-type { border-bottom: none; }
+        .section-title {
+            color: #667eea;
+            font-size: 1.35em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .form-group { 
+            margin-bottom: 22px; 
+        }
+        label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 8px; 
+            color: #555; 
+        }
+        label .required { color: #e74c3c; }
+        label .optional {
+            color: #95a5a6;
+            font-weight: 400;
+            font-size: 0.9em;
+        }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 13px 14px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 8px; 
+            font-size: 1em;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+        input:focus, select:focus, textarea:focus { 
+            outline: none; 
+            border-color: #667eea; 
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
+        }
+        textarea { min-height: 110px; resize: vertical; }
+        .input-hint {
+            color: #777;
+            font-size: 0.86em;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* File upload styling from nice version */
+        .file-upload-box {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 32px 20px;
+            text-align: center;
+            background: #f9fbff;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            margin-top: 10px;
+        }
+        .file-upload-box:hover {
+            background: #f0f4ff;
+            border-color: #5a6fd1;
+        }
+        .file-upload-box.required {
+            border-color: #e74c3c;
+            background: #fff8f8;
+        }
+        .file-upload-box.has-files {
+            border-color: #28a745;
+            background: #f6fff8;
+        }
+        .file-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload-box .icon { font-size: 2.8em; margin-bottom: 12px; }
+        .file-upload-box p {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 1.08em;
+        }
+        .file-upload-box.required p { color: #e74c3c; }
+        .file-upload-box.has-files p { color: #28a745; }
+        .file-upload-box small { color: #888; font-size: 0.92em; }
+        .file-list { margin-top: 16px; }
+        .file-item {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .file-item .filename {
+            color: #1b5e20;
+            font-weight: 500;
+            flex: 1;
+        }
+        .file-item .remove {
+            color: #c62828;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 4px 10px;
+            border: 1px solid #c62828;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .file-item .remove:hover {
+            background: #c62828;
+            color: white;
+        }
+        .file-count-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.88em;
+            margin-left: 12px;
+            font-weight: bold;
+        }
+
+        /* Main button */
+        button.main-btn { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1.18em; 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 28px;
+            transition: all 0.3s;
+        }
+        button.main-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 30px rgba(102,126,234,0.35); 
+        }
+        button.main-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Messages */
+        .message { 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-top: 24px; 
+            text-align: center;
+            display: none;
+        }
+        .message.success { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+        .message.error   { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255,255,255,0.35);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ────────────────────────────────────────────── */
+        /* Duplicate modal (from version B, restyled)      */
+        /* ────────────────────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 1000;
+        }
+        .duplicate-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 36px 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.4);
+            max-width: 520px;
+            width: 92%;
+            z-index: 1001;
+            text-align: center;
+        }
+        .modal-icon { font-size: 3.8em; margin-bottom: 16px; color: #ff9800; }
+        .modal-title { font-size: 1.6em; color: #333; margin-bottom: 12px; font-weight: 700; }
+        .modal-message { font-size: 1.05em; color: #555; line-height: 1.5; margin-bottom: 20px; }
+        .session-details {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.98em;
+        }
+        .session-details p { margin: 6px 0; }
+        .modal-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        .btn-modal {
+            padding: 12px 32px;
+            font-size: 1.05em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-no  { background: #6c757d; color: white; }
+        .btn-yes { background: #dc3545; color: white; }
+        .btn-no:hover  { background: #5a6268; }
+        .btn-yes:hover { background: #c82333; }
+        .warning-text {
+            color: #dc3545;
+            font-weight: 600;
+            margin-top: 16px;
+            font-size: 0.96em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="setup-card">
+        <h1>🔒 Exam Session Setup</h1>
+        <p class="subtitle">Configure once • Mark many students</p>
+
+        <div class="warning">
+            <strong>⚠️ Important:</strong> These settings will apply to every student in this session.
+            You'll only need to enter Student ID and upload answer sheets afterward.
+        </div>
+
+        <form id="setupForm" enctype="multipart/form-data">
+            <div class="form-section">
+                <h3 class="section-title">📋 Exam Details</h3>
+
+                <div class="form-group">
+                    <label>Year <span class="required">*</span></label>
+                    <input type="number" name="year" required value="2025" min="2020" max="2035">
+                </div>
+
+                <div class="form-group">
+                    <label>Term <span class="required">*</span></label>
+                    <select name="term" required>
+                        <option value="">Select Term</option>
+                        {% for term in terms %}
+                        <option value="{{ term }}">{{ term }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Class / Form <span class="required">*</span></label>
+                    <select name="class" required>
+                        <option value="">Select Class</option>
+                        {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Stream / Section <span class="required">*</span></label>
+                    <input type="text" name="stream" required placeholder="e.g. A, B, East, Gold">
+                </div>
+
+                <div class="form-group">
+                    <label>Subject <span class="required">*</span></label>
+                    <select name="subject" required>
+                        <option value="">Select Subject</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject }}">{{ subject }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Exam Type <span class="required">*</span></label>
+                    <input type="text" name="exam_type" required placeholder="e.g. Midterm, EOT, Quiz 4, Mock">
+                    <small class="input-hint">You can type any descriptive name</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3 class="section-title">📎 Exam Materials</h3>
+
+                <div class="info-box">
+                    <strong>Tip:</strong> Upload at least one question paper and one marking scheme.
+                    You can upload multiple files.
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Question Papers 
+                        <span class="required">* (at least one)</span>
+                        <span class="file-count-badge" id="qpCount" style="display:none;">0</span>
+                    </label>
+                    <div class="file-upload-box required" id="qpBox">
+                        <input type="file" name="question_papers[]" id="question_papers" multiple accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="icon">📄</div>
+                        <p>Click or drag question papers here</p>
+                        <small>PDF, JPG, PNG – max ~10 MB each</small>
+                    </div>
+                    <div class="file-list" id="qpList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Marking Schemes / Rubrics 
+                        <span class="required">* (at least one)</span>
+                        <span class="file-count-badge" id="rubricCount" style="display:none;">0</span>
+                    </label>
+                    <div class="file-upload-box required" id="rubricBox">
+                        <input type="file" name="rubrics[]" id="rubrics" multiple accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="icon">✓</div>
+                        <p>Click or drag rubrics here</p>
+                        <small>PDF, JPG, PNG – max ~10 MB each</small>
+                    </div>
+                    <div class="file-list" id="rubricList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Rubric Notes <span class="optional">(optional)</span></label>
+                    <textarea name="rubric_text" rows="4" placeholder="Extra instructions, special rules, penalties..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="main-btn">🔒 Lock Settings & Continue</button>
+
+            <div id="messageBox" class="message"></div>
+        </form>
+    </div>
+
+    <!-- ─── Duplicate Warning Modal ─── -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="duplicate-modal" id="duplicateModal">
+        <div class="modal-icon">⚠️</div>
+        <h2 class="modal-title">Duplicate Session Detected</h2>
+        <p class="modal-message">
+            There are already <strong id="studentCount">0</strong> student record(s) in this session.<br><br>
+            Do you want to <strong>overwrite</strong> them?
+        </p>
+
+        <div class="session-details" id="sessionDetails"></div>
+
+        <p class="warning-text">This cannot be undone. A backup of the old data will be created.</p>
+
+        <div class="modal-buttons">
+            <button class="btn-modal btn-no" onclick="cancelOverwrite()">No – Cancel</button>
+            <button class="btn-modal btn-yes" onclick="confirmOverwrite()">Yes – Overwrite</button>
+        </div>
+    </div>
+
+    <script>
+        // ─── File handling (from nice version) ───
+        let qpFiles = [];
+        let rubricFiles = [];
+
+        document.getElementById('question_papers').addEventListener('change', e => handleFiles(e.target.files, 'qp'));
+        document.getElementById('rubrics').addEventListener('change',       e => handleFiles(e.target.files, 'rubric'));
+
+        function handleFiles(files, type) {
+            const arr = Array.from(files);
+            if (type === 'qp') {
+                qpFiles = qpFiles.concat(arr);
+                displayFiles('qp');
+            } else {
+                rubricFiles = rubricFiles.concat(arr);
+                displayFiles('rubric');
+            }
+        }
+
+        function displayFiles(type) {
+            const files   = type === 'qp' ? qpFiles : rubricFiles;
+            const listId  = type === 'qp' ? 'qpList'  : 'rubricList';
+            const countId = type === 'qp' ? 'qpCount' : 'rubricCount';
+            const boxId   = type === 'qp' ? 'qpBox'   : 'rubricBox';
+
+            const list = document.getElementById(listId);
+            const count = document.getElementById(countId);
+            const box  = document.getElementById(boxId);
+
+            list.innerHTML = '';
+
+            if (files.length > 0) {
+                count.style.display = 'inline-block';
+                count.textContent = files.length + ' file' + (files.length > 1 ? 's' : '');
+                box.classList.remove('required');
+                box.classList.add('has-files');
+
+                files.forEach((file, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+                    item.innerHTML = `
+                        <span class="filename">${i+1}. ${file.name}  (${(file.size/1024/1024).toFixed(2)} MB)</span>
+                        <span class="remove" onclick="removeFile('${type}', ${i})">✕ Remove</span>
+                    `;
+                    list.appendChild(item);
+                });
+            } else {
+                count.style.display = 'none';
+                box.classList.add('required');
+                box.classList.remove('has-files');
+            }
+        }
+
+        window.removeFile = function(type, idx) {
+            if (type === 'qp') {
+                qpFiles.splice(idx, 1);
+                displayFiles('qp');
+            } else {
+                rubricFiles.splice(idx, 1);
+                displayFiles('rubric');
+            }
+        };
+
+        // ─── Modal logic (from version B) ───
+        const modalOverlay   = document.getElementById('modalOverlay');
+        const duplicateModal = document.getElementById('duplicateModal');
+        let pendingFormData = null;
+
+        function showDuplicateModal(data) {
+            document.getElementById('studentCount').textContent = data.student_count;
+
+            const info = data.session_info;
+            document.getElementById('sessionDetails').innerHTML = `
+                <p><strong>Year:</strong> ${info.year}</p>
+                <p><strong>Term:</strong> ${info.term}</p>
+                <p><strong>Class:</strong> ${info.class} – ${info.stream}</p>
+                <p><strong>Subject:</strong> ${info.subject}</p>
+                <p><strong>Exam:</strong> ${info.exam_type}</p>
+            `;
+
+            modalOverlay.style.display = 'block';
+            duplicateModal.style.display = 'block';
+        }
+
+        function hideModal() {
+            modalOverlay.style.display = 'none';
+            duplicateModal.style.display = 'none';
+        }
+
+        function cancelOverwrite() {
+            hideModal();
+            pendingFormData = null;
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🔒 Lock Settings & Continue';
+            showMessage('Session creation cancelled. Data preserved.', 'error');
+        }
+
+        async function confirmOverwrite() {
+            hideModal();
+            pendingFormData.append('force_overwrite', 'true');
+
+            submitBtn.textContent = 'Overwriting session...';
+
+            try {
+                const res = await fetch('/setup', { method: 'POST', body: pendingFormData });
+                const result = await res.json();
+
+                if (result.success) {
+                    showMessage('Session overwritten successfully!', 'success');
+                    setTimeout(() => location.href = '/upload-student', 1400);
+                } else {
+                    showMessage('Error: ' + result.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🔒 Lock Settings & Continue';
+                }
+            } catch (err) {
+                showMessage('Network error – please try again', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔒 Lock Settings & Continue';
+            }
+
+            pendingFormData = null;
+        }
+
+        // ─── Form submit ───
+        const setupForm = document.getElementById('setupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageBox = document.getElementById('messageBox');
+
+        function showMessage(text, type) {
+            messageBox.textContent = text;
+            messageBox.className = 'message ' + type;
+            messageBox.style.display = 'block';
+        }
+
+        setupForm.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            // Basic client check
+            if (qpFiles.length === 0 || rubricFiles.length === 0) {
+                showMessage('Please upload at least one question paper and one rubric.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span> Checking session...';
+
+            const formData = new FormData(setupForm);
+            pendingFormData = formData;
+
+            // Append files (since FormData from form doesn't include JS-added files)
+            qpFiles.forEach(f => formData.append('question_papers[]', f));
+            rubricFiles.forEach(f => formData.append('rubrics[]', f));
+
+            try {
+                const response = await fetch('/setup', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.status === 409 && result.duplicate_session) {
+                    showDuplicateModal(result);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🔒 Lock Settings & Continue';
+                } else if (result.success) {
+                    showMessage('Session ready! Redirecting...', 'success');
+                    setTimeout(() => location.href = '/upload-student', 1200);
+                } else {
+                    showMessage('Error: ' + (result.message || 'Unknown issue'), 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '🔒 Lock Settings & Continue';
+                }
+            } catch (err) {
+                showMessage('Network error – check connection', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔒 Lock Settings & Continue';
+            }
+        });
+    </script>
+</body>
+</html>

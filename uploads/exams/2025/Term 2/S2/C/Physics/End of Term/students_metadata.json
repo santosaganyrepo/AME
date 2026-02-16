@@ -1,0 +1,36 @@
+{
+    "1212": {
+        "student_name": "Waswa Martin",
+        "student_id": "1212",
+        "total_pages": 4,
+        "sync_time": "2026-02-01 13:21:14",
+        "status": "Marked",
+        "total_score": 48.0,
+        "questions": {
+            "q2": {
+                "score": 10.0,
+                "max_score": 100,
+                "feedback": ""
+            },
+            "q3": {
+                "score": 14.0,
+                "max_score": 100,
+                "feedback": ""
+            }
+        },
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "The student understands the concepts of eclipses and basic machine principles, however has failed to apply formulas correctly for efficiency and provide accurate conceptual explanations for bicycle mechanics, and needs improvement in problem-solving calculations and detailed scientific explanations.",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "33": {
+        "student_name": "33",
+        "student_id": "33",
+        "total_pages": 4,
+        "sync_time": "2026-02-01 13:23:16",
+        "status": "Synced",
+        "total_score": 0.0,
+        "questions": {}
+    }
+}

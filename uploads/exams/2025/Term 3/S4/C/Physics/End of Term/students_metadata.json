@@ -1,0 +1,25 @@
+{
+    "323": {
+        "student_name": "Madol Anyuat",
+        "student_id": "323",
+        "total_pages": 8,
+        "sync_time": "2026-02-03 13:05:24",
+        "status": "Marked",
+        "total_score": 65.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Auto-marked by AI",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "2223": {
+        "student_name": "Santos madol",
+        "student_id": "2223",
+        "total_pages": 8,
+        "sync_time": "2026-02-03 13:15:42",
+        "status": "Synced",
+        "total_score": 0.0,
+        "questions": {}
+    }
+}

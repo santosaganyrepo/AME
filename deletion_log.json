@@ -1,0 +1,282 @@
+[
+    {
+        "student_id": "1212",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 2/S2/C/Physics/End of Term",
+        "upload_time": "2026-02-01 13:21:14",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "33",
+        "student_name": "33",
+        "exam_session": "2025/Term 2/S2/C/Physics/End of Term",
+        "upload_time": "2026-02-01 13:23:16",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.055507659912109375
+    },
+    {
+        "student_id": "232",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S3/C/Biology/End of Term",
+        "upload_time": "2026-02-01 14:03:49",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "32",
+        "student_name": "Lukwago Renon333",
+        "exam_session": "2025/Term 3/S3/C/Physics/Activity of Integration 2",
+        "upload_time": "2026-02-01 12:47:59",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.6265926361083984
+    },
+    {
+        "student_id": "323",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S3/C/Physics/Activity of Integration 2",
+        "upload_time": "2026-02-01 12:50:21",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.6265926361083984
+    },
+    {
+        "student_id": "10000",
+        "student_name": "Amos",
+        "exam_session": "2025/Term 3/S2/C/Biology/End of Term",
+        "upload_time": "2026-02-01 13:01:43",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.3392963409423828
+    },
+    {
+        "student_id": "232",
+        "student_name": "323",
+        "exam_session": "2025/Term 3/S2/C/Biology/End of Term",
+        "upload_time": "2026-02-01 13:17:47",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.3392963409423828
+    },
+    {
+        "student_id": "1213",
+        "student_name": "Ssentongo Aselem",
+        "exam_session": "2025/Term 3/S2/C/Biology/Activity of Integration 2",
+        "upload_time": "2026-02-02 07:30:11",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.16017436981201172
+    },
+    {
+        "student_id": "323",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S2/C/Biology/Activity of Integration 2",
+        "upload_time": "2026-02-02 07:37:38",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.16017436981201172
+    },
+    {
+        "student_id": "324",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 3/S2/C/Biology/Activity of Integration 2",
+        "upload_time": "2026-02-02 07:34:21",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.16017436981201172
+    },
+    {
+        "student_id": "9022",
+        "student_name": "Majur Madol",
+        "exam_session": "2025/Term 3/S2/C/Biology/Activity of Integration 1",
+        "upload_time": "2026-02-02 07:22:09",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.16017436981201172
+    },
+    {
+        "student_id": "212",
+        "student_name": "Santos madol",
+        "exam_session": "2025/Term 3/S2/C/Geography/Activity of Integration 2",
+        "upload_time": "2026-02-02 10:24:41",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "213",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S2/C/English Language/End of Term_backup_1770010242",
+        "upload_time": "2026-02-02 08:13:38",
+        "deletion_time": "2026-02-04 10:45:14",
+        "size_mb": 0.2950410842895508
+    },
+    {
+        "student_id": "7000",
+        "student_name": "Ssentongo Aselem",
+        "exam_session": "2025/Term 2/S4/B/Physics/Mocks",
+        "upload_time": "2026-02-03 12:50:49",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "1122",
+        "student_name": "1121",
+        "exam_session": "2025/Term 3/S4/B/Physics/Mocks",
+        "upload_time": "2026-02-03 13:22:31",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "212",
+        "student_name": "21212",
+        "exam_session": "2025/Term 3/S4/B/Physics/Mocks",
+        "upload_time": "2026-02-03 13:33:25",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "210",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 3/S4/B/Physics/Mocks",
+        "upload_time": "2026-02-03 13:39:45",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "78937",
+        "student_name": "Madol Anyuat",
+        "exam_session": "2025/Term 3/S3/C/Geography/Activity of Integration 1",
+        "upload_time": "2026-02-03 10:38:25",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "672",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 3/S3/C/Geography/Activity of Integration 1",
+        "upload_time": "2026-02-03 10:40:25",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "232",
+        "student_name": "Madol Anyuat",
+        "exam_session": "2025/Term 3/S2/B/Geography/Activity of Integration 2",
+        "upload_time": "2026-02-03 13:48:32",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "22",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 3/S2/B/Geography/Activity of Integration 2",
+        "upload_time": "2026-02-03 13:50:38",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "3892",
+        "student_name": "Waswa Martin",
+        "exam_session": "2025/Term 3/S2/C/Geography/End of Term",
+        "upload_time": "2026-02-03 12:24:49",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2630748748779297
+    },
+    {
+        "student_id": "1009",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S2/C/English Language/End of Term",
+        "upload_time": "2026-02-03 10:35:23",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2950410842895508
+    },
+    {
+        "student_id": "2132",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S2/C/English Language/End of Term",
+        "upload_time": "2026-02-03 10:36:23",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.2950410842895508
+    },
+    {
+        "student_id": "8900",
+        "student_name": "Henry",
+        "exam_session": "2025/Term 3/S2/C/Kiswahili/End of Term",
+        "upload_time": "2026-02-03 11:39:56",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.1331501007080078
+    },
+    {
+        "student_id": "2901",
+        "student_name": "Round 2",
+        "exam_session": "2025/Term 3/S2/C/Kiswahili/End of Term",
+        "upload_time": "2026-02-03 11:40:59",
+        "deletion_time": "2026-02-06 08:01:43",
+        "size_mb": 0.1331501007080078
+    },
+    {
+        "student_id": "0054",
+        "student_name": "Santos Madol",
+        "exam_session": "2026/Term 2/S3/North/History and Political Education/End of Term",
+        "upload_time": "2026-02-05 08:51:17",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "1200",
+        "student_name": "Nakato Martha",
+        "exam_session": "2026/Term 2/S2/B/Chemistry/Activity of Integration 2",
+        "upload_time": "2026-02-06 08:19:22",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "22",
+        "student_name": "Lukwago Renon",
+        "exam_session": "2026/Term 2/S2/B/Chemistry/Activity of Integration 2",
+        "upload_time": "2026-02-06 08:21:04",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "343",
+        "student_name": "Agany Madol",
+        "exam_session": "2026/Term 2/S2/B/Chemistry/Activity of Integration 2",
+        "upload_time": "2026-02-06 08:27:58",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "232",
+        "student_name": "Agany Madol",
+        "exam_session": "2026/Term 2/S2/B/Chemistry/Activity of Integration 2",
+        "upload_time": "2026-02-06 08:29:25",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.17345237731933594
+    },
+    {
+        "student_id": "323",
+        "student_name": "Agany Madol",
+        "exam_session": "2026/Term 2/S2/B/Chemistry/Activity of Integration 2",
+        "upload_time": "2026-02-06 08:47:09",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 1.0146207809448242
+    },
+    {
+        "student_id": "232",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 2/S2/C/Physics/Activity of Integration 2",
+        "upload_time": "2026-02-05 10:08:55",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.1392202377319336
+    },
+    {
+        "student_id": "232",
+        "student_name": "Ssentongo Aselem",
+        "exam_session": "2025/Term 3/S3/B/Physics/Mocks",
+        "upload_time": "2026-02-05 09:21:14",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.41091251373291016
+    },
+    {
+        "student_id": "232",
+        "student_name": "Agany Madol",
+        "exam_session": "2025/Term 3/S3/C/Literature in English/Activity of Integration 2",
+        "upload_time": "2026-02-04 10:14:13",
+        "deletion_time": "2026-02-16 14:55:17",
+        "size_mb": 0.2630748748779297
+    }
+]

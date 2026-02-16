@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marked Students - History</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Stats Cards */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #764ba2;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Exam Session Cards */
+        .exam-session {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .exam-session:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        
+        .session-header {
+            background: #e6e6fa;
+            color: #4a4a4a;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            border-bottom: 1px solid #d0d0e8;
+        }
+        
+        .session-header:hover {
+            background: #d8d8f0;
+        }
+        
+        .session-info {
+            flex: 1;
+        }
+        
+        .session-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a4a4a;
+        }
+        
+        .session-meta {
+            font-size: 0.85em;
+            opacity: 0.85;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            color: #5a5a5a;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .session-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .mini-stat {
+            text-align: center;
+            background: rgba(102, 126, 234, 0.15);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .mini-stat-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            display: block;
+            color: #667eea;
+        }
+        
+        .mini-stat-label {
+            font-size: 0.7em;
+            opacity: 0.8;
+            color: #5a5a5a;
+        }
+        
+        .expand-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: #667eea;
+        }
+        
+        .exam-session.collapsed .expand-icon {
+            transform: rotate(-90deg);
+        }
+        
+        /* Student Table */
+        .session-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .exam-session.expanded .session-content {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .students-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .students-table thead {
+            background: #f8f9ff;
+        }
+        
+        .students-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .students-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+        
+        .students-table tbody tr:hover {
+            background: #f8f9ff;
+        }
+        
+        .students-table td {
+            padding: 15px;
+            color: #333;
+        }
+        
+        .student-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        /* Diagnostic Report Button */
+        .btn-diagnostic {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-diagnostic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+        
+        /* Diagnostic Report Section */
+        .diagnostic-row {
+            background: #f8f9ff;
+        }
+        
+        .diagnostic-report {
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            margin: 10px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .diagnostic-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .diagnostic-header h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+        
+        .diagnostic-subtitle {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .diagnostic-content {
+            display: grid;
+            gap: 25px;
+        }
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-synced {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-marked {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+        
+        .empty-state-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+        
+        .empty-state h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .session-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .session-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .students-table {
+                font-size: 0.85em;
+            }
+            
+            .students-table th,
+            .students-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Marked Students History</h1>
+            <div class="header-actions">
+                <div class="stats-overview" style="flex: 1; margin-right: 20px;">
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.total_sessions }}</span>
+                        <span class="stat-label">Exam Sessions</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.total_students }}</span>
+                        <span class="stat-label">Total Students</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value">{{ stats.total_marked }}</span>
+                        <span class="stat-label">Marked</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="showExcelModal()" style="background: #28a745;">
+                        📊 Generate Spreadsheet
+                    </button>
+                    <a href="/setup-start" class="btn btn-primary">➕ New Exam Session</a>
+                    <a href="/" class="btn btn-secondary">🏠 Dashboard</a>
+                </div>
+            </div>
+        </div>
+        
+        {% if exam_sessions %}
+            {% for session in exam_sessions %}
+            <div class="exam-session expanded">
+                <div class="session-header" onclick="toggleSession(this)">
+                    <div class="session-info">
+                        <div class="session-title">
+                            <span>📚 {{ session.subject }} - {{ session.exam_type }}</span>
+                        </div>
+                        <div class="session-meta">
+                            <span class="meta-item">
+                                🎓 <strong>{{ session.class }} {{ session.stream }}</strong>
+                            </span>
+                            <span class="meta-item">
+                                📅 <strong>{{ session.term }} {{ session.year }}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="session-stats">
+                        <div class="mini-stat">
+                            <span class="mini-stat-value">{{ session.total_students }}</span>
+                            <span class="mini-stat-label">Students</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-value">{{ session.marked_count }}</span>
+                            <span class="mini-stat-label">Marked</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                </div>
+                
+                <div class="session-content">
+                    <table class="students-table">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Pages</th>
+                                <th>Status</th>
+                                <th>Total Score</th>
+                                <th>Sync Time</th>
+                                <th>Diagnostic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in session.students %}
+                            <tr class="student-row">
+                                <td class="student-name">{{ student.student_name }}</td>
+                                <td><strong>{{ student.student_id }}</strong></td>
+                                <td><strong>{{ student.total_pages }}</strong> pages</td>
+                                <td>
+                                    <span class="status-badge status-{{ student.status.lower() }}">
+                                        {% if student.status == 'Marked' %}
+                                            ✓ Marked
+                                        {% else %}
+                                            ⏳ Not Marked
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if student.status == 'Marked' %}
+                                        <strong style="color: #28a745; font-size: 1.1em;">{{ student.total_score }}%</strong>
+                                    {% else %}
+                                        <span style="color: #999;">—</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: #666;">{{ student.sync_time }}</td>
+                                <td>
+                                    {% if student.status == 'Marked' %}
+                                        <button class="btn-diagnostic" onclick="toggleDiagnostic('{{ student.student_id }}')">
+                                            📊 Report
+                                        </button>
+                                    {% else %}
+                                        <span style="color: #999;">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if student.status == 'Marked' %}
+                            <tr class="diagnostic-row" id="diagnostic-{{ student.student_id }}" style="display: none;">
+                                <td colspan="7">
+                                    <div class="diagnostic-report">
+                                        <div class="diagnostic-header">
+                                            <h3>📋 AI Marking Report</h3>
+                                            <p class="diagnostic-subtitle">Student: <strong>{{ student.student_name }}</strong> (ID: {{ student.student_id }})</p>
+                                        </div>
+                                        
+                                        <div class="diagnostic-content">
+                                            <!-- Total Score Display -->
+                                            <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #f0fff4, #d4edda); border-radius: 12px; margin-bottom: 20px; border: 3px solid #28a745;">
+                                                <div style="font-size: 0.9em; color: #666; margin-bottom: 10px; font-weight: 600;">TOTAL SCORE</div>
+                                                <div style="font-size: 4em; font-weight: bold; color: #28a745;">{{ student.total_score }}%</div>
+                                            </div>
+                                            
+                                            <!-- AI Feedback -->
+                                            <div style="background: #f8f9ff; padding: 25px; border-radius: 12px; border-left: 5px solid #667eea;">
+                                                <h4 style="color: #667eea; font-size: 1.2em; margin-bottom: 15px;">📝 AI Feedback</h4>
+                                                <p style="font-size: 1.1em; line-height: 1.8; color: #333; margin-bottom: 20px;">
+                                                    {{ student.overall_feedback if student.overall_feedback else "No feedback available." }}
+                                                </p>
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h2>No Marked Students Yet</h2>
+                <p>Start marking your first exam to see student records here</p>
+                <a href="/setup-start" class="btn btn-primary">🚀 Start Marking Now</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Excel Generation Modal -->
+    <div id="excelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto; padding: 20px;">
+        <div style="background: white; padding: 40px; border-radius: 20px; max-width: 900px; width: 90%; margin: 50px auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <h1 style="color: #667eea; text-align: center; margin-bottom: 30px; font-size: 2em;">📊 Generate Excel Spreadsheet</h1>
+            
+            <form id="excelForm">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Year:</label>
+                    <input type="text" id="excel_year" required placeholder="e.g., 2025" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Term:</label>
+                    <select id="excel_term" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="">Select Term</option>
+                        <option value="Term 1">Term 1</option>
+                        <option value="Term 2">Term 2</option>
+                        <option value="Term 3">Term 3</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Class:</label>
+                    <select id="excel_class" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="">Select Class</option>
+                        <option value="S1">S1</option>
+                        <option value="S2">S2</option>
+                        <option value="S3">S3</option>
+                        <option value="S4">S4</option>
+                        <option value="S5">S5</option>
+                        <option value="S6">S6</option>
+                        <option value="P1">P1</option>
+                        <option value="P2">P2</option>
+                        <option value="P3">P3</option>
+                        <option value="P4">P4</option>
+                        <option value="P5">P5</option>
+                        <option value="P6">P6</option>
+                        <option value="P7">P7</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Stream:</label>
+                    <input type="text" id="excel_stream" required placeholder="e.g., A, B, C, East, West" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Subject:</label>
+                    <select id="excel_subject" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="">Select Subject</option>
+                        <option value="English Language">English Language</option>
+                        <option value="Literature in English">Literature in English</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Geography">Geography</option>
+                        <option value="History and Political Education">History and Political Education</option>
+                        <option value="Kiswahili">Kiswahili</option>
+                        <option value="Christian Religious Education (CRE)">Christian Religious Education (CRE)</option>
+                        <option value="Islamic Religious Education (IRE)">Islamic Religious Education (IRE)</option>
+                        <option value="Art and Design">Art and Design</option>
+                        <option value="Performing Arts">Performing Arts</option>
+                        <option value="Entrepreneurship">Entrepreneurship</option>
+                        <option value="Information and Communication Technology (ICT)">Information and Communication Technology (ICT)</option>
+                        <option value="Skills Technology and Design">Skills Technology and Design</option>
+                        <option value="Nutrition and Food Technology">Nutrition and Food Technology</option>
+                        <option value="Agriculture">Agriculture</option>
+                        <option value="Physical Education">Physical Education</option>
+                        <option value="General Science (Special Needs)">General Science (Special Needs)</option>
+                        <option value="French">French</option>
+                        <option value="German">German</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Latin">Latin</option>
+                        <option value="Chinese (Mandarin)">Chinese (Mandarin)</option>
+                        <option value="Luganda">Luganda</option>
+                        <option value="Jophadola (Dhopadhola)">Jophadola (Dhopadhola)</option>
+                        <option value="Leb-Acholi">Leb-Acholi</option>
+                        <option value="Leb-Lango">Leb-Lango</option>
+                        <option value="Lugbarati (Lugbara)">Lugbarati (Lugbara)</option>
+                        <option value="Lunyankole-Rukiga">Lunyankole-Rukiga</option>
+                        <option value="Runyoro-Rutoro">Runyoro-Rutoro</option>
+                        <option value="Lumasaba">Lumasaba</option>
+                        <option value="Lusoga">Lusoga</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Exam Type:</label>
+                    <input type="text" id="excel_exam_type" required placeholder="e.g., BOT, MOT, EOT, Mock, Activity of Integration" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                
+                <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📄 File Format</h3>
+                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Choose Format:</label>
+                    <select id="excel_format" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="xlsx">XLSX (Microsoft Excel)</option>
+                        <option value="ods">ODS (OpenDocument Spreadsheet)</option>
+                    </select>
+                    <p style="color: #666; font-size: 0.9em; margin-top: 10px; margin-bottom: 0;">
+                        XLSX is compatible with Microsoft Excel, Google Sheets, and Numbers.<br>
+                        ODS is compatible with LibreOffice, OpenOffice, and Google Sheets.
+                    </p>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" onclick="hideExcelModal()" style="flex: 1; padding: 15px 40px; border-radius: 10px; font-size: 1.1em; font-weight: 600; cursor: pointer; background: #dc3545; color: white; border: none;">
+                        Cancel
+                    </button>
+                    <button type="submit" id="generateBtn" style="flex: 1; padding: 15px 40px; border-radius: 10px; font-size: 1.1em; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;">
+                        Generate Spreadsheet
+                    </button>
+                </div>
+            </form>
+            
+            <div id="excelMessage" style="display: none; margin-top: 20px; padding: 15px; border-radius: 5px; text-align: center; font-weight: 600;"></div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSession(header) {
+            const session = header.parentElement;
+            session.classList.toggle('expanded');
+            session.classList.toggle('collapsed');
+        }
+        
+        function toggleDiagnostic(studentId) {
+            const diagnosticRow = document.getElementById('diagnostic-' + studentId);
+            const button = event.target;
+            
+            if (diagnosticRow.style.display === 'none' || diagnosticRow.style.display === '') {
+                diagnosticRow.style.display = 'table-row';
+                button.textContent = '✕ Close';
+                button.style.background = '#dc3545';
+                setTimeout(() => {
+                    diagnosticRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                diagnosticRow.style.display = 'none';
+                button.textContent = '📊 Report';
+                button.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }
+        }
+        
+        // Excel Modal Functions
+        function showExcelModal() {
+            document.getElementById('excelModal').style.display = 'block';
+        }
+        
+        function hideExcelModal() {
+            document.getElementById('excelModal').style.display = 'none';
+            document.getElementById('excelForm').reset();
+            document.getElementById('excelMessage').style.display = 'none';
+        }
+        
+        function showExcelMessage(text, type) {
+            const msgBox = document.getElementById('excelMessage');
+            msgBox.style.display = 'block';
+            msgBox.textContent = text;
+            msgBox.style.background = type === 'success' ? '#d4edda' : '#f8d7da';
+            msgBox.style.color = type === 'success' ? '#155724' : '#721c24';
+        }
+        
+        // Excel Form Submission
+        document.getElementById('excelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            
+            const formData = {
+                year: document.getElementById('excel_year').value,
+                term: document.getElementById('excel_term').value,
+                class: document.getElementById('excel_class').value,
+                stream: document.getElementById('excel_stream').value,
+                subject: document.getElementById('excel_subject').value,
+                exam_type: document.getElementById('excel_exam_type').value,
+                format: document.getElementById('excel_format').value
+            };
+            
+            try {
+                const response = await fetch('/generate-excel', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    let filename = `exam_results_${formData.subject}_${Date.now()}.${formData.format}`;
+                    if (contentDisposition) {
+                        const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                        if (match && match[1]) filename = match[1].replace(/['"]/g, '');
+                    }
+                    
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showExcelMessage('✅ Spreadsheet generated successfully!', 'success');
+                    setTimeout(() => hideExcelModal(), 2000);
+                } else {
+                    const result = await response.json();
+                    showExcelMessage('❌ ' + (result.message || 'Failed to generate'), 'error');
+                }
+            } catch (error) {
+                showExcelMessage('❌ Error: ' + error.message, 'error');
+            }
+            
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate Spreadsheet';
+        });
+        
+        // Expand all sessions by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.exam-session').forEach(session => {
+                session.classList.add('expanded');
+            });
+        });
+    </script>
+</body>
+</html>

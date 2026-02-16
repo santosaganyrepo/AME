@@ -1,0 +1,51 @@
+{
+    "32": {
+        "student_name": "Lukwago Renon333",
+        "student_id": "32",
+        "total_pages": 7,
+        "sync_time": "2026-02-01 12:47:59",
+        "status": "Marked",
+        "total_score": 40.0,
+        "questions": {
+            "q1": {
+                "score": 50.0,
+                "max_score": 100,
+                "feedback": ""
+            },
+            "q2": {
+                "score": 50.0,
+                "max_score": 100,
+                "feedback": ""
+            },
+            "q3": {
+                "score": 50.0,
+                "max_score": 100,
+                "feedback": ""
+            },
+            "q4": {
+                "score": 20.0,
+                "max_score": 100,
+                "feedback": ""
+            }
+        },
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Auto-marked by AI",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "323": {
+        "student_name": "Agany Madol",
+        "student_id": "323",
+        "total_pages": 7,
+        "sync_time": "2026-02-01 12:50:21",
+        "status": "Marked",
+        "total_score": 0.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Auto-marked by AI",
+        "strengths": [],
+        "areas_for_improvement": []
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "232": {
+        "student_name": "Agany Madol",
+        "student_id": "232",
+        "total_pages": 3,
+        "sync_time": "2026-02-05 10:08:55",
+        "status": "Marked",
+        "total_score": 26.0,
+        "questions": {
+            "q1": {
+                "score": 15.0,
+                "max_score": 20,
+                "feedback": ""
+            },
+            "q7": {
+                "score": 11.0,
+                "max_score": 20,
+                "feedback": ""
+            }
+        },
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Item 1: 15/20, Item 7: 11/20.\nThe student demonstrated good conceptual understanding of laser properties and energy calculations in Item 1 and Item 7(a) respectively. However, significant weaknesses were observed in making clear choices, providing complete explanations, and applying correct colour codes for wiring. The student also failed to attempt the required number of questions, leading to a lower overall score. Areas for improvement include careful reading of instructions, ensuring all parts of a question are addressed, and revising fundamental concepts like electrical wiring standards and generator operation.",
+        "strengths": [],
+        "areas_for_improvement": []
+    }
+}

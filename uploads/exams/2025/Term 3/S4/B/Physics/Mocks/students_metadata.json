@@ -1,0 +1,50 @@
+{
+    "1122": {
+        "student_name": "1121",
+        "student_id": "1122",
+        "total_pages": 8,
+        "sync_time": "2026-02-03 13:22:31",
+        "status": "Marked",
+        "total_score": 85.0,
+        "questions": {
+            "q1": {
+                "score": 2.0,
+                "max_score": 100,
+                "feedback": ""
+            }
+        },
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "The student demonstrates strong conceptual understanding and good application of physics principles, particularly in theoretical explanations and problem-solving. However, there are notable weaknesses in numerical calculations and attention to detail in some parts, leading to loss of marks. Improvement is needed in precision for calculations and ensuring all parts of a question are fully addressed.",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "212": {
+        "student_name": "21212",
+        "student_id": "212",
+        "total_pages": 8,
+        "sync_time": "2026-02-03 13:33:25",
+        "status": "Marked",
+        "total_score": 55.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "The student demonstrates a foundational understanding of physics concepts, particularly in areas like energy calculations and basic electrical principles, but struggles with detailed explanations, conceptual accuracy in optics and astrophysics, and consistent application of formulas. Areas for improvement include strengthening theoretical knowledge in light and stellar evolution, practicing problem-solving steps, and enhancing communication clarity. item/Q1",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "210": {
+        "student_name": "Waswa Martin",
+        "student_id": "210",
+        "total_pages": 8,
+        "sync_time": "2026-02-03 13:39:45",
+        "status": "Marked",
+        "total_score": 65.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "\"item/Q1: 13/20, item/Q2: 14/20, item/Q3: 12/20, item/Q5: 13/20, item/Q7: 13/20. Waswa Martin demonstrates a good foundational understanding of",
+        "strengths": [],
+        "areas_for_improvement": []
+    }
+}

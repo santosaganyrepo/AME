@@ -1,0 +1,30 @@
+{
+    "78937": {
+        "student_name": "Madol Anyuat",
+        "student_id": "78937",
+        "total_pages": 2,
+        "sync_time": "2026-02-03 10:38:25",
+        "status": "Marked",
+        "total_score": 75.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Madol demonstrates strong knowledge and reasoning in explaining population dynamics and their negative impacts, providing well-structured and detailed answers. However, an area for improvement is to ensure all parts of a question are addressed, as positive impacts of population growth were omitted.",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "672": {
+        "student_name": "Waswa Martin",
+        "student_id": "672",
+        "total_pages": 2,
+        "sync_time": "2026-02-03 10:40:25",
+        "status": "Marked",
+        "total_score": 75.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Waswa demonstrated strong knowledge and conceptual accuracy in identifying reasons for population increase and negative impacts of population growth. However, the student needs to improve on fully addressing all aspects of a question, specifically by including positive impacts when explicitly asked for both positive and negative.",
+        "strengths": [],
+        "areas_for_improvement": []
+    }
+}

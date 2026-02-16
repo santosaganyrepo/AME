@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Smart Scanner</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: white; padding: 10px; }
+        .header { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 10px; position: relative; border: 1px solid rgba(255,255,255,0.3); }
+        .end-btn { position: absolute; right: 10px; top: 12px; background: #ff4d4d; color: white; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 0.75em; font-weight: bold; }
+        .card { background: white; border-radius: 15px; padding: 15px; color: #333; margin-bottom: 10px; }
+        input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; margin-bottom: 10px; outline: none; }
+        
+        .camera-box { position: relative; width: 100%; border-radius: 15px; overflow: hidden; background: #000; border: 3px solid white; }
+        #video { width: 100%; height: auto; }
+        
+        .controls { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 15px 0; position: relative; }
+        .shutter-btn { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 4px solid rgba(0,0,0,0.1); }
+        .gallery-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border: 2px solid white; }
+        
+        .count-badge { background: #ffd700; color: #333; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9em; margin-bottom: 5px; display: inline-block; }
+
+        .gallery-container { text-align: center; }
+        .gallery { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; min-height: 110px; }
+        .thumb { position: relative; flex: 0 0 70px; height: 90px; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid white; }
+        .del-btn { position: absolute; top: -8px; right: -8px; background: red; color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 14px; display: flex; align-items: center; justify-content: center; border: 2px solid white; cursor: pointer; font-weight: bold; z-index: 10; }
+        
+        .upload-btn { width: 100%; padding: 20px; background: #28a745; color: white; border: none; border-radius: 15px; font-size: 1.2em; font-weight: bold; display: none; cursor: pointer; }
+        .upload-btn:disabled { background: #6c757d; }
+
+        /* Modal */
+        #statusModal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.85); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .modal-content { 
+            background: white; 
+            color: #333; 
+            width: 90%; 
+            max-width: 420px; 
+            border-radius: 20px; 
+            padding: 24px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+        }
+        .modal-title { text-align: center; margin-bottom: 16px; font-size: 1.4em; }
+        .modal-icon { font-size: 3em; margin-bottom: 12px; text-align: center; }
+        .report-list { margin: 12px 0; border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        .report-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 12px 14px; 
+            border-bottom: 1px solid #eee; 
+            font-size: 0.98em; 
+        }
+        .report-item:last-child { border-bottom: none; }
+        .status-perfect { color: #28a745; font-weight: bold; }
+        .status-warning { color: #e67e22; font-weight: bold; }
+        .status-error   { color: #dc3545; font-weight: bold; }
+        .modal-btn { 
+            width: 100%; 
+            padding: 14px; 
+            margin-top: 12px; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 1.05em; 
+        }
+        .btn-primary   { background: #007bff; color: white; }
+        .btn-warning   { background: #ffc107; color: #333; }
+        .btn-danger    { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="/end-session" class="end-btn">End Session</a>
+        <h3>{{ exam_data.class }} • {{ exam_data.subject }}</h3>
+    </div>
+
+    <div class="card">
+        <input type="text" id="student_id" placeholder="Student ID (optional)">
+        <input type="text" id="student_name" placeholder="Full Name *">
+    </div>
+
+    <div class="camera-box">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="shutter-btn" onclick="takePhoto()">📸</div>
+        <label class="gallery-btn">
+            📁
+            <input type="file" id="fileInput" multiple accept="image/*" style="display:none;" onchange="handleFiles(this.files)">
+        </label>
+    </div>
+
+    <div class="gallery-container">
+        <div id="pageCounter" class="count-badge" style="display:none;">0 Pages Captured</div>
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <button class="upload-btn" id="uploadBtn" onclick="startUpload()">UPLOAD & MARK</button>
+
+    <!-- Feedback Modal -->
+    <div id="statusModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="report-list" id="reportList"></div>
+            <button class="modal-btn" id="modalBtn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        let captured = [];
+    
+        // ──────────────────────────────────────
+        // Your existing camera/gallery logic (unchanged)
+        // ──────────────────────────────────────
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+    
+        async function init() {
+            try {
+                const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = s;
+            } catch (e) { alert("Camera access denied."); }
+        }
+    
+        function takePhoto() {
+            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob(b => {
+                const file = new File([b], `page_${captured.length+1}_${Date.now()}.jpg`, {type:"image/jpeg"});
+                captured.push(file);
+                render();
+            }, 'image/jpeg', 0.82);
+        }
+    
+        function handleFiles(files) {
+            for (let file of files) {
+                captured.push(file);
+            }
+            render();
+            document.getElementById('fileInput').value = "";
+        }
+    
+        function removeImage(index) {
+            captured.splice(index, 1);
+            render();
+        }
+    
+        function render() {
+            const gal = document.getElementById('gallery');
+            const counter = document.getElementById('pageCounter');
+            gal.innerHTML = '';
+            
+            captured.forEach((f, i) => {
+                const url = URL.createObjectURL(f);
+                gal.innerHTML += `
+                    <div class="thumb">
+                        <div class="del-btn" onclick="removeImage(${i})">×</div>
+                        <img src="${url}">
+                    </div>`;
+            });
+    
+            if (captured.length > 0) {
+                counter.style.display = 'inline-block';
+                counter.innerText = `${captured.length} ${captured.length === 1 ? 'Page' : 'Pages'} Captured`;
+                document.getElementById('uploadBtn').style.display = 'block';
+            } else {
+                counter.style.display = 'none';
+                document.getElementById('uploadBtn').style.display = 'none';
+            }
+        }
+    
+        // ──────────────────────────────────────
+        // Simplified upload – no client quality check
+        // ──────────────────────────────────────
+        async function startUpload() {
+            const name = document.getElementById('student_name').value.trim();
+            if (!name) {
+                showModal("Missing Name", "Please enter the student's full name.", "⚠️", "warning");
+                return;
+            }
+    
+            if (captured.length === 0) {
+                showModal("No Pages", "Please capture or select at least one page.", "⚠️", "warning");
+                return;
+            }
+    
+            const btn = document.getElementById('uploadBtn');
+            btn.disabled = true;
+            btn.innerHTML = "UPLOADING...";
+    
+            const formData = new FormData();
+            formData.append('student_name', name);
+            formData.append('student_id', document.getElementById('student_id').value.trim());
+            captured.forEach(file => formData.append('files[]', file));
+    
+            try {
+                const res = await fetch('/upload-batch', { method: 'POST', body: formData });
+                const data = await res.json();
+    
+                if (res.status === 422) {
+                    // Backend rejected poor quality pages
+                    let msg = '<div style="color:#dc3545; font-weight:bold;">Some pages cannot be processed:</div><br>';
+                    if (data.details && data.details.length > 0) {
+                        data.details.forEach(d => msg += `• ${d}<br>`);
+                    } else {
+                        msg += data.message || "Image quality too low for marking.";
+                    }
+                    msg += '<br>Please retake the flagged pages and try again.';
+                    showModal("Quality Check Failed", msg, "❌", "error");
+                } else if (data.success) {
+                    let title = data.marked ? "Success" : "Partial Success";
+                    let msg = data.marked 
+                        ? `Student uploaded & marked! Score: ${data.score}%`
+                        : `Uploaded successfully, but marking failed: ${data.message || 'You can retry later.'}`;
+                    showModal(title, msg, data.marked ? "✅" : "⚠️", data.marked ? "success" : "warning");
+                    
+                    if (data.marked) {
+                        setTimeout(() => location.reload(), 2800);
+                    }
+                } else {
+                    showModal("Upload Failed", data.message || "Unknown error.", "❌", "error");
+                }
+            } catch (e) {
+                showModal("Network Error", "Could not connect to server. Check internet.", "📡", "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "UPLOAD & MARK";
+            }
+        }
+    
+        function showModal(title, message, icon, type = "info") {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalIcon').textContent = icon;
+            document.getElementById('reportList').innerHTML = `<div style="padding:12px; line-height:1.5;">${message}</div>`;
+    
+            const btn = document.getElementById('modalBtn');
+            if (type === "success") {
+                document.getElementById('modalIcon').style.color = "#28a745";
+                btn.className = "modal-btn btn-primary";
+            } else if (type === "warning") {
+                document.getElementById('modalIcon').style.color = "#e67e22";
+                btn.className = "modal-btn btn-warning";
+            } else {
+                document.getElementById('modalIcon').style.color = "#dc3545";
+                btn.className = "modal-btn btn-danger";
+            }
+    
+            document.getElementById('statusModal').style.display = 'flex';
+        }
+    
+        function closeModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+    
+        init();
+    </script>
+</body>
+</html>

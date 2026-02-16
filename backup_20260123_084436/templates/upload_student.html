@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Student Scripts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .session-info { background: #d1ecf1; border-left: 4px solid #0c5460; padding: 20px; margin-bottom: 30px; border-radius: 8px; }
+        .session-info h3 { color: #0c5460; margin-bottom: 10px; }
+        .session-info p { margin: 5px 0; color: #0c5460; }
+        .quick-form { background: #f8f9ff; padding: 30px; border-radius: 10px; margin-bottom: 30px; }
+        .quick-form h2 { color: #667eea; margin-bottom: 20px; }
+        .mobile-capture { border: 3px dashed #28a745; background: #d4edda; padding: 40px; text-align: center; border-radius: 10px; margin: 20px 0; }
+        .mobile-capture p { color: #155724; font-size: 1.1em; font-weight: 600; }
+        .btn-end-session { background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; float: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Continuous Capture Mode</h1>
+            <button class="btn-end-session" onclick="endSession()">End Session</button>
+        </header>
+        
+        <main>
+            <div class="session-info">
+                <h3>🔒 Locked Session Info</h3>
+                <p><strong>Class:</strong> {{ exam_data.class }}</p>
+                <p><strong>Subject:</strong> {{ exam_data.subject }}</p>
+                <p><strong>Exam:</strong> {{ exam_data.exam_type }} - {{ exam_data.term }} {{ exam_data.year }}</p>
+            </div>
+            
+            <div class="quick-form">
+                <h2>Quick Student Entry</h2>
+                
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="student_id">Student ID *</label>
+                            <input type="text" id="student_id" name="student_id" required 
+                                   placeholder="e.g., 001" autofocus>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="student_name">Full Name *</label>
+                            <input type="text" id="student_name" name="student_name" required 
+                                   placeholder="e.g., John Doe">
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-capture">
+                        <p>📱 Use Mobile Camera to Capture All Pages</p>
+                        <input type="file" id="files" name="files[]" multiple accept="image/*" 
+                               capture="environment" required style="margin-top: 20px;">
+                    </div>
+                    
+                    <div id="filePreview" class="file-list"></div>
+                    
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        Upload & Clear Mobile
+                    </button>
+                </form>
+                
+                <div id="resultMessage" class="message" style="display: none;"></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ url_for('view_students') }}" style="color: #667eea; text-decoration: none;">
+                    📊 View All Uploaded Students
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        const fileInput = document.getElementById('files');
+        const filePreview = document.getElementById('filePreview');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultMessage = document.getElementById('resultMessage');
+        
+        fileInput.addEventListener('change', function() {
+            filePreview.innerHTML = '';
+            const files = Array.from(fileInput.files);
+            files.forEach((file, idx) => {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.textContent = `Page ${idx + 1}: ${file.name}`;
+                filePreview.appendChild(div);
+            });
+        });
+        
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(uploadForm);
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+            
+            try {
+                const response = await fetch('/upload-batch', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultMessage.innerHTML = `✅ ${result.message}<br>Ready for next student!`;
+                    resultMessage.className = 'message success';
+                    resultMessage.style.display = 'block';
+                    
+                    // Clear form for next student
+                    setTimeout(() => {
+                        uploadForm.reset();
+                        filePreview.innerHTML = '';
+                        document.getElementById('student_id').focus();
+                        resultMessage.style.display = 'none';
+                    }, 2000);
+                } else {
+                    resultMessage.innerHTML = '❌ ' + result.message;
+                    resultMessage.className = 'message error';
+                    resultMessage.style.display = 'block';
+                }
+            } catch (error) {
+                resultMessage.innerHTML = '❌ Network error';
+                resultMessage.className = 'message error';
+                resultMessage.style.display = 'block';
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Upload & Clear Mobile';
+        });
+        
+        function endSession() {
+            if (confirm('End this marking session?')) {
+                fetch('/end-session', { method: 'POST' })
+                    .then(() => window.location.href = '/');
+            }
+        }
+    </script>
+</body>
+</html>

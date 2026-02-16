@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Students - Exam Upload System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Uploaded Exam Scripts</h1>
+            <nav>
+                <a href="{{ url_for('index') }}">Upload</a>
+                <a href="{{ url_for('view_students') }}" class="active">View Students</a>
+            </nav>
+        </header>
+        <main>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>{{ stats.total_students }}</h3>
+                    <p>Total Students</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{ stats.total_pages }}</h3>
+                    <p>Total Pages</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{ stats.by_status.uploaded }}</h3>
+                    <p>Pending Review</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{ stats.by_status.marked }}</h3>
+                    <p>Marked</p>
+                </div>
+            </div>
+            <div class="table-container">
+                {% if students %}
+                <table class="students-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Subject</th>
+                            <th>Pages</th>
+                            <th>Status</th>
+                            <th>Uploaded</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td><strong>{{ student.student_id }}</strong></td>
+                            <td>{{ student.student_name }}</td>
+                            <td>{{ student.class }}</td>
+                            <td>{{ student.subject }}</td>
+                            <td>{{ student.total_pages }}</td>
+                            <td><span class="status-badge">{{ student.status }}</span></td>
+                            <td>{{ student.upload_timestamp[:10] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <p>�� No exam scripts uploaded yet</p>
+                    <a href="{{ url_for('index') }}" class="btn-primary">Upload First Script</a>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

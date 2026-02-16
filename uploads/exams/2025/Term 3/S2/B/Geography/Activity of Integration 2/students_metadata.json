@@ -1,0 +1,41 @@
+{
+    "232": {
+        "student_name": "Madol Anyuat",
+        "student_id": "232",
+        "total_pages": 2,
+        "sync_time": "2026-02-03 13:48:32",
+        "status": "Marked",
+        "total_score": 80.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "\"item/Q1: 20/20, item/Q2: 12/20. Madol demonstrates strong knowledge and excellent reasoning in explaining the causes of population growth in Uganda, providing well-structured and relevant points. However, a key area for improvement is to meticulously address all parts of a question; in part b), while negative impacts were thoroughly covered, the positive impacts of population growth were entirely omitted. This oversight prevented a higher score despite the quality of the points provided.\"",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "22": {
+        "student_name": "Waswa Martin",
+        "student_id": "22",
+        "total_pages": 2,
+        "sync_time": "2026-02-03 13:50:38",
+        "status": "Marked",
+        "total_score": 87.5,
+        "questions": {
+            "q1": {
+                "score": 20.0,
+                "max_score": 100,
+                "feedback": ""
+            },
+            "q2": {
+                "score": 15.0,
+                "max_score": 100,
+                "feedback": ""
+            }
+        },
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Waswa demonstrated excellent knowledge and conceptual accuracy in explaining the reasons for population increase and the negative impacts of rapid growth, providing well-structured and detailed points. A key area for improvement is to ensure all aspects of a question are addressed; specifically, the student omitted the positive impacts of population growth in part (b), which was explicitly requested. Overall, a strong performance with clear reasoning.",
+        "strengths": [],
+        "areas_for_improvement": []
+    }
+}

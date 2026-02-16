@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Auto Deletion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        .settings-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .warning-banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #c92a2a;
+        }
+        
+        .warning-banner h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        
+        .status-enabled {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-disabled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .confirmation-section {
+            background: #fff3cd;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+            margin: 30px 0;
+        }
+        
+        .checkbox-container {
+            margin: 20px 0;
+        }
+        
+        .checkbox-container label {
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .checkbox-container label:hover {
+            background: #f8f9ff;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c92a2a);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+        
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+        }
+        
+        .info-box h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+        
+        .preview-section {
+            margin: 30px 0;
+        }
+        
+        .preview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .deletion-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .log-entry {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .log-entry strong {
+            color: #667eea;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Settings - Auto Deletion</h1>
+            <p style="color: #666; margin-top: 10px;">Manage automatic deletion of student answer sheets after 48 hours</p>
+        </div>
+        
+        <div class="settings-card">
+            <!-- Current Status -->
+            <div>
+                <h2 style="color: #667eea; margin-bottom: 20px;">Current Status</h2>
+                <span class="status-indicator {% if auto_deletion_enabled %}status-enabled{% else %}status-disabled{% endif %}">
+                    {% if auto_deletion_enabled %}
+                        ✅ Auto-Deletion ENABLED
+                    {% else %}
+                        ⏸️ Auto-Deletion DISABLED
+                    {% endif %}
+                </span>
+                
+                {% if auto_deletion_enabled %}
+                <div class="info-box">
+                    <h4>ℹ️ Auto-Deletion Active</h4>
+                    <p>Student answer sheets are automatically deleted 48 hours after upload to save storage space.</p>
+                    <p style="margin-top: 10px;"><strong>Last Run:</strong> {{ settings.auto_deletion.last_run if settings.auto_deletion.last_run else 'Never' }}</p>
+                    <p><strong>Enabled On:</strong> {{ settings.auto_deletion.enabled_date if settings.auto_deletion.enabled_date else 'Unknown' }}</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 2px solid #e0e0e0;">
+            
+            <!-- Enable Auto-Deletion -->
+            {% if not auto_deletion_enabled %}
+            <div>
+                <h2 style="color: #667eea; margin-bottom: 20px;">Enable Auto-Deletion</h2>
+                
+                <div class="warning-banner">
+                    <h3>⚠️ CRITICAL WARNING</h3>
+                    <p><strong>Once enabled, student answer sheets will be permanently deleted after 48 hours.</strong></p>
+                    <p style="margin-top: 10px;">This action cannot be undone. Deleted images cannot be recovered.</p>
+                    <p style="margin-top: 10px;">Student scores and feedback will be preserved, but you will lose access to the original answer sheets.</p>
+                </div>
+                
+                <div class="confirmation-section">
+                    <h3 style="color: #856404; margin-bottom: 20px;">Confirmation Required</h3>
+                    <p style="margin-bottom: 20px;">Please read and confirm both warnings before enabling auto-deletion:</p>
+                    
+                    <div class="checkbox-container">
+                        <label>
+                            <input type="checkbox" id="confirm1" onchange="checkConfirmation()">
+                            <span>I understand that student answer sheets will be permanently deleted after 48 hours and cannot be recovered.</span>
+                        </label>
+                        
+                        <label>
+                            <input type="checkbox" id="confirm2" onchange="checkConfirmation()">
+                            <span>I understand that only scores and AI feedback will remain after deletion, and I will not be able to review the original answer sheets.</span>
+                        </label>
+                    </div>
+                    
+                    <button id="enableBtn" class="btn btn-danger" onclick="enableAutoDeletion()" disabled>
+                        🗑️ Enable Auto-Deletion (Irreversible)
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            <!-- Disable Auto-Deletion -->
+            <div>
+                <h2 style="color: #667eea; margin-bottom: 20px;">Disable Auto-Deletion</h2>
+                <p style="margin-bottom: 20px;">Turn off automatic deletion. Existing student folders will be preserved.</p>
+                <button class="btn btn-success" onclick="disableAutoDeletion()">
+                    ⏸️ Disable Auto-Deletion
+                </button>
+            </div>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 2px solid #e0e0e0;">
+            
+            <!-- Preview -->
+            <div class="preview-section">
+                <h2 style="color: #667eea; margin-bottom: 20px;">Deletion Preview</h2>
+                <p style="margin-bottom: 20px;">See what will be deleted in the next run:</p>
+                <button class="btn btn-secondary" onclick="loadPreview()">
+                    👁️ Preview Pending Deletions
+                </button>
+                
+                <div id="preview-results" style="display: none; margin-top: 20px;">
+                    <div class="preview-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="preview-folders">0</div>
+                            <div class="stat-label">Folders to Delete</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="preview-size">0 MB</div>
+                            <div class="stat-label">Space to Free</div>
+                        </div>
+                    </div>
+                    
+                    <div id="preview-list"></div>
+                </div>
+            </div>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 2px solid #e0e0e0;">
+            
+            <!-- Deletion Log -->
+            <div>
+                <h2 style="color: #667eea; margin-bottom: 20px;">Deletion History</h2>
+                <button class="btn btn-secondary" onclick="loadDeletionLog()">
+                    📋 View Deletion Log
+                </button>
+                
+                <div id="deletion-log" class="deletion-log" style="display: none;">
+                    <!-- Log entries will be loaded here -->
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+            
+            <!-- Back Button -->
+            <div style="margin-top: 40px;">
+                <a href="/" class="btn btn-secondary">🏠 Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function checkConfirmation() {
+            const confirm1 = document.getElementById('confirm1').checked;
+            const confirm2 = document.getElementById('confirm2').checked;
+            const enableBtn = document.getElementById('enableBtn');
+            
+            enableBtn.disabled = !(confirm1 && confirm2);
+        }
+        
+        async function enableAutoDeletion() {
+            if (!confirm('Are you absolutely sure you want to enable auto-deletion? This cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/settings/enable-auto-deletion', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({confirmed: true})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Auto-deletion enabled successfully. Page will reload...', 'success');
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showMessage('Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function disableAutoDeletion() {
+            if (!confirm('Disable auto-deletion?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/settings/disable-auto-deletion', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Auto-deletion disabled successfully. Page will reload...', 'success');
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    showMessage('Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadPreview() {
+            try {
+                const response = await fetch('/settings/deletion-preview');
+                const result = await response.json();
+                
+                document.getElementById('preview-folders').textContent = result.total_folders;
+                document.getElementById('preview-size').textContent = result.total_size_mb + ' MB';
+                
+                const listDiv = document.getElementById('preview-list');
+                if (result.total_folders === 0) {
+                    listDiv.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No folders pending deletion</p>';
+                } else {
+                    listDiv.innerHTML = '<h4 style="margin: 20px 0;">Folders to be Deleted:</h4>' +
+                        result.folders.map(f => `
+                            <div class="log-entry">
+                                <strong>${f.student_name}</strong> (ID: ${f.student_id})<br>
+                                <span style="color: #666;">Uploaded: ${f.upload_time} | Age: ${Math.round(f.age_hours)}h | Size: ${f.size_mb.toFixed(2)} MB</span>
+                            </div>
+                        `).join('');
+                }
+                
+                document.getElementById('preview-results').style.display = 'block';
+            } catch (error) {
+                showMessage('Error loading preview: ' + error.message, 'error');
+            }
+        }
+        
+        async function loadDeletionLog() {
+            try {
+                const response = await fetch('/settings/deletion-log');
+                const result = await response.json();
+                
+                const logDiv = document.getElementById('deletion-log');
+                
+                if (result.log.length === 0) {
+                    logDiv.innerHTML = '<p style="text-align: center; color: #666;">No deletion history</p>';
+                } else {
+                    logDiv.innerHTML = result.log.reverse().map(entry => `
+                        <div class="log-entry">
+                            <strong>${entry.student_name}</strong> (ID: ${entry.student_id})<br>
+                            <span style="color: #666;">
+                                Uploaded: ${entry.upload_time} | Deleted: ${entry.deletion_time}<br>
+                                Session: ${entry.exam_session} | Size: ${entry.size_mb.toFixed(2)} MB
+                            </span>
+                        </div>
+                    `).join('');
+                }
+                
+                logDiv.style.display = 'block';
+            } catch (error) {
+                showMessage('Error loading log: ' + error.message, 'error');
+            }
+        }
+        
+        function showMessage(text, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.className = 'message ' + type;
+            msgDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                msgDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

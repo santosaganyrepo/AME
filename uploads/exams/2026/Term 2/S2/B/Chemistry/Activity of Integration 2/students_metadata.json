@@ -1,0 +1,67 @@
+{
+    "1200": {
+        "student_name": "Nakato Martha",
+        "student_id": "1200",
+        "total_pages": 4,
+        "sync_time": "2026-02-06 08:19:22",
+        "status": "Marked",
+        "total_score": 50.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Item 1: 0/20, Item 2: 11/20, Item 3: 19/20.\nNakato Martha demonstrated a good understanding of eclipses, particularly in illustrating the ray diagrams correctly. However, there were significant conceptual inaccuracies in the written explanations for both solar and lunar eclipses. In Item 2, the student provided a correct explanation for the preference of an improved bicycle but failed to attempt calculations for velocity and power, and the explanation for how the improved bicycle works was incomplete. Areas for improvement include strengthening conceptual accuracy in explanations, practicing problem-solving calculations, and ensuring all parts of a question are addressed.",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "22": {
+        "student_name": "Lukwago Renon",
+        "student_id": "22",
+        "total_pages": 4,
+        "sync_time": "2026-02-06 08:21:04",
+        "status": "Marked",
+        "total_score": 23.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Item 1: 0/20, Item 2: 4/20, Item 3: 10/20. Lukwago Renon attempted only two out of the three required items, resulting in a significant loss of marks. For Item 2, the student's calculations were irrelevant, and explanations for bicycle efficiency and the grooved rim were vague or incorrect. In Item 3, while the eclipse diagrams were mostly accurate, the textual definitions and explanations for solar and lunar eclipses, as well as penumbra, contained critical conceptual errors. The reasoning for safe viewing was also flawed. To improve, the student must focus on foundational conceptual accuracy, ensure consistency between diagrams and text, and attempt all questions to demonstrate broader understanding.",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "343": {
+        "student_name": "Agany Madol",
+        "student_id": "343",
+        "total_pages": 4,
+        "sync_time": "2026-02-06 08:27:58",
+        "status": "Marked",
+        "total_score": 45.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Item 2: 9/20, Item 3: 18/20.\nThe student demonstrated good conceptual understanding and communication in Item 3, providing clear explanations and diagrams for eclipses and safe viewing methods. However, Item 2 showed significant weaknesses in problem-solving and application, particularly with calculations for mechanical advantage, velocity ratio, and efficiency, leading to incorrect results and an inability to fully address the question's requirements. The student also failed to attempt Item 1, which significantly impacted the overall score. Improvement is needed in applying formulas correctly, interpreting problem statements, and ensuring all parts of a question are addressed.\n\n---\n**Detailed Breakdown:**\n\n**ITEM 1: (Not Attempted",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "232": {
+        "student_name": "Agany Madol",
+        "student_id": "232",
+        "total_pages": 4,
+        "sync_time": "2026-02-06 08:29:25",
+        "status": "Marked",
+        "total_score": 30.0,
+        "questions": {},
+        "raw_score": 0,
+        "max_score": 100,
+        "overall_feedback": "Item 1: 0/20, Item 2: 4/20, Item 3: 14/20.\nThe student demonstrated some conceptual understanding of eclipses and basic gear mechanisms, providing relevant diagrams for eclipses and identifying \"less effort\" for the improved bicycle. However, significant weaknesses include not attempting Item 1, failing to answer specific sub-questions in Item 2, and providing incomplete or inaccurate explanations and calculations. Areas for improvement include thoroughly reading and answering all parts of the questions, providing detailed scientific explanations, ensuring calculations are accurate and relevant, and clearly illustrating specific features like the \"grooved rim\" when asked. The student failed to attempt the required number of questions, significantly impacting the",
+        "strengths": [],
+        "areas_for_improvement": []
+    },
+    "323": {
+        "student_name": "Agany Madol",
+        "student_id": "323",
+        "total_pages": 15,
+        "sync_time": "2026-02-06 08:47:09",
+        "status": "Synced",
+        "total_score": 0.0,
+        "questions": {}
+    }
+}
