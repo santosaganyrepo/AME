@@ -1,0 +1,93 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Biology",
+    "exam_type": "Tests 6",
+    "total_marks": 40
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "namuli",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 85.0,
+      "sync_time": "2026-08-03 11:10",
+      "questions": {},
+      "overall_feedback": "The student demonstrated a strong performance across the paper, scoring 34.0 marks out of 40.0 by showing a solid grasp of biological concepts and practical application. The candidate performed particularly well in Item 2, where osmosis was accurately explained in relation to soil solute concentrations, correctly identifying hypertonic solutions causing water loss from root cells via semi-permeable membranes leading to plant wilting. In Item 1, the student effectively identified kwashiorkor and its physical signs such as swollen bellies and reddish hair, while also outlining protein digestion involving pepsin in the stomach and trypsin in the duodenum. However, the candidate displayed a minor gap in fully elaborating the complete enzymatic digestion of proteins down to individual amino acids, as well as the exact role of peptidases in the small intestine. To achieve maximum marks, the student should focus on writing more comprehensive pathways for nutrient breakdown, ensuring all final digestive products and relevant intestinal enzymes are explicitly detailed in written explanations.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 34.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "002",
+      "student_id": "002",
+      "student_name": "alic3",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-08-03 11:11",
+      "questions": {},
+      "overall_feedback": "The student achieved a total score of 24.0 out of 40.0, demonstrating a fair understanding of biological concepts across the examination paper. Performance was strongest in the section addressing human nutrition and protein digestion, where the candidate correctly identified kwashiorkor as a protein deficiency disease, listed key symptoms such as swollen bellies and feet, and accurately described the digestive roles of stomach enzymes like pepsin and pancreatic trypsin. Conversely, the student struggled significantly with plant transport processes, confusing osmosis with diffusion and incorrectly describing movement",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 24.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "003",
+      "student_id": "003",
+      "student_name": "nsereko",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 65.0,
+      "sync_time": "2026-08-03 11:11",
+      "questions": {},
+      "overall_feedback": "The student scored 26.0 out of 40.0, demonstrating a solid foundation in human biology alongside noticeable structural deficiencies in plant physiology. Overall performance across the paper was quite uneven, as the candidate achieved high marks on the first question regarding human nutrition and protein deficiency while struggling significantly to explain plant water relations in the second question. The student's strongest area was clearly the detailed explanation of protein digestion, where they correctly outlined mechanical mastication in the mouth, enzymatic breakdown by pepsin in the stomach and trypsin in",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 26.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "004",
+      "student_id": "004",
+      "student_name": "makula",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-08-03 11:11",
+      "questions": {},
+      "overall_feedback": "The candidate scored a total of 24.0 marks out of 40.0, demonstrating a moderate grasp of biological concepts across the two assessment items. Overall performance was stronger in human nutrition and digestive biochemistry than in plant physiology and environmental interactions. The student showed commendable strength in describing protein digestion within the digestive tract, correctly identifying the activation of prorennin by hydrochloric acid in the stomach and the eventual breakdown of polypeptides into amino acids in the ileum. Conversely, the candidate displayed significant gaps in understanding plant transport mechanisms, incorrectly attributing fertilizer-induced wilting to the absorption of thermal heat from the sun rather than explaining hypertonic soil conditions and exosmosis from root hair cells. Additionally, explanations regarding leaf damage and corrective farming practices lacked precise biological terminology regarding photosynthesis and osmotic balance. To improve future performance, the candidate should focus on mastering osmotic potential concepts and hypertonic plant-soil interactions, practicing the correct scientific explanations for water movement across cell membranes.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 24.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "akia",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 77.5,
+      "sync_time": "2026-08-03 11:11",
+      "questions": {},
+      "overall_feedback": "The student demonstrated a strong understanding of biological concepts across the assessment, obtaining a total score of 31.0 out of 40.0. Performance was consistently solid, particularly in explaining nutritional deficiency diseases and the complete mechanism of human protein digestion. The strongest area was evident in the detailed breakdown of protein digestion, where the candidate accurately traced the digestive pathway from the stomach through the duodenum to the ileum, correctly identifying key enzymes like pepsin and peptidase alongside their respective products. Conversely, the weakest area appeared in explaining how",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 31.0,
+      "max_score": 40.0
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "2",
+    "total_marks": 40
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "makula",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 100.0,
+      "sync_time": "2026-08-04 09:25",
+      "questions": {
+        "Item 1": {
+          "score": 11.0,
+          "max_score": 11.0,
+          "feedback": "",
+          "stages": [
+            {
+              "label": "Phase 1 revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            },
+            {
+              "label": "Phase 2 bag count and revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Phase 3 bag count and revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Total revenue and net profit calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            }
+          ]
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 11.0,
+      "max_score": 11.0
+    },
+    {
+      "id": "002",
+      "student_id": "002",
+      "student_name": "akia",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 83.3,
+      "sync_time": "2026-08-04 09:26",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 12.0,
+          "feedback": "",
+          "stages": [
+            {
+              "label": "Phase 1 revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            },
+            {
+              "label": "Phase 2 bag count and revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Phase 3 bag count and revenue calculation",
+              "awarded": 2.0,
+              "max": 3.0
+            },
+            {
+              "label": "Total revenue and net income calculation",
+              "awarded": 3.0,
+              "max": 4.0
+            }
+          ]
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 10.0,
+      "max_score": 12.0
+    },
+    {
+      "id": "003",
+      "student_id": "003",
+      "student_name": "namuli",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 100.0,
+      "sync_time": "2026-08-04 09:26",
+      "questions": {
+        "Item 1": {
+          "score": 9.0,
+          "max_score": 9.0,
+          "feedback": "",
+          "stages": [
+            {
+              "label": "Phase 1 revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            },
+            {
+              "label": "Phase 2 bag count and revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Phase 3 bag count and revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Total revenue calculation",
+              "awarded": 1.0,
+              "max": 1.0
+            }
+          ]
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 9.0,
+      "max_score": 9.0
+    },
+    {
+      "id": "004",
+      "student_id": "004",
+      "student_name": "ochwo",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 100.0,
+      "sync_time": "2026-08-04 09:26",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 10.0,
+          "feedback": "",
+          "stages": [
+            {
+              "label": "Phase 1 revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            },
+            {
+              "label": "Phase 2 bag count & revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Phase 3 bag count & revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Total revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            }
+          ]
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 10.0,
+      "max_score": 10.0
+    },
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "kakooza",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-08-04 09:27",
+      "questions": {
+        "Item 1": {
+          "score": 6.0,
+          "max_score": 10.0,
+          "feedback": "",
+          "stages": [
+            {
+              "label": "Phase 1 revenue calculation",
+              "awarded": 2.0,
+              "max": 2.0
+            },
+            {
+              "label": "Phase 2 bag count & revenue calculation",
+              "awarded": 3.0,
+              "max": 3.0
+            },
+            {
+              "label": "Phase 3 bag count & revenue calculation",
+              "awarded": 1.0,
+              "max": 3.0
+            },
+            {
+              "label": "Total revenue calculation",
+              "awarded": 0.0,
+              "max": 2.0
+            }
+          ]
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 6.0,
+      "max_score": 10.0
+    }
+  ]
+}

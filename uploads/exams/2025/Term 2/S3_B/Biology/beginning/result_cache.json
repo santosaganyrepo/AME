@@ -1,0 +1,406 @@
+{
+  "bf94722cc3d4db6e33e19ab38c16e9dd22e585a5b6800328a1006b4d9a654a0e": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "akia",
+    "total_score": 57.5,
+    "raw_score": 23.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a solid foundational understanding of basic biological principles across both items, showing particular strength in explaining human digestive mechanics. The candidate's strongest performance appears in describing the step-by-step pathway of protein breakdown in Item 1, where they correctly identified specific digestive enzymes including pepsin in the stomach, trypsin in the duodenum, and peptidases in the ileum, accurately tracing the conversion of proteins into absorbable amino acids. Furthermore, the candidate correctly diagnosed the nutritional deficiency as kwashiorkor and provided clear functions of dietary proteins in growth and cellular repair. Conversely, the candidate's primary weakness lies in explaining the physical and physiological effects of direct chemical leaf spraying in Item 2. When addressing why leaf spraying exacerbated plant damage, the candidate incorrectly claimed that chemical coating prevented sunlight absorption, which somehow increased the rate of transpiration to pull more water from roots. This reflects a fundamental misconception regarding stomatal blockage, tissue necrosis, and chemical hypertonicity. Additionally, while the candidate successfully recognized exosmosis and hypertonic conditions in soil, their explanation of starch-only dietary damage omitted key pathophysiology such as fluid retention, edema, and hair pigmentation changes. Secondary observations indicate a slight disorganization in response structure, as the student completed Item 2 prior to Item 1, alongside minor conceptual slips regarding transpiration mechanisms. To improve performance, the candidate should focus on mastering the detailed clinical features of malnutrition diseases and revise plant physiological processes, particularly how chemical treatments impact stomatal function and cellular water relations under stress conditions.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 09:30:53"
+  },
+  "777b1ac63ea7caec949f048afc6c47d311edbc6fdb8b651d392371a7ed5f3f81": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "makula",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a variable level of biological understanding across the two items, showing a clear grasp of basic recall and digestive pathways but struggling significantly with plant physiology and osmotic mechanisms. The candidate’s strongest performance was in describing the protein digestion pathway in Item 1, where they correctly identified the roles of hydrochloric acid in stomach juice, activation of enzymes, breakdown of caseinogen to polypeptides by pepsin, and the subsequent conversion of polypeptides to amino acids within the ileum. In contrast, the weakest area was plant water relations in Item 2, where the student relied on teleological and scientifically inaccurate explanations, such as claiming that artificial fertilizer absorbs heat from the sun to warm plant stems or that salt directly absorbs water to dilute itself, completely omitting key biological concepts such as water potential gradients, exosmosis, hypertonicity, and turgor pressure. A secondary observation is the candidate's tendency to offer daily intuitive reasoning rather than rigorous scientific mechanisms; for instance, proposing that farmers should water crops from the top down so leaves can breathe, which demonstrates a persistent misunderstanding of transpiration and stomatal function. To improve, the student should first review plant transport mechanisms, focusing specifically on how solute concentrations dictate water movement via osmosis using standard scientific terminology. Secondly, the learner should practice applying biological principles to practical farming scenarios rather than relying on intuitive generalizations.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 09:31:06"
+  },
+  "8e0a4727e840962af4c2fde9bfba3e8fe54ec338f35001aff8d05d81fbd0c125": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "nsereko",
+    "total_score": 32.5,
+    "raw_score": 13.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a solid foundational understanding of human biology and digestive processes in Item 1, but exhibits severe misconceptions regarding plant physiology and osmosis in Item 2. Performance is markedly stronger in the nutrition and digestion sections, where the student correctly identified kwashiorkor as the health condition affecting the children and detailed how dietary protein deficiency impairs tissue growth and cell replacement. Furthermore, the explanation of protein digestion was well-articulated, appropriately describing mechanical breakdown followed by enzymatic cleavage using pepsin in the stomach to produce polypeptides and trypsin in the duodenum. In contrast, the candidate struggled significantly with plant water relations. The biggest gap in understanding occurred in the osmotic mechanism task, where the learner incorrectly claimed that excess fertilizer and salty water caused high salt concentration inside root hair cells and prohibited semi-permeability, completely failing to explain hypertonic soil environments, water potential gradients, or exosmosis. Additionally, the advice provided to the farmer incorrectly focused on soil pH and alkaline conditions rather than actionable practices such as diluting fertilizers or using non-saline water. Secondary observations highlight a tendency to rely on rote-learned general statements rather than applying biological principles directly to scenario contexts. To improve, the candidate should review plant transport mechanisms with an emphasis on osmosis terminology such as solute potential and turgidity. Practice in applying plant physiology principles to real-world agricultural scenarios will also strengthen analytical skills and prevent off-topic responses.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 09:31:38"
+  },
+  "4a4bdda585c0c568dfacb8128d99760f24359866123670037d18ebe54197c7d3": {
+    "success": true,
+    "student_id": "004",
+    "student_name": "namuli",
+    "total_score": 50.0,
+    "raw_score": 20.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 7.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a foundational grasp of basic biological concepts across both items, showing the ability to identify key terms and outline general physiological processes. Performance was strongest in Item 2 Part (b), where the candidate accurately explained that spraying a hypertonic chemical onto already wilted leaves accelerated desiccation by drawing out remaining moisture, and correctly advised the farmer to irrigate with pure water and apply fertilizers during wet conditions to avoid localized salt stress. Conversely, the candidate's primary weakness lay in Item 1 Part (a), where they correctly identified Kwashiorkor but failed to explain the underlying physiological mechanisms causing symptoms; instead of describing how protein deficiency reduces blood plasma osmotic pressure and leads to fluid retention or tissue wasting, the candidate simply listed visible symptoms and made vague references to preventing marasmus. A recurring issue across both items is an imprecise understanding of biological mechanics, frequently attributing osmotic water movement to an attempt to neutralize hypertonic solutions rather than defining water potential gradients, loss of turgor pressure, or plasmolysis. In digestion, while pepsin and trypsin were correctly identified, the student omitted critical details such as pH environments and the final conversion of peptides to amino acids by peptidases in the ileum. To improve, the candidate should focus on mastering step-by-step biological pathways and using precise terminology like water potential, turgidity, and specific enzyme actions. Additionally, practicing structured explanations that link scientific causes to cellular effects will help bridge the gap between recognizing symptoms and explaining underlying mechanisms.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 09:31:55"
+  },
+  "9d189befb6fa062c9a716638d52931c67b9ff6b8a3bbfda086dcac01ea301dd2": {
+    "success": true,
+    "student_id": "005",
+    "student_name": "alice",
+    "total_score": 32.5,
+    "raw_score": 13.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a partial understanding of human nutrition and digestive biology, performing noticeably better on the biological processes in Item 1 than on the plant physiology and osmotic mechanisms in Item 2. The candidate's strongest area was identifying the nutritional deficiency disease as Kwashiorkor and outlining the initial stages of protein digestion, correctly describing how gastric juice containing hydrochloric acid and pepsin breaks down proteins into polypeptides in the stomach, and how pancreatic trypsin continues this breakdown in the duodenum to refute the belief that young children cannot digest complex foods. Conversely, the weakest area was plant water relations in Item 2, where the student incorrectly substituted diffusion for osmosis and falsely claimed that water moves from a region of low concentration to high concentration, completely omitting key concepts such as hypertonic soil solutions, water potential gradients, exosmosis, and loss of turgor pressure. A secondary observation is the presence of fundamental scientific misconceptions, such as attributing chemical leaf damage to stomatal suffocation that cuts off oxygen for respiration, as well as providing vague, non-specific agricultural recommendations that lack actionable procedures like using fresh non-saline water or diluting fertilizers. To improve future performance, the student should focus on mastering precise biological terminology and definitions, particularly distinguishing clearly between passive transport mechanisms like osmosis and diffusion. Additionally, targeted revision on complete biochemical pathways, including peptidase activity in the ileum and the pathophysiological mechanisms behind protein deficiency edema, will help build complete, high-scoring responses.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 09:32:14"
+  },
+  "3d13db2bea1a42ba2e158407a9bf6b7cc51bf6a0ecf7d531f5936ab5c6b12bc9": {
+    "success": true,
+    "student_id": "006",
+    "student_name": "akia",
+    "total_score": 57.5,
+    "raw_score": 23.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a commendable foundational understanding of biological processes across both items, showing particular strength in detailing human digestive mechanisms. In Item 1, the script accurately identified kwashiorkor as the nutritional disorder resulting from a protein-deficient diet and provided a thorough, step-by-step breakdown of protein digestion, correctly referencing gastric juice with pepsin in the stomach, trypsin in the duodenum, and peptidases in the ileum breaking down peptides into absorbable amino acids. Furthermore, the response in Item 2 showed a good grasp of plant transport dynamics, properly explaining how hypertonic soil conditions caused by excessive fertilizers lead to exosmosis, plasmolysis, and wilting.\n\nHowever, noticeable gaps emerged when addressing physiological damage and leaf-level interactions. In Item 1(a), while the candidate recognized that a pure starch diet causes stunted growth, they failed to account for key biological impacts such as fluid retention, edema, muscle wasting, and hair pigmentation changes. The primary area of weakness appeared in Item 2(b), where the candidate incorrectly argued that spraying strong chemicals on leaves coats them to block sunlight and increase transpiration pull. This reveals a fundamental misconception regarding how chemical sprays cause direct tissue toxicity, stomatal damage, and leaf desiccation rather than accelerating transpiration. In terms of application, the candidate offered sound practical farming advice, such as using non-saline water and placing fertilizers further from stems. To improve future performance, the student should focus on revising the full physiological symptoms of deficiency diseases and study the precise impact of topical chemical treatments on leaf mechanics and gas exchange.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 12:23:53"
+  },
+  "8ac5617cf6e8e5b3cf45b0b1bd9b609a6a72cf8e86709993d28239921103dd6c": {
+    "success": true,
+    "student_id": "07",
+    "student_name": "namuli",
+    "total_score": 45.0,
+    "raw_score": 18.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 6.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a fair foundational understanding across both compulsory biology tasks, showing consistent effort to address all components of the scenario questions. Performance was strongest in identifying specific biological terms and outlining basic physiological processes. For instance, in Item 1, the candidate correctly identified kwashiorkor based on the presenting symptoms of swollen bellies and reddish hair, while also demonstrating a solid grasp of basic digestive enzymes by identifying pepsin in gastric juice and trypsin in the duodenum. Similarly, in Item 2, the candidate successfully recognized that spraying chemical solution onto already wilted leaves created a hypertonic environment that accelerated water loss.\n\nHowever, the candidate's primary weakness lies in providing detailed biological mechanisms and using precise scientific terminology. In Item 2(a), while the candidate recognized the role of osmosis, the explanation relied on informal concepts like plants trying to neutralize or stabilize the solution rather than accurately describing water potential gradients, exosmosis, and loss of turgor pressure. Furthermore, in Item 1(a), the candidate failed to explain the physiological mechanics of edema or tissue wasting resulting from protein deficiency, offering only a vague assertion about starchy foods failing to prevent kwashiorkor.\n\nTo improve, the candidate should focus on using accurate biological vocabulary such as water potential, solute concentration, and exosmosis when explaining physical transport processes. Additionally, when discussing nutritional deficiencies, the candidate should practice describing step-by-step metabolic effects rather than superficial symptom lists.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 12:23:55"
+  },
+  "44247ac25fa6f30e05d907c67f8c21afd604add3371b4934453eb0bbf5216c03": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "alice",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 7.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a commendable qualitative understanding of human nutrition and digestive biology, which represented their strongest area across the assessment. In particular, the candidate correctly identified kwashiorkor as the underlying health condition and effectively outlined the digestive breakdown of proteins, accurately referencing gastric hydrochloric acid, stomach pepsin, and duodenal trypsin to logically refute the traditional misconception regarding groundnut paste digestion. However, performance was considerably weaker in plant physiology, which constituted the candidate's primary learning gap. When explaining the mechanism of plant wilting following excessive fertilizer and saline water application, the response incorrectly attributed water movement out of root cells to diffusion rather than osmosis, while completely omitting crucial concepts such as water potential gradients, hypertonic soil conditions, exosmosis, and loss of cell turgidity. Furthermore, while the student noted that chemical spraying caused stomatal destruction and reduced gas exchange, the corresponding agricultural advice for future farming practices remained overly generic, missing key actionable guidelines such as utilizing fresh non-salty irrigation water, diluting fertilizers, and applying them at appropriate distances from plant stems. A recurring secondary observation is the candidate's tendency to confuse physical transport processes across biological membranes alongside a reliance on imprecise terminology. To improve overall performance, the student should focus on thoroughly revising osmotic principles in plant systems, practicing the rigorous application of precise scientific terms like hypertonicity and exosmosis, and ensuring that practical recommendations directly target the underlying biological mechanisms described in exam scenarios.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 12:24:31"
+  },
+  "57ce37a889f0e0b407d2178e519c06da0c3b729ca920d9776f25e6f17b59a16c": {
+    "success": true,
+    "student_id": "008",
+    "student_name": "makula",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a foundational, qualitative grasp of biological concepts in human nutrition and digestion, but shows severe misconceptions when explaining plant physiology and physical mechanisms. In human nutrition, the student successfully identified Kwashiorkor and provided a clear description of protein digestion, correctly outlining the roles of hydrochloric acid and pepsin in the stomach as well as the final breakdown to amino acids in the ileum. However, performance was considerably weaker in explaining plant transport mechanisms and osmotic dynamics. The student incorrectly attributed plant wilting to fertilizers absorbing heat from the sun and requiring excess transpiration for cooling, rather than explaining water potential gradients, hypertonic soil conditions, exosmosis, or loss of turgor pressure. A similar lack of scientific mechanics was evident in the agricultural recommendations, where the candidate advised watering plants from the top and scattering fertilizer to reduce heat concentration on stems, completely missing the need to use fresh non-saline water and dilute solute concentrations. Across both items, the student frequently relies on non-scientific heat-based theories and simple surface observations rather than precise physiological mechanisms. To improve, the learner should focus on mastering core osmotic terminology such as solute potential, hypertonic solutions, and exosmosis, and practice applying chemical and physical principles to plant transport problems. Furthermore, the candidate should be encouraged to explain biological symptoms using underlying biochemical mechanisms—such as plasma protein loss in edema—rather than merely restating observable physical signs.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 12:24:50"
+  },
+  "a538164552a0dbaa06b023443fa7cbd100e88cafe334ab53ab32bfc5fad616a1": {
+    "success": true,
+    "student_id": "009",
+    "student_name": "nsereko",
+    "total_score": 32.5,
+    "raw_score": 13.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a clear contrast in performance between the two items on the paper, exhibiting a satisfactory understanding of human nutrition and digestive biology while displaying severe conceptual misconceptions in plant transport mechanisms and osmosis. In the first item, the student performed strongly on the foundational identification of Kwashiorkor and articulated valid biological functions of proteins in growing children, correctly noting their role in tissue repair, cellular growth via mitosis, and hair pigmentation maintenance. The candidate also outlined the digestive pathway reasonably well, correctly describing mechanical breakdown, gastric juice action involving hydrochloric acid and pepsin to form polypeptides, and subsequent pancreatic trypsin activity in the duodenum. However, the explanation of pathophysiology lacked essential biological details, omitting key concepts such as fluid imbalance, plasma protein reduction, and edema. Performance declined sharply in the second item addressing plant water relations. The candidate struggled significantly with osmotic mechanisms, incorrectly asserting that high salt concentration inside root hair cells prevents them from remaining semi-permeable, entirely missing the concepts of lower soil water potential, hypertonicity, and exosmosis. Furthermore, the candidate's explanation of chemical spraying misconstrued mesophyll function, and the proposed agricultural advice mistakenly focused on soil pH requirements rather than addressing fertilizer dilution and clean water irrigation. To improve, the candidate should revisit core physical-biology principles, specifically focusing on water potential gradients, hypertonic environments, and exosmosis in plant tissues. Additionally, practicing structured scenario analysis will help the candidate connect theoretical knowledge directly to practical agricultural problems rather than providing off-topic recommendations.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-11 12:25:49"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "ad2185b4204014670c4d69b6d94e23f8f0be4da4666c5160c243b28bf1380893": {
+    "success": true,
+    "student_id": "121",
+    "student_name": "sato",
+    "total_score": 34.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 12 marks for providing a clear introduction and identifying five distinct roles of NGOs/CSOs, including service delivery, poverty reduction, advocacy for human rights, promotion of democracy and development, and good governance/anti-corruption, but failed to include a conclusion and did not mention environmental protection as a role."
+      },
+      "Item 2": {
+        "score": 22.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 22 marks for providing a correct definition of land fragmentation, identifying five causes (population pressure, industrialization, urbanization, land policies, and inheritance), and three effects (low production, land conflicts, and environmental degradation), but the"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-27 12:48:36"
+  }
+}

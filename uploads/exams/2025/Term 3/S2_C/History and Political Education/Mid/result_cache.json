@@ -1,0 +1,392 @@
+{
+  "59ce55c54aa5ee4f180a04ccb5b51618dc73b3b08ed16ad97936c30d03dbad9c": {
+    "success": true,
+    "student_id": "767",
+    "student_name": "san",
+    "total_score": 26.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": "The student scored 16/20. Marks were awarded for a clear introduction, 10 distinct roles"
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:13:59"
+  },
+  "57ea46efe7c069dfdc607ce7055d3c54e14eab8ef7c3d431d1bd2bb44418fc6c": {
+    "success": true,
+    "student_id": "767",
+    "student_name": "mad",
+    "total_score": 35.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": "The student scored 15/20. The answer provided a good introduction, numerous relevant roles"
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:14:17"
+  },
+  "6cd98d9341c036e1be921651bbc0c7545eafc4bd50c58ce520e56da8d635f4e7": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "444",
+    "total_score": 28.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 13.0,
+        "max_score": 20,
+        "feedback": "The student scored 13/20. Marks were awarded for a good introduction, service delivery, economic empowerment"
+      },
+      "Item 2": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:14:35"
+  },
+  "3866f2117a90f3de8fb0798dd845e885608346f138a63946fe1a24facfaa2bd4": {
+    "success": true,
+    "student_id": "342",
+    "student_name": "212",
+    "total_score": 25.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": "The student scored 6/20. Marks were awarded for a clear introduction, definition of NGOs/CSOs,"
+      },
+      "Item 2": {
+        "score": 19.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:14:55"
+  },
+  "f484d22fafdf9a6e4521ec06e65f173d428ffb4b70122bfcc5ae34b4257cb7c6": {
+    "success": true,
+    "student_id": "43",
+    "student_name": "544",
+    "total_score": 24.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student scored 14/20. The answer provided a good introduction, covered multiple roles of NGOs/"
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:15:23"
+  },
+  "16bf5bfaa5f5076f0c185724025bd9546b4c189cb8a05fdca4fd418a6aa3bcd1": {
+    "success": true,
+    "student_id": "234",
+    "student_name": "ds",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 7.0,
+        "max_score": 20,
+        "feedback": "The student scored 7/20. Marks were awarded for identifying roles such as advocacy for women's rights, good governance"
+      },
+      "Item 2": {
+        "score": 13.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:15:48"
+  },
+  "3384bdb5ca7e1c58c09c5be3cdc97ab50d94dbcd715e8baee828786f317728ea": {
+    "success": true,
+    "student_id": "55",
+    "student_name": "55",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "This item was not attempted by the student. No content was provided for this question."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student"
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:16:00"
+  },
+  "c34de3354a72572cb086c86b7bf0622a8f7a3280deb826ffc1ff84ae3fcde892": {
+    "success": true,
+    "student_id": "65",
+    "student_name": "343",
+    "total_score": 15.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": "The student earned 15/20 marks. Marks were awarded for a clear definition of NGOs/CSOs, discussion of service delivery (healthcare, education, emergency relief), advocacy for human rights and democracy,"
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:16:12"
+  },
+  "cf2ad3256b70e8d944e0bf55c4288a9a178014af1ccbe913fec5dd3b58abf5c4": {
+    "success": true,
+    "student_id": "44",
+    "student_name": "54",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student provided a comprehensive answer covering multiple roles of NGOs/CSOs, including service delivery, advocacy, good governance, poverty eradication, and community development, with specific examples. All expected points from the rubric were explicitly"
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:16:29"
+  },
+  "db8a63615631ff5c5b7bfe95ee29dadfce08cb66030729b6dc0b5ee63b3efd07": {
+    "success": true,
+    "student_id": "34",
+    "student_name": "344",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "0/20. This item was not attempted by the student."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "10/"
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 12:16:40"
+  },
+  "ece5d58afd3fade11a253f19b85491918d76266d0de4213317ebf8832916b52c": {
+    "success": true,
+    "student_id": "454",
+    "student_name": "544",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "10/20. The student provided a basic definition of NGOs and identified four distinct roles (service"
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 13:17:12"
+  },
+  "4ec213850b288b8a36747a609e3094266104de9e6805caa5285e48e97ae4c3b9": {
+    "success": true,
+    "student_id": "332",
+    "student_name": "979",
+    "total_score": 24.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student defined NGOs and provided five distinct roles (service delivery, emergency aid, poverty reduction, human rights advocacy"
+      },
+      "Item 2": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 13:18:18"
+  }
+}

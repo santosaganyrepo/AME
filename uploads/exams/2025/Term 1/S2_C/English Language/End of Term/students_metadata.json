@@ -1,0 +1,54 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 1",
+    "class": "S2",
+    "stream": "C",
+    "subject": "English Language",
+    "exam_type": "End of Term"
+  },
+  "students": [
+    {
+      "id": "65725",
+      "student_id": "65725",
+      "student_name": "Agany Santos",
+      "total_pages": 7,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-05-25 12:07",
+      "questions": {
+        "Item 2": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 12 marks for correctly identifying a prism for TIR and providing a partially labeled diagram, along with explaining coherence and monochromatic properties of a laser. The explanation of prism operation was incomplete, and the conclusion on laser suitability for security was missing."
+        },
+        "Item 3": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 10 marks for correctly identifying charge dissipation and a safe path to ground for a lightning conductor, and for listing fire hazard and electric shock as dangers"
+        },
+        "Item 5": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 6": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 7": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

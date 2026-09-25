@@ -1,0 +1,37 @@
+{
+  "c337db86ac0c69ae6d76034782a3ebaffdabd6b176efc2f47512e3e99b243f08": {
+    "success": true,
+    "student_id": "212",
+    "student_name": "4223",
+    "total_score": 25.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "10/20. The student provided a functional definition of NGOs and discussed four roles (service delivery"
+      },
+      "Item 2": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-29 13:19:30"
+  }
+}

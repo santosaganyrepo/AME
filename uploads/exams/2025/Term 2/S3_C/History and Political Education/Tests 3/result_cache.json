@@ -1,0 +1,58 @@
+{
+  "60becf75016b71bf6a4ae02e70253e7928a3c3108070117180f77d1083b1d249": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "Siima",
+    "total_score": 77.5,
+    "raw_score": 31.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "overall_feedback": "The student demonstrated a strong overall performance across both scenarios in this assessment, showing a solid understanding of East African history and social development concepts. The work in Scenario One was particularly impressive, where the candidate provided accurate details regarding pre",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-03 09:09:19"
+  },
+  "bcaa68001a558ce9ef351abb67e132f7309b401246ceb1b2a08f902980689c61": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "Namuganza",
+    "total_score": 70.0,
+    "raw_score": 28.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "overall_feedback": "The student demonstrated a solid overall understanding of the curriculum, delivering clear and well-structured responses across the required tasks. Performance was strongest in the section addressing British indirect rule and its impact on national unity, where the learner",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-03 09:09:43"
+  },
+  "42fc8285129f9bc7b6f6d0947019ea736f6c54a69b541b76ec27a8467735fcf8": {
+    "success": true,
+    "student_id": "005",
+    "student_name": "Shalom",
+    "total_score": 82.5,
+    "raw_score": 33.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "overall_feedback": "Shalom performed exceptionally well across this examination paper, demonstrating a thorough understanding of East African history, colonial administration, and heritage management. The script exhibits strong clarity, coherent logical structure, and impressive historical detail throughout most",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-03 09:10:17"
+  },
+  "4eed78b045b9643a6c22801e381184cfea25d03479cc526d383f9ec5dc77c3ab": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "Ayen",
+    "total_score": 67.5,
+    "raw_score": 27.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "overall_feedback": "The candidate demonstrated a solid foundational understanding of historical concepts and contemporary societal issues across the assessment. Overall performance was commendable, with structured responses that attempted to address the core requirements of each task. The candidate performed strongest in analyzing colonial administrative",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-03 09:11:09"
+  }
+}

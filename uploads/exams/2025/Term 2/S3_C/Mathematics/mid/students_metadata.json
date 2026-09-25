@@ -1,0 +1,27 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "mid",
+    "total_marks": 40
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "akia",
+      "total_pages": 3,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-04 11:10",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    }
+  ]
+}

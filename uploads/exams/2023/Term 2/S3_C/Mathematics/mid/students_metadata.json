@@ -1,0 +1,73 @@
+{
+  "exam_info": {
+    "year": "2023",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "323",
+      "student_id": "323",
+      "student_name": "Lukwago Renon",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 75.0,
+      "sync_time": "2026-05-15 11:59",
+      "questions": {
+        "Item 4": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified the product and sum for factorization, found the correct factors, and derived the two integer solutions (x=4, x=-2). They then correctly stated that there are two integer solutions, earning full marks. A complete answer required factorization and identification of integer roots."
+        },
+        "Item 6": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 9": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 10": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 11": {
+          "score": 9.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 4 (Solve for x in log(log(x)) = 1): The student correctly applied the definition of logarithms to solve the equation step-by-step, accurately finding log(x) = 10 and subsequently x = 10^10, earning full marks. A complete answer required two applications of the logarithmic definition.\n\nItem 5 (How many integer solutions does the equation x^2 - 2x - 8 = 0 have?): The student correctly identified the product and sum for factorization, found the correct factors, and derived the two integer solutions (x=4, x=-2). They then correctly stated that there are two integer solutions, earning full marks. A complete answer required factorization and identification of integer roots.\n\nItem 6 (Expand (3 - (2/3)x)^8 in ascending powers of x): The student correctly applied the binomial expansion formula, accurately calculated all",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Agany Madol A",
+      "total_pages": 4,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-15 12:00",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    }
+  ]
+}

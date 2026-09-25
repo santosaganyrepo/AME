@@ -1,0 +1,514 @@
+{
+  "f769c325bd0c2423da0b85cf9d2d03bd6b91005fce3a29c57978c16fa5c8aa93": {
+    "success": true,
+    "student_id": "0012",
+    "student_name": "siima",
+    "total_score": 42.5,
+    "raw_score": 17.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong understanding of cultural diffusion and heritage preservation, but struggled with analytical depth regarding colonial policies, trade route specifics, and balancing commercial development with historical conservation. \n\nIn Item 1(a), the learner excelled in explaining cultural exchange, specifically citing the spread of Islamic culture, the adoption of Kiswahili as a lingua franca, and the introduction of traditional attire like the Kanzu and Gomesi. In Item 1(b), the response",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:06:28"
+  },
+  "70d2077233c2f2007940730f3da0e5be827e03c180c7f4cd73173a8da51ac267": {
+    "success": true,
+    "student_id": "0021",
+    "student_name": "ayen",
+    "total_score": 32.5,
+    "raw_score": 13.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a broad attempt across all sections of the paper, showing a clear preference for general civic reasoning and modern preservation concepts over detailed historical analysis. In Item 1(b), the response showed reasonable practical understanding by explaining educational, economic, and tourism benefits of heritage preservation alongside modern integration strategies like building commercial centers near historical sites. However, the",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:06:58"
+  },
+  "d20678b30cd9f872aa5f75e4fb8777c90ca2c51526863d02bdcaef4c7c1caf0e": {
+    "success": true,
+    "student_id": "0922",
+    "student_name": "namug",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a broad, variable engagement across the examination paper, showing stronger performance on contemporary civic and preservation concepts than on specific historical analysis. In Item 1, the learner scored well in Part (b) by offering sensible, articulate arguments for preserving heritage sites—highlighting educational value, identity, and tourism revenue—alongside practical strategies such as adaptive reuse and integrated architectural planning. However, performance on Item 1(a) was considerably weaker, as",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:07:16"
+  },
+  "267beedff1368844d2701be5531ecc6bb0c68515f2df26c5c7c520262ab206f6": {
+    "success": true,
+    "student_id": "0982",
+    "student_name": "shalom",
+    "total_score": 70.0,
+    "raw_score": 28.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 10.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated an overall satisfactory understanding of the curriculum, with notable strength in analytical historical essays, alongside moderate gaps in civic application and historical depth for pre-colonial economic dynamics. The strongest area of performance was displayed in Item 2 Part (a), where the response provided a comprehensive and well-structured analysis of colonial administrative policies. The student accurately identified key mechanisms such as indirect rule, sub-chief collaboration through figures like Semei Kakungulu, coercive taxation",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:07:38"
+  },
+  "0d834cf7fae9b483346a65289c4a768edf455516641db7f46732b9f140d8a0ca": {
+    "success": true,
+    "student_id": "09021",
+    "student_name": "siima",
+    "total_score": 60.0,
+    "raw_score": 24.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 8.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a solid understanding of certain key historical concepts and civic arguments, though performance varies across tasks. In Item 1, the learner excelled in explaining cultural exchange, specifically detailing the introduction of Kiswahili, Islamic culture, and traditional coastal attire such as the Kanzu and Gomesi to illustrate cultural diffusion in pre-colonial East Africa. However, performance was notably weaker in addressing the practical balance between urban development and heritage preservation. Instead of proposing urban",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:08:33"
+  },
+  "11bafa6fb9bcd8f7982bf362378ab1f5e94fec262f0a2ed492a9f432ef3dd0ae": {
+    "success": true,
+    "student_id": "09021",
+    "student_name": "ayen",
+    "total_score": 30.0,
+    "raw_score": 12.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a partial understanding of civic responsibility, local governance, and heritage preservation, but exhibited significant weaknesses in pre-colonial historical accuracy and structured essay development. In Item 1 Part (a), performance was exceptionally weak, as the student provided generic claims regarding friendship, hard work, and routes to avoid getting lost, rather than explaining actual historical trade networks like the Central Route, or cultural transformations",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:09:05"
+  },
+  "406c936423688165cdae2a593504d5c306e207ca4f7bcf4d4bfd2e57d4b5c96e": {
+    "success": true,
+    "student_id": "09021",
+    "student_name": "namug",
+    "total_score": 72.5,
+    "raw_score": 29.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 10.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a solid foundational grasp of the curriculum, with notable strength in Item 1 Part (b) and Item 2 Part (a), where answers were structured, logically developed, and closely aligned with the prompt requirements. In Item 1 Part (b), the proposal effectively articulated the case for heritage preservation by detailing cultural identity, educational value, and economic benefits through tourism, while providing practical strategies for balancing preservation with urban development. Similarly,",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:09:21"
+  },
+  "406c0adbee18ad085802bbe28fd1be68258374612018af46abe1d9000786d806": {
+    "success": true,
+    "student_id": "0902121",
+    "student_name": "namug",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a variable level of performance across the paper, showing a stronger grasp of contemporary civic arguments and heritage preservation strategies than pre-colonial trade dynamics and detailed colonial history. In Item 1, response quality improved significantly from Part (a) to Part (b). While Part (a) was hindered by brief, generalized bullet points that lacked concrete historical actors, specific trade routes (such as the Central or Northern routes), and detailed cultural transformation, Part (b)",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:10:17"
+  },
+  "f6aaf3af5900a24990b9ed259076aa9974e1cb2c1b8d13fef4a8360767f855a8": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "sha",
+    "total_score": 27.5,
+    "raw_score": 11.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a fair performance on the first item, engaging thoughtfully with aspects of pre-colonial trade and heritage preservation, but completely omitted the second item on colonial administrative policies and resistance movements. Within the attempted tasks, the candidate performed strongest in analyzing cultural exchange during pre-colonial trade and detailing the rationale for historical site preservation. Specifically, the candidate accurately highlighted how trade introduced new languages like Kiswahili, altered attire from animal hides to manufactured cloth, and fostered social integration through intermarriage. Furthermore, the proposal",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:23:34"
+  },
+  "dde44a86ee99d66343c081550a05869af4276c1b38d5c3cf396badb925950899": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "aye",
+    "total_score": 22.5,
+    "raw_score": 9.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a selective grasp of historical and civic concepts, showing clear competence in specific narrative areas while leaving major compulsory sections of the examination entirely unattempted. Performance was strongest in addressing the cultural exchange resulting from pre-colonial trade, where the student accurately explained how coastal interactions introduced Islamic culture, established Kiswahili for inter-community communication, and led to the adoption of foreign attire such as the Kanzu and Gomesi in place of traditional bark cloth. The candidate also presented",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:24:52"
+  },
+  "d4a91ccd6956c756540d8f2ed849784fbb1833044d7dc3af6f05d93cfb90b85d": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "sii",
+    "total_score": 22.5,
+    "raw_score": 9.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a fair understanding of heritage conservation concepts but shows significant gaps in specific historical knowledge and exam completion. Performance was strongest in Item 1 Part (b), where the candidate provided practical and relevant strategies for preservation and urban balance. For instance, the student correctly identified the value of adaptive reuse by suggesting the reusing of historical buildings alongside innovative architectural approaches and regulatory frameworks to maintain community identity while supporting economic growth. Conversely, the learner's performance was weakest in Item 1 Part (a), where",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:25:24"
+  }
+}

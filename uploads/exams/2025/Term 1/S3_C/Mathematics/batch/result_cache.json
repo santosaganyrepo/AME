@@ -1,0 +1,390 @@
+{
+  "77fd5d865d4dd3b3075f3c5dc1f1da516c66b49dcdbe8381d224568cc23154e8": {
+    "success": true,
+    "student_id": "005",
+    "student_name": "Kakooza",
+    "total_score": 15.0,
+    "raw_score": 6.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a solid foundational understanding of structured proportional reasoning and unit-rate calculations within the initial stages of the first task. In particular, the candidate performed exceptionally well when setting up the sequential sales breakdown for the first two market phases. For example, after correctly deducting the initial thirty-one bags from the total harvest to find eleven hundred sixty-nine remaining bags, the candidate accurately computed sixty percent of that remaining amount to yield seven hundred one point four bags, subsequently multiplying by the unit price of one hundred thousand shillings to arrive at seventy million one hundred forty thousand shillings for phase two. However, the student encountered significant difficulty maintaining completion and thoroughness as the work progressed. The candidate's biggest area of weakness lies in leaving key mathematical procedures unfinished and omitting entire required sections of the assessment. Specifically, while the candidate correctly determined four hundred sixty-seven point six bags for the third phase and set up the product of four hundred sixty-seven point six and seventy thousand, they failed to complete the multiplication, provided an incomplete total revenue figure, and omitted the net profit calculation entirely, alongside all of part b and item two. Secondary observations indicate a clean and legible structural presentation initially, but the work abruptly stops, suggesting time management challenges or fatigue. To improve future performance, the candidate should focus on completing every arithmetic operation fully before moving forward and practice managing examination time effectively to ensure all compulsory tasks, including financial summaries and contextual reports, are thoroughly addressed.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 10:06:20"
+  },
+  "3e922cb57ab2c6024d9431af30b2b9e09a52a74ba60615d9f57c1c987f0e294a": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "Makula",
+    "total_score": 82.5,
+    "raw_score": 33.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a strong overall grasp of financial calculations and practical budgeting, presenting clear step-by-step working across most tasks. Performance in financial mathematics was particularly impressive; for instance, in Item 1, the candidate correctly determined the quantities and revenues for all three sales phases—calculating UGX 2,480,000 for Phase 1, UGX 70,140,000 for Phase 2, and UGX 32,732,000 for Phase 3—and accurately computed the net profit of UGX 101,352,000 and individual member shares of UGX 2,533,800. Similarly, in Item 2, the candidate skillfully calculated the plot area of 32 square meters using the triangle area formula and correctly applied real-world rounding rules to determine the required fertilizer bags and total material costs. Conversely, the candidate's primary weakness lay in coordinate geometry, where they completely omitted the standard distance formula to find the side lengths of the triangle, opting instead to estimate side lengths to find the perimeter. Additionally, in the comparative analysis section, the candidate failed to compute the overall weighted average price per bag, relying on an erroneous subtraction before reaching a basic qualitative conclusion. To improve performance, the candidate should practice applying coordinate geometry formulas, specifically the distance formula between two given points, to avoid estimation errors. Furthermore, the candidate should ensure that all specific analytical requirements, such as calculating weighted average unit prices, are explicitly addressed in comparative financial reports.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 10:06:26"
+  },
+  "437de16c55e987b806cb52fccb8f6bee5a8da36f2ee2f308fcb29cad6bdda2f5": {
+    "success": true,
+    "student_id": "004",
+    "student_name": "Namuli",
+    "total_score": 77.5,
+    "raw_score": 31.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated strong foundational skills in basic financial calculations and contextual application, particularly in handling multi-stage business scenarios. Performance was strongest in Item 1, where the candidate systematically computed sales revenues across all three phases, summed total earnings accurately, and correctly accounted for operational expenses. A prominent strength was shown in executing follow-through logic during profit sharing, where net profits were cleanly divided among all forty group members using appropriate mathematical layout and clear units. Conversely, performance was significantly weaker in coordinate geometry and area optimization in Item 2. The candidate primary weakness was an incorrect area calculation for the triangular plot, where an erroneous variation of Herons formula was applied by adding squared differences rather than multiplying factors, yielding an inaccurate area of 141.6 square meters instead of the true 32 square meters. Additionally, the candidate failed to compute the explicit weighted average price per bag in Item 1 Part b and left the qualitative justification for rounding up full units incomplete on the final page. Despite these missteps, the candidate successfully carried through earlier errors into subsequent budgeting steps, correctly determining the required number of fencing rolls and fertilizer bags based on their calculated dimensions. To improve performance, the candidate should focus on memorizing standard coordinate geometry formulas, specifically the perpendicular base-height method or Shoelace algorithm for triangular area. Furthermore, the candidate should practice completing written analytical justifications fully and double-checking basic arithmetic additions to avoid minor computational slips.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 10:06:27"
+  },
+  "0510b766e1dd18d984174553dcf33bb88fa8423f7921b1a8b5ef2966934623f1": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "Akia",
+    "total_score": 75.0,
+    "raw_score": 30.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates strong competency in multi-step financial arithmetic and spatial area calculations, though significant conceptual gaps remain in coordinate geometry and comparative analysis. In Item 1 Part (a), the script exhibits excellent mathematical precision and clear structural layout; the student methodically determined the phased bag quantities and corresponding revenues—UGX 2,480,000 for phase one, UGX 70,140,000 for phase two, and UGX 32,732,000 for phase three—leading to an accurate net profit calculation and precise individual member share distribution. Conversely, the most significant technical weakness appears in Item 2 Part (a), where the candidate omitted the required distance formula entirely and substituted arbitrary side lengths of 9, 9, and 8 meters to evaluate the triangular perimeter. Another critical gap occurred in the analytical section of Item 1 Part (b), where the candidate incorrectly concluded that selling all bags at once was more profitable, directly contradicting their own correct calculations showing phased sales yielded higher total revenue. On a secondary note, the student displayed commendable practical reasoning by correctly rounding up fractional requirements to full units for fencing rolls and fertilizer bags, although they neglected to sum these individual costs into a final combined budget total. To improve future performance, the student should practice explicitly applying coordinate geometry distance formulas rather than estimating lengths, and systematically verify that written analytical conclusions align logically with their calculated numerical values.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 10:06:31"
+  },
+  "f3216fbe37ab12066524523d2e01fc96f5ad125107251b8a3cc35758f2e82f20": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "Ochwo",
+    "total_score": 52.5,
+    "raw_score": 21.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong grasp of multi-step financial calculations in the first item, systematically breaking down the phased sales of maize and showing clear, methodical working for each individual phase. A notable strength is evident in Item 1 Part (a), where the candidate correctly calculated the quantities and earnings across all three phases, obtaining UGX 2,480,000 for Phase 1, UGX 70,140,000 for Phase 2, and UGX 32,732,000 for Phase 3 before applying correct follow-through to calculate total expenses and equal member profit shares. Similarly, in coordinate geometry, the student successfully identified the base and perpendicular height to derive the exact plot area of 32 square meters. However, significant gaps exist in analytical interpretation and coordinate geometry formulas. The student's weakest performance occurred in Item 2 Part (a), where the distance formula was entirely omitted and the perimeter was incorrectly given as 24 meters by assuming equal side lengths of 8 meters, rather than calculating the exact slanted side lengths. Additionally, in Item 1 Part (b), the candidate asserted that phased selling generated less profit than selling all at once without performing any required calculations for weighted average price or flat-rate revenue, leading to an inaccurate analytical conclusion. Furthermore, a minor addition error occurred when summing the phase revenues, though follow-through credit was earned in",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 10:06:33"
+  },
+  "257508564718d99c3b387e0fdc61160959262faef5701b47a140c2a83bca50ad": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "akia",
+    "total_score": 85.0,
+    "raw_score": 34.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a strong overall grasp of financial mathematics and practical budgeting applications. Performance across Item 1 was particularly commendable, where the candidate systematically worked through all three sales phases, correctly computing phase revenues, summing total revenue to UGX 105,352,000, deducting operational expenses to determine net profit, and accurately dividing profit among group members. The candidate also effectively analyzed the financial benefit of phased selling compared to a flat rate, identifying the exact additional gain generated. The strongest area of performance was in multi-step arithmetic and area calculation, exemplified by the clear determination of the triangular plot area in Item 2, where the candidate correctly identified a base of 8 meters and a height of 8 meters to evaluate the area as 32 square meters using the standard triangle formula. Furthermore, the candidate appropriately applied real-world rounding rules when calculating required fencing rolls and fertilizer bags. Conversely, the candidate's primary weakness lay in coordinate geometry precision; in Item 2(a), the candidate completely bypassed the distance formula, incorrectly assuming side lengths of 9 meters rather than applying the square root coordinate formula to calculate exact distances between points. Additionally, the candidate omitted the explicit calculation of the weighted average selling price per bag in Item 1(b). To improve future performance, the candidate should practice explicit substitution into coordinate formulas for geometry tasks and ensure every",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-16 11:23:53"
+  }
+}

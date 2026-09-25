@@ -1,0 +1,77 @@
+{
+  "ec00609e03fd4f972ff96ee987e9b1e3cc99d9aa8aa81265c81deb11bd43d0bd": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "Ssentongo Aselem",
+    "total_score": 50.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the momentum of the car travelling northwards and southwards, but the calculation for the total momentum and the conclusion about overspeeding were incomplete or incorrect."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly identified that a prism and mirror can be used for security and explained total internal reflection, but the diagram was not neat or labelled, and the explanation of operation was incomplete."
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly identified that the color of"
+      },
+      "Item 4": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:39:41"
+  },
+  "874a02916969b3396580b2fa3a2db78723118ca1834a402e1e9a283ec65115cb": {
+    "success": true,
+    "student_id": "8948",
+    "student_name": "378272",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the entire response discussed nuclear physics and radioactive waste, which was completely irrelevant to the questions about refrigerator energy, seatbelts, and tyre temperature."
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for correctly identifying a prism as superior to a mirror for total internal reflection with a clear diagram and explanation, and for accurately describing the differences between laser light and bulb light regarding coherence, monochromaticity, directionality, and intensity."
+      },
+      "Item 5": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": "The student was awarded"
+      },
+      "Item 7": {
+        "score": 25.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:40:22"
+  }
+}

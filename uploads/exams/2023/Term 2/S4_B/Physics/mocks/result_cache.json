@@ -1,0 +1,207 @@
+{
+  "1fb9a1f79779a3724e066a424f37124045c68553cab76a5576fda9260766c9a0": {
+    "success": true,
+    "student_id": "343",
+    "student_name": "Ssentongo Aselem",
+    "total_score": 65.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 18 marks for correctly explaining the advantages of a prism over a mirror for total internal reflection and providing a comprehensive comparison of laser and bulb properties for security systems, though the diagram for the prism was not perfectly neat."
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded full marks, 20, for accurately describing the function of a lightning conductor, correctly assessing the suitability of the transformer based on turns ratio and efficiency, and clearly outlining the dangers of delaying fuse replacement and earth connection."
+      },
+      "Item 5": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:42:35"
+  },
+  "10d95767a3ee20e31712af85a2dd1acfe2753c5dad23320df0c5cb96c5d7058d": {
+    "success": true,
+    "student_id": "22",
+    "student_name": "Ssentongo Aselem",
+    "total_score": 50.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 3.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 3 marks for correctly stating the temperature conversion formula and identifying L0 and L100, but the calculation was flawed due to an arbitrary Lθ value and the conclusion on overspeeding was not derived from the temperature."
+      },
+      "Item 2": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 6 marks for correctly choosing a prism over a mirror with a valid reason and providing a diagram showing total internal reflection, but the explanation of operation was brief and part (b) was entirely irrelevant.\nItem"
+      },
+      "Item 5": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 21.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:43:29"
+  },
+  "965e943ebc3579caac60be0e42cf188c192607b80f3692f3ebe1babfc50835b7": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "Lukwago Renon",
+    "total_score": 90.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 14 marks for correctly explaining the importance of seatbelts and accurately calculating the tyre temperature to conclude on overspeeding, but lost marks for misinterpreting the refrigerator energy calculation by using an incorrect time from another question."
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for correctly choosing a glass prism with valid reasons and a clear diagram, and for accurately differentiating laser light from bulb light with a suitable conclusion."
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:45:21"
+  },
+  "42635a772680f79281f81fc385d0064948584b870cf98dcc613e7da0e7ff07f4": {
+    "success": true,
+    "student_id": "343",
+    "student_name": "Santos madol",
+    "total_score": 56.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for correctly identifying several differences between laser and bulb light, such as coherence and monochromaticity, but lost marks for choosing a mirror instead of a prism for the security system and not fully explaining the prism's advantages."
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for correctly explaining the function of a lightning conductor, accurately calculating the transformer's output voltage and power to determine its unsuitability, and identifying all key dangers of electrical system delays.\nItem"
+      },
+      "Item 5": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:58:16"
+  },
+  "cecd8fe7f5f1a215c70c11bfb93b55e8d2700fb6a3a6243a7a6e31b9805210ef": {
+    "success": true,
+    "student_id": "343",
+    "student_name": "Lukwago Renon",
+    "total_score": 14.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The mark awarded is 0/20. The student provided answers completely irrelevant to the questions on refrigerator energy, seatbelt advice, or tyre temperature calculation, instead discussing nuclear reactors and population explosions."
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The mark awarded is 0/20. The student's response was entirely about stars and space exploration, failing to address any aspect of laser security systems, prisms, mirrors, or light sources."
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The mark awarded is"
+      },
+      "Item 5": {
+        "score": 5.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 9.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 11:59:03"
+  },
+  "bdc49cb0bc5bb3d0f246498933c12e071fd5ce244978d932a7e4c9288790d665": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "Agany Madol",
+    "total_score": 8.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 7": {
+        "score": 8.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 8 marks for correctly calculating the daily energy consumption for all listed appliances and summing them, but no marks were awarded for choosing a suitable generator, explaining its operation, providing a diagram, or for energy saving methods."
+      }
+    },
+    "overall_feedback": "The student's overall performance is very weak as only one item was attempted out of the five required, and only partial marks were earned for that single item. The strongest demonstrated concept was the calculation of daily energy consumption, where the student accurately computed the energy used by multiple appliances over specified times. The most critical gap is the failure to attempt the compulsory Section A questions and the lack of understanding regarding suitable generator types for common household",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 12:04:40"
+  }
+}

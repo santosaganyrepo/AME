@@ -1,0 +1,66 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 3",
+    "class": "S2",
+    "stream": "C",
+    "subject": "Physics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "212",
+      "student_id": "212",
+      "student_name": "Ssentongo Aselem",
+      "total_pages": 6,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 15.0,
+      "sync_time": "2026-05-08 15:32",
+      "questions": {
+        "Item 2": {
+          "score": 3.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 2: 3/20\nThe student demonstrated a good understanding of calculating work done and power, correctly applying the formulas and performing the calculations for Item 2b. However, the student failed to attempt Item 1 and Item 3, and only partially addressed Item 2. Many answers provided were for questions not present in the given exam paper, indicating a significant misunderstanding of the task or the specific questions to be answered. For future exams, it is crucial to carefully read and understand the questions provided in the question paper and ensure that answers directly address those questions. Focus on attempting all required items.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "323",
+      "student_id": "323",
+      "student_name": "Agany Madol",
+      "total_pages": 6,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 85.0,
+      "sync_time": "2026-05-08 15:51",
+      "questions": {
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 3": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 4": {
+          "score": 16.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 2: 15/20, Item 3: 20/20, Item 4: 16/20\nAgany demonstrates a strong understanding of core physics concepts, particularly in Earth and Space, and shows excellent problem-solving abilities in calculations. The explanations for day and night, seasons, and lightning are well-reasoned and supported by clear diagrams. However, there is some confusion between magnetic and electrostatic phenomena, and some procedural descriptions include irrelevant details. To improve, Agany should focus on distinguishing similar but distinct concepts and ensure all parts of questions are attempted for maximum marks.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

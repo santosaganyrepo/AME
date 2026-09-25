@@ -1,0 +1,39 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 3",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "121",
+      "student_id": "121",
+      "student_name": "sato",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 34.0,
+      "sync_time": "2026-05-27 12:48",
+      "questions": {
+        "Item 1": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 12 marks for providing a clear introduction and identifying five distinct roles of NGOs/CSOs, including service delivery, poverty reduction, advocacy for human rights, promotion of democracy and development, and good governance/anti-corruption, but failed to include a conclusion and did not mention environmental protection as a role."
+        },
+        "Item 2": {
+          "score": 22.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 22 marks for providing a correct definition of land fragmentation, identifying five causes (population pressure, industrialization, urbanization, land policies, and inheritance), and three effects (low production, land conflicts, and environmental degradation), but the"
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

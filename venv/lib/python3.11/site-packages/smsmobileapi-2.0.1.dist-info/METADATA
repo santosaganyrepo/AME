@@ -1,0 +1,60 @@
+Metadata-Version: 2.1
+Name: smsmobileapi
+Version: 2.0.1
+Summary: A module that allows sending SMS and WhatsApp for free from your own mobile phone and receiving SMS on your mobile phone, all for free since the mobile plan is used
+Home-page: https://github.com/smsmobileapi/smsmobileapi
+Author: Quest-Concept
+Author-email: info@smsmobileapi.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+
+# SMS Mobile API
+
+**SMS Mobile API** is a Python module that allows developers to send SMS messages, retrieve received SMS messages, and send WhatsApp messages via the SMS Mobile API.
+
+## Prerequisites
+
+### 1. Install the SMS Mobile API App
+Before using this module, **you must first install the SMS Mobile API mobile app** on your Android or iOS device. This app is required to connect your phone to the API for sending and receiving SMS messages.
+
+- [Download SMS Mobile API for Android](https://play.google.com/store/apps/details?id=com.smsmobileapiapp)
+- [Download SMS Mobile API for iOS](https://apps.apple.com/us/app/sms-mobile-api/id6667092442)
+
+Once the app is installed and configured, you can obtain your API key from within the app to use with this Python module.
+
+### 2. Connect Your WhatsApp Account (Optional for WhatsApp Integration)
+The connection to WhatsApp is handled through the **SMS Mobile API dashboard**.  
+This process does **not require a WhatsApp Business account** or identity verification. Thanks to our simplified and secure authentication process, you can quickly link your WhatsApp account and start sending WhatsApp messages without any per-message costs.
+
+To set up your WhatsApp connection:
+1. Create a new account in the SMS Mobile API app (or use the account already set up for managing SMS if you have one).  
+   [Create or Manage Your WhatsApp Account Here](https://smsmobileapi.com/whatsapp/)
+
+2. Configure a connection with WhatsApp through the **WhatsApp Config** menu in the dashboard:  
+   [Connect WhatsApp Here](https://smsmobileapi.com/connect/)
+
+Once configured, you'll be able to send WhatsApp messages seamlessly through our API.
+
+## Good to Know: WhatsApp Integration
+When entering phone numbers for WhatsApp messages:
+- **Start with the country code**, but without the `+` or `00`.  
+- Follow it directly with the rest of the number.
+
+**Example**: For a number in the USA:  
+If the phone number is `+1 555-123-4567`, enter it as `15551234567`.
+
+## Installation
+
+You can install the module directly from PyPI:
+
+```bash
+pip install smsmobileapi
+
+

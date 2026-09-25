@@ -1,0 +1,93 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S4",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "Agany MAdol",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 25.0,
+      "sync_time": "2026-05-26 20:57",
+      "questions": {
+        "Item 1": {
+          "score": 13.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 13 marks for providing a good definition of NGOs, identifying four roles (service delivery, advocacy, development, disaster management) with examples, and demonstrating good organization, but lacked a distinct conclusion and did not explicitly address good governance/anti-corruption as a role."
+        },
+        "Item 2": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 12 marks for accurately defining land fragmentation and identifying five causes (population pressure, urbanization, industrialization, legal reforms, government policies), but did not discuss the effects of land fragmentation or provide a conclusion with specific examples."
+        }
+      },
+      "overall_feedback": "Agany MAdol demonstrated a fair understanding of the topics, achieving a total score of 25 out of 40. The student's strongest area was identifying the causes of land fragmentation, providing multiple relevant points such as population pressure and urbanization. However, a critical gap was the omission of effects for land fragmentation and a lack of distinct conclusions for both items, indicating a need to structure answers more comprehensively. To improve, the student should practice outlining full answers, ensuring all parts of the question (e.g., causes AND effects) are addressed and a clear concluding statement is provided.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "782",
+      "student_id": "782",
+      "student_name": "San",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 80.0,
+      "sync_time": "2026-05-26 20:58",
+      "questions": {
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 20 marks for providing a comprehensive discussion of the roles of NGOs and CSOs, including service delivery, advocacy for human rights, economic empowerment, and good governance, supported by specific examples. The answer lacked explicit discussion of environmental protection and challenges faced by NGOs."
+        },
+        "Item 2": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 12 marks for accurately defining land fragmentation and identifying several key causes such as population pressure, urbanization, inheritance, and land policies. The answer did not discuss the effects or solutions to land fragmentation, and missed some causes like land conflicts and poverty."
+        }
+      },
+      "overall_feedback": "San demonstrated a strong understanding",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "908",
+      "student_id": "908",
+      "student_name": "sam",
+      "total_pages": 5,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 38.0,
+      "sync_time": "2026-05-26 20:58",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 18 marks for a strong introduction and comprehensive discussion of eight distinct roles of NGOs/CSOs, including service delivery, advocacy for human rights, mobilization, promotion of democracy, anti-corruption efforts, women's rights, and reaching marginalized communities, but a clear concluding paragraph was missing."
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 20 marks for a precise definition of land fragmentation and a thorough explanation of its causes, including population pressure, industrialization, urbanization, and land policies, demonstrating a complete understanding of the topic."
+        }
+      },
+      "overall_feedback": "The student demonstrated a good overall",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

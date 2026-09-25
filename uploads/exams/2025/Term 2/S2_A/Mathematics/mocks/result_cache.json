@@ -1,0 +1,1726 @@
+{
+  "2667cdf7b528b4107891af54f35115445b4d27a093a577517ad52f3d75e30064": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "makula",
+    "total_score": 62.5,
+    "raw_score": 25.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated strong proficiency in financial mathematics in Item 1, executing all calculations for phased sales, total revenue, net profit, and member distribution with precision and correct monetary units (UGX). The candidate successfully calculated total revenue under a flat-rate strategy and accurately derived the comparative financial gain of UGX 3,352,000. However,",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:27:20"
+  },
+  "6ad922758af0bcc1416837e9c0a09314864495ab018061da3c3dbe560986488d": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "akia",
+    "total_score": 77.5,
+    "raw_score": 31.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong performance in numerical financial calculations and foundational area determination, but exhibited significant conceptual gaps in coordinate geometry distance calculations and comparative financial analysis. In Item 1, the candidate executed all three selling phases flawlessly, calculating the remaining bag counts, phase revenues, total revenue, net profit, and individual profit shares per member with high precision and proper",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:27:37"
+  },
+  "ca737e525f21e643b192e012e972b544d747056216f281efde64a4b0ac177c24": {
+    "success": true,
+    "student_id": "00012",
+    "student_name": "ochwo",
+    "total_score": 45.0,
+    "raw_score": 18.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a strong grasp of basic arithmetic operations and multi-step financial calculations in structured scenarios. In Item 1 Part (a), the student methodically processed each phase of maize sales, correctly determining quantities, revenues, sum total revenue, and total operational expenses, earning near-full marks despite a minor transcription slip when calculating net profit. However, performance was significantly weaker in analytical",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 12:28:00"
+  },
+  "82af66313ef3b7210ecffeb95941d66c7563876bffd4007202d1b37e95950aa9": {
+    "success": true,
+    "student_id": "323",
+    "student_name": "kakooza",
+    "total_score": 15.0,
+    "raw_score": 6.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a promising initial understanding of structured mathematical problem-solving in Item 1 Part (a), accurately executing complex percentage and proportional calculations for phased market sales, yet left the vast majority of the examination unattempted. The student’s strongest area was in performing early-stage revenue calculations, shown clearly when correctly deriving the Phase 1 revenue of UGX 2,480,000 for 31 bags at UGX 80,000 per bag, as well",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 19:22:36"
+  },
+  "5e5283cb7ba2e22fe41dc6c1ded7b6d9053c19af84790efbcc141f0c1710e79e": {
+    "success": true,
+    "student_id": "121212",
+    "student_name": "namuli",
+    "total_score": 67.5,
+    "raw_score": 27.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong grasp of structured financial arithmetic in Task 1, correctly calculating the multi-phase maize sales revenue of UGX 105,352,000 and subtracting operational expenses to find the net profit. In Item 1 Part (b), equal distribution among the forty group members was calculated accurately using follow-",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 19:27:44"
+  },
+  "635680cf436fdc70eb3be8b74e3bc9a910013dbc53b74a508092a3e9ce2625df": {
+    "success": true,
+    "student_id": "902832",
+    "student_name": "makula",
+    "total_score": 80.0,
+    "raw_score": 32.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates strong competence in multi-step financial calculations and basic geometric area computations. In Item 1, the candidate systematically solved all three sales phases, accurately determining bag quantities, revenue per phase, total revenue, net profit, and member distribution shares. The strongest performance was observed in the structured calculations for financial breakdown and area determination, where the student",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 19:28:29"
+  },
+  "10d5f2392e5774afe20a1ee1be80a92a63e30bee81c0c0f28167b044fce40e12": {
+    "success": true,
+    "student_id": "20400",
+    "student_name": "akai",
+    "total_score": 70.0,
+    "raw_score": 28.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated strong competence in standard arithmetic operations, multi-step financial calculations, and clear profit sharing distribution in Item 1. All three sales phases, total revenue, transport and storage deductions, and individual profit shares for the forty members were calculated with complete mathematical precision and correct monetary units. The candidate also correctly evaluated total revenue at the flat rate of UGX",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:04:59"
+  },
+  "1d3b39b5cc5c493df16de1405d3d63fc8c3758668913df8bf126af8231c4aee4": {
+    "success": true,
+    "student_id": "20400",
+    "student_name": "ochwoi",
+    "total_score": 47.5,
+    "raw_score": 19.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong grasp of structured arithmetic calculations in multi-step financial scenarios, particularly in Item 1 Part (a). Their strongest performance was evidenced by flawlessly setting up the bag counts and revenue calculations across all three sales phases, correctly finding 701.4 bags for Phase 2 and 467.6 bags for Phase",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:05:36"
+  },
+  "79f3a936f6ab030574fdd7021e5586fedacb0727d374f065616430b14ed0ea76": {
+    "success": true,
+    "student_id": "20400",
+    "student_name": "kakooza",
+    "total_score": 30.0,
+    "raw_score": 12.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong understanding of structured multi-phase financial calculations in Item 1 Part (a). Step-by-step working was clearly presented, with accurate determination of bag counts and gross revenues for each individual selling phase. Proper monetary units (UGX) were consistently included throughout the steps. \n\nHowever, performance dropped in the final stages of summation and comparative evaluation. In Part (a), a minor arithmetic addition",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:05:51"
+  },
+  "fdd559dfa6b681598ff38f0fe861a8d6322d4a91a4b1fe0f7c2c0cab424000ed": {
+    "success": true,
+    "student_id": "20400",
+    "student_name": "namuli",
+    "total_score": 62.5,
+    "raw_score": 25.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong command of basic financial calculations in Item 1, displaying clear, step-by-step working for multi-phase sales, expense summation, and profit division. The primary strength of the work is evident in Item 1(a), where the candidate accurately computed phase bag counts and revenues to obtain the correct total revenue of UG",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:06:06"
+  },
+  "9b7f3c0215c16bf91bdfe795a357c3c86e41bc8f7aa4fa2f931990ad8bbbe6c0": {
+    "success": true,
+    "student_id": "2040020400",
+    "student_name": "makula",
+    "total_score": 80.0,
+    "raw_score": 32.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated strong competence in financial mathematics and applied problem-solving in Item 1. Calculations for multi-phase sales revenues, net profit determination, and equal profit distribution among group members were executed with clear step-by-step mathematical working, correct formulas, and precise final values including appropriate currency units (UGX). The comparison between phased selling and a",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:10:10"
+  },
+  "f0c76fcb8e37bb6a642a40d9d2e3b723f68f2bdc15f2cecff80a7859978e72ff": {
+    "success": true,
+    "student_id": "2040020400",
+    "student_name": "akia",
+    "total_score": 75.0,
+    "raw_score": 30.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a strong grasp of multi-step arithmetic processes and scenario-based financial calculations in Item 1. All revenue phases, total revenue summation, total net profit, and profit distribution among members were executed with high precision and clear layout. A notable strength is seen in Item 1 Part (a), where the candidate correctly calculated remaining bag quantities across all three phases",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:10:27"
+  },
+  "e79eed0945e40fc5317d546a4dd7f506f0e9d122880aaf56d470df422274fb3c": {
+    "success": true,
+    "student_id": "2040020400",
+    "student_name": "kakoosa",
+    "total_score": 32.5,
+    "raw_score": 13.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong foundational understanding of financial mathematics in Item 1, showing clear, step-by-step working for multi-stage arithmetic calculations. The candidate correctly identified the bag quantities and calculated exact revenues across all three sales phases, scoring full credit for phase calculations. For example, in Phase 2, the student accurately determined that 60% of the remaining 1,169 bags equaled 701",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:11:20"
+  },
+  "ad82a8248a1f68e12251838e32ab3b10588d738448494b46ef0f6eb2c664acbf": {
+    "success": true,
+    "student_id": "7283",
+    "student_name": "kakooza",
+    "total_score": 15.0,
+    "raw_score": 6.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a sound foundational understanding of multi-step percentage and proportional calculations in financial mathematics, particularly when setting up sequential transactional phases. The student performed strongly in the initial sales stages of Item 1, correctly determining the first phase revenue as UGX 2,480,000 for 31 bags at UGX 80,000 each, and accurately processing the second phase by taking 60 percent of the remaining 1,169 bags (",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:14:00"
+  },
+  "9f9429111ed4e71451720a5a478c845711fd45b6238c1833127bc22adc38fe87": {
+    "success": true,
+    "student_id": "35725",
+    "student_name": "ochwoi",
+    "total_score": 45.0,
+    "raw_score": 18.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong understanding of multi-step percentage calculations and financial arithmetic in Item 1 Part (a). They successfully calculated the quantities and revenues for all three selling phases, correctly computed total operational expenses, and carried forward values logically through to the individual member profit distribution. Their strongest area was setting up and executing the piecewise financial calculations in Scenario 1",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:14:40"
+  },
+  "35758f68794d3dc91e50d0d83b995d7755d7a206c0dc057f9e48104837a732d8": {
+    "success": true,
+    "student_id": "319092",
+    "student_name": "akia",
+    "total_score": 77.5,
+    "raw_score": 31.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a solid grasp of financial calculations and practical budgeting across both items, showing particular strength in multi-step arithmetic, revenue breakdowns, and area determination. In Item 1, the candidate systematically executed the calculations for all three sales phases, correctly handling fractional remainders, percentage deductions, cumulative revenue summation, net profit evaluation, and equal profit distribution",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:14:56"
+  },
+  "6b2c72d85c279880d587538d2d30450176770fc008fc94ed91d2eb96fd9c5f77": {
+    "success": true,
+    "student_id": "35172",
+    "student_name": "namuli",
+    "total_score": 70.0,
+    "raw_score": 28.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a solid foundational understanding across both items, particularly in multi-step financial calculations and applying real-world rounding rules. In Item 1(a), the student calculated individual sales phase revenues accurately (UGX 2,480,000, UGX 70,140,000,",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:15:33"
+  },
+  "c35eb853ae838f136b95fd59589b7a68d4fc36853901a6aeb4b8d1f13398e545": {
+    "success": true,
+    "student_id": "0098021",
+    "student_name": "makula",
+    "total_score": 80.0,
+    "raw_score": 32.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated excellent competence in financial mathematics and numerical optimization, displaying clear, structured working and accurate multi-step execution. In Item 1, the candidate correctly computed the phased maize sales, total revenue, net profit, and individual distribution per member, as well as the alternative revenue from flat-rate pricing. However, they omitted calculating the overall weighted average",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:15:48"
+  },
+  "d90c7a254ca51082cec1ba1a55d5d84fd6b0811cfb9e6300b7b351e33298836f": {
+    "success": true,
+    "student_id": "44333",
+    "student_name": "makula",
+    "total_score": 82.5,
+    "raw_score": 33.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated excellent competence in multi-step financial arithmetic and basic geometric calculations, particularly in Item 1. In Part (a) of Item 1, the candidate systematically executed the phased sales revenue calculations, accurately determining the sub-totals for all three phases, correctly summing total revenue to UGX 105,352,00",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:16:48"
+  },
+  "0a156b6078dbe30de251ba01e55b35ac2b3e713ade34ec23c54080f457cb4d2d": {
+    "success": true,
+    "student_id": "8383",
+    "student_name": "namuli",
+    "total_score": 70.0,
+    "raw_score": 28.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a solid foundational understanding of financial calculations in Item 1, handling multi-stage percentage and fraction computations with remarkable accuracy. In Part (a), the step-by-step breakdown of revenue across all three phases was executed correctly, with full working shown for the quantities sold at each price point, leading to an accurate total",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:20:18"
+  },
+  "b473ceee00b09237cfc3680912d77a3556b31cd94208dba1ae0a02152f8113d8": {
+    "success": true,
+    "student_id": "22232",
+    "student_name": "akia",
+    "total_score": 77.5,
+    "raw_score": 31.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 15",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong command of financial arithmetic and basic geometric applications, though performance was hindered by specific conceptual missteps in analytical comparisons and coordinate geometry formulas. In Item 1, the candidate executed the multi-stage calculations for phased sales perfectly, accurately determining the total revenue of UGX 105,352,0",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:20:57"
+  },
+  "da96cf2968cc0e501ca7fe386d836985af15bbc44a341334923128aad437d460": {
+    "success": true,
+    "student_id": "44444",
+    "student_name": "ochwo",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 13",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 14",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a strong understanding of financial mathematics in Item 1, executing multi-step percentage calculations, revenue phase breakdowns, and net profit deductions with complete mathematical precision and clear step-by-step layout. For instance, in Item 1(a), the candidate flawlessly calculated the bag quantities and revenues for all three selling phases (yielding UGX 2",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:21:13"
+  },
+  "8c16a8506a65ee2962ff6740d275ffdf08101cb6591348cf0d4c5d93164b0ed9": {
+    "success": true,
+    "student_id": "9094940",
+    "student_name": "kakooza",
+    "total_score": 15.0,
+    "raw_score": 6.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a solid foundational understanding of initial multi-step contextual arithmetic in Item 1, specifically within the early phases of the maize harvest revenue calculation. Their primary strength was clearly displayed in Phase 1 and Phase 2, where they successfully computed the exact bag quantities and corresponding financial yields, such as correctly calculating 60% of 1,169 remaining bags to obtain 701.4 bags and multiplying by UGX 100,000 to reach UGX 70",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:21:29"
+  },
+  "65b3ba111805de7de4e0e01133a697fee138845ac9ae6d0f32835d1f7f6b9388": {
+    "success": true,
+    "student_id": "121212",
+    "student_name": "mak",
+    "total_score": 47.5,
+    "raw_score": 19.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 10",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 11",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 12",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a strong grasp of financial calculations in Item 1, effectively carrying out multi-step arithmetic for phased sales revenue, total expenditure, and net profit distribution. Accurate working is shown throughout Part (a), properly accounting for percentages and remaining inventory balances. In Part (b), the student correctly calculates member dividend shares and accurately determines flat-rate revenue for comparison. However, performance drops sharply in the",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:22:41"
+  },
+  "efc5a452c0b207967c1f05659a6a608f29757b1fb5f86602db7d9db6b9420f58": {
+    "success": true,
+    "student_id": "1111",
+    "student_name": "aki",
+    "total_score": 20.0,
+    "raw_score": 8.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates outstanding accuracy, precision, and structural clarity in multi-step financial calculations where responses were provided. In the opening section of Item 1, the student methodically broke down the phased selling scenario into its three distinct component stages, correctly determining the bag quantities and monetary value generated in each phase. Specifically, the student calculated the Phase 1 earnings correctly, determined the 60% share of remaining bags for Phase 2, and accurately computed the final remainder and revenue for Phase 3",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:23:03"
+  },
+  "54f0ec45fa174e77b8e16d0cdf3d97e1d157cfe6eff61768dd4dfee7f40cff7c": {
+    "success": true,
+    "student_id": "3444",
+    "student_name": "och",
+    "total_score": 20.0,
+    "raw_score": 8.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated impressive mathematical precision and logical structuring when addressing the revenue calculations in the first item. Across the attempted work, the candidate systematically broken down the multi-phase sales scenario, showing clear step-by-step working, correct percentages, accurate intermediate bag counts, and proper monetary units throughout. The candidate's strongest area was the calculation of phase-by-phase revenues, where they flawlessly computed the 31 initial bags at eighty thousand shillings each to get 2,480,00",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:23:50"
+  },
+  "0d280b40a4f1c67160627aede4d8e05ef6c456bbfbd0c0462493831d2c6ca97d": {
+    "success": true,
+    "student_id": "9893",
+    "student_name": "nam",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 8",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 9",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a strong foundation in multi-step financial mathematics throughout Item 1, executing complex calculations logically and systematically. In Part (a), the student successfully broken down the phased sales strategy, correctly determining the bag counts and corresponding revenues for all three phases before arriving at the accurate total revenue figure. The candidate's strongest work is evident in the Phase 2 calculations, where they correctly applied the percentage remaining (60%",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-06 21:24:36"
+  }
+}

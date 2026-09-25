@@ -1,0 +1,54 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S2",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Agany Madol",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 65.0,
+      "sync_time": "2026-05-17 13:16",
+      "questions": {
+        "Item 4": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 6": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 9": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 10": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Auto-marked by AI.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

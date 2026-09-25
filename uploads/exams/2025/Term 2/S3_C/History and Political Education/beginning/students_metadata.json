@@ -1,0 +1,39 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "beginning"
+  },
+  "students": [
+    {
+      "id": "323",
+      "student_id": "323",
+      "student_name": "Agany Madol",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 97.5,
+      "sync_time": "2026-05-14 13:26",
+      "questions": {
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified and explained multiple key roles of NGOs and CSOs, including service delivery (healthcare, housing, education, emergency relief), poverty alleviation through economic empowerment initiatives (e.g., village saving cooperatives, farmer associations), advocacy for human rights and justice, promotion of democracy and good governance (e.g., pressuring for free and fair elections, fighting corruption), and community development. Specific examples like Red Cross, FIDA, and FIBA were appropriately referenced, demonstrating strong application of knowledge. All expected major roles were covered comprehensively, earning full marks. A complete answer required a broad discussion of these various functions with supporting details."
+        },
+        "Item 2": {
+          "score": 19.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified and explained six distinct causes of land fragmentation, including population growth, industrialization, urbanization, land inheritance, land tenure systems, and increased demand for agricultural land, earning 18 marks. However, the definition of land fragmentation was"
+        }
+      },
+      "overall_feedback": "Item 1 (Roles of NGOs and CSOs): The student correctly identified and explained multiple key roles of NGOs and CSOs, including service delivery (healthcare, housing, education, emergency relief), poverty alleviation through economic empowerment initiatives (e.g., village saving cooperatives, farmer associations), advocacy for human rights and justice, promotion of democracy and good governance (e.g., pressuring for free and fair elections, fighting corruption), and community development. Specific examples like Red Cross, FIDA, and FIBA were appropriately referenced, demonstrating strong application of knowledge. All expected major roles were covered comprehensively, earning full marks. A complete answer required a broad discussion of these various functions with supporting details.\n\nItem 2 (Land Fragmentation): The student correctly identified and explained six distinct causes of land fragmentation, including population growth, industrialization, urbanization, land inheritance, land tenure systems, and increased demand for agricultural land, earning 18 marks. However, the definition of land fragmentation was",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Mathematics",
+    "exam_type": "Tests 2"
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "Makula",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 20.0,
+      "sync_time": "2026-08-02 11:22",
+      "questions": {
+        "Item 6": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly calculated the total revenue, net profit, and distribution per member, aligning perfectly with the marking scheme. All steps and final answers are accurate and clearly presented."
+        },
+        "Item 7": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": "The student attempted to"
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "002",
+      "student_id": "002",
+      "student_name": "Akia",
+      "total_pages": 3,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 11:22",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "003",
+      "student_id": "003",
+      "student_name": "Ochwo",
+      "total_pages": 3,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 11:22",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "004",
+      "student_id": "004",
+      "student_name": "Namuli",
+      "total_pages": 4,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 11:23",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "Kakooza",
+      "total_pages": 1,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 11:23",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    }
+  ]
+}

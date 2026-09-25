@@ -1,0 +1,42 @@
+{
+  "624abc4671671e7b90588e41b52b71c94255d5b079e1681a50f4e32767dc0548": {
+    "success": true,
+    "student_id": "889",
+    "student_name": "sameo",
+    "total_score": 40.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the answer for part (a) lacked calculation and comparison, and parts (b) and (c) were not attempted, instead providing an irrelevant description of a nuclear reactor."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for correctly describing the relationship between star color and temperature, and for identifying that stars are made of gases and dust, but failed to explain the life cycle of a star or the purpose"
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 12:22:10"
+  }
+}

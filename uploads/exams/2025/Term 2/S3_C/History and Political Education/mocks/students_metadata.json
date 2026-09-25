@@ -1,0 +1,78 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "mocks"
+  },
+  "students": [
+    {
+      "id": "567",
+      "student_id": "567",
+      "student_name": "Geu Alier",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 100.0,
+      "sync_time": "2026-05-18 12:19",
+      "questions": {
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "Awarded 20/20. Correct: Accurate definitions of ideas, Accurate explanation of theory, Accurate use of terminology, Accurate recall of facts, Recognition of key terms in questions, Clear structure of answers, Logical flow, Appropriate language for the subject, Explaining cause and effect, Drawing conclusions, \"Discuss\" - provide meaning required. Lost marks: None."
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "Awarded 20/20. Correct: Accurate definitions of ideas, Accurate explanation of theory, Accurate use of terminology, Accurate recall of facts, Recognition of key terms in questions, Clear structure of answers, Logical flow, Appropriate language for the subject, Explaining cause and effect, \"Define\" - precise meaning required, \"What do you think are the causes\" - provide meaning required. Lost marks: Drawing conclusions (the student did not provide a concluding statement for the causes of land fragmentation)."
+        }
+      },
+      "overall_feedback": "Item 1 (Roles of NGOs and CSOs in society/country): Awarded 20/20. Correct: Accurate definitions of ideas, Accurate explanation of theory, Accurate use of terminology, Accurate recall of facts, Recognition of key terms in questions, Clear structure of answers, Logical flow, Appropriate language for the subject, Explaining cause and effect, Drawing conclusions, \"Discuss\" - provide meaning required. Lost marks: None.\nItem 2 (Definition and causes of land fragmentation): Awarded 20/20. Correct: Accurate definitions of ideas, Accurate explanation of theory, Accurate use of terminology, Accurate recall of facts, Recognition of key terms in questions, Clear structure of answers, Logical flow, Appropriate language for the subject, Explaining cause and effect, \"Define\" - precise meaning required, \"What do you think are the causes\" - provide meaning required. Lost marks: Drawing conclusions (the student did not provide a concluding statement for the causes of land fragmentation).",
+      "strengths": [
+        "Accurate recall of facts, demonstrated by providing specific examples of NGOs/CSOs (e.g., UNICEF, Red Cross, FIDA) and their activities, as well as specific causes of land fragmentation (e.g., freehold tenure system).",
+        "Comprehensive explanation of concepts, detailing multiple roles of NGOs/CSOs and various causes of land fragmentation with clear cause-and-effect relationships."
+      ],
+      "areas_for_improvement": [
+        "Drawing conclusions: The student consistently missed providing a concluding statement for Item 2, which is a key component of a complete discussion.",
+        "Clarity in explanation: For Item 2, ensure all explanations, especially for complex causes like urbanization and land tenure, are fully accurate and clearly articulated to demonstrate a complete understanding of cause and effect."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Waswa Martin",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 75.0,
+      "sync_time": "2026-05-18 12:25",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "Awarded 18/20. Correct: Student provided a clear definition of NGOs and CSOs. Student demonstrated accurate explanation of ideas by detailing multiple roles including provision of social services, emergency aid, poverty reduction, human rights advocacy, development facilitation, democracy advocacy, women's rights promotion, policy negotiation, and anti-corruption efforts. Explanations were supported by evidence through relevant examples like UNICEF, Red Cross, FIDA, and specific regions like Karamoja. The answer exhibited a clear structure of answers, appropriate language for the subject, and good clarity and explanation. Lost marks: No significant rubric criteria were missed; minor grammatical imperfections did not detract from the overall quality."
+        },
+        "Item 2": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": "Awarded 12/20. Correct: Student provided a basic but correct definition of land fragmentation. Student demonstrated accurate explanation of ideas by correctly identifying population increase, increased agriculture, land policies, and land tenure systems as causes. The answer had a clear structure of answers and legible handwriting. Lost marks: Student failed to provide accurate explanation of ideas for industrialization and urbanization as causes of land fragmentation, demonstrating a misunderstanding of these concepts in this context. The explanation for \"unfavorable policies\" was convoluted and lacked clarity and explanation, making it difficult to award marks."
+        }
+      },
+      "overall_feedback": "Item 1 (Roles of NGOs and CSOs): Awarded 18/20. Correct: Student provided a clear definition of NGOs and CSOs. Student demonstrated accurate explanation of ideas by detailing multiple roles including provision of social services, emergency aid, poverty reduction, human rights advocacy, development facilitation, democracy advocacy, women's rights promotion, policy negotiation, and anti-corruption efforts. Explanations were supported by evidence through relevant examples like UNICEF, Red Cross, FIDA, and specific regions like Karamoja. The answer exhibited a clear structure of answers, appropriate language for the subject, and good clarity and explanation. Lost marks: No significant rubric criteria were missed; minor grammatical imperfections did not detract from the overall quality.\nItem 2 (Land fragmentation): Awarded 12/20. Correct: Student provided a basic but correct definition of land fragmentation. Student demonstrated accurate explanation of ideas by correctly identifying population increase, increased agriculture, land policies, and land tenure systems as causes. The answer had a clear structure of answers and legible handwriting. Lost marks: Student failed to provide accurate explanation of ideas for industrialization and urbanization as causes of land fragmentation, demonstrating a misunderstanding of these concepts in this context. The explanation for \"unfavorable policies\" was convoluted and lacked clarity and explanation, making it difficult to award marks.",
+      "strengths": [
+        "Accurate explanation of ideas for Item 1, providing a comprehensive and well-supported discussion of NGO/CSO roles.",
+        "Structure of answers, presenting information clearly with a logical flow in both items."
+      ],
+      "areas_for_improvement": [
+        "Accurate explanation of ideas for Item 2, specifically understanding the impact of industrialization and urbanization on land fragmentation.",
+        "Clarity and explanation for Item 2, ensuring all points are clearly articulated and logically sound, particularly when discussing complex policy impacts."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "exam_info": {
+    "year": "2024",
+    "term": "Term 2",
+    "class": "S4",
+    "stream": "B",
+    "subject": "Geography",
+    "exam_type": "mocks"
+  },
+  "students": [
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Madol Anyuat",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 70.0,
+      "sync_time": "2026-05-14 13:45",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "For part (a), the student correctly identified and explained high fertility rates, early marriage and pregnancies, increased refugee influx, and the immigration effect, earning full marks for these four distinct and relevant reasons. They also correctly identified high life expectancy leading to reduced death rates as a reason, earning partial credit for the concept. However, the explanation for high life expectancy included a confusing and contradictory example (\"more people died in a single before 2014 than after 2014\") which undermined the clarity of the point. For part (b), the student correctly identified and explained six negative impacts: increased crime rate, unemployment, land fragmentation and conflicts, environmental degradation, growth of slums, and the easy spread of diseases. These points were well-articulated and demonstrated a strong understanding of the adverse consequences. However, the student completely failed to address the positive impacts of rapid population growth, despite the question explicitly asking for \"both positive and negative\" impacts. This omission represents a significant gap in the answer. A complete answer for part (a) required at least four clear reasons for population increase, each briefly explained. A complete answer for part (b) required a balanced discussion of both positive (e.g., increased labor force, larger market, innovation, cultural diversity) and negative impacts of rapid population growth."
+        }
+      },
+      "overall_feedback": "Item 1 (Rapid Population Growth in Uganda): For part (a), the student correctly identified and explained high fertility rates, early marriage and pregnancies, increased refugee influx, and the immigration effect, earning full marks for these four distinct and relevant reasons. They also correctly identified high life expectancy leading to reduced death rates as a reason, earning partial credit for the concept. However, the explanation for high life expectancy included a confusing and contradictory example (\"more people died in a single before 2014 than after 2014\") which undermined the clarity of the point. For part (b), the student correctly identified and explained six negative impacts: increased crime rate, unemployment, land fragmentation and conflicts, environmental degradation, growth of slums, and the easy spread of diseases. These points were well-articulated and demonstrated a strong understanding of the adverse consequences. However, the student completely failed to address the positive impacts of rapid population growth, despite the question explicitly asking for \"both positive and negative\" impacts. This omission represents a significant gap in the answer. A complete answer for part (a) required at least four clear reasons for population increase, each briefly explained. A complete answer for part (b) required a balanced discussion of both positive (e.g., increased labor force, larger market, innovation, cultural diversity) and negative impacts of rapid population growth.",
+      "strengths": [
+        "The student demonstrated a comprehensive grasp of the negative consequences of rapid population growth, providing six distinct and well-explained points. The student accurately identified and explained multiple key demographic and socio-economic factors contributing to Uganda's population growth, including specific contextual factors like refugee influx and immigration. The answer was presented in well-organised paragraphs, making it easy to read and follow the student's arguments."
+      ],
+      "areas_for_improvement": [
+        "The student must carefully read and address all components of a question, specifically ensuring that if \"both positive and negative\" aspects are requested, both are provided. While the core concepts were often correct, the student should ensure that all examples and supporting details are accurate and do not contradict the main point being made, as seen with the life expectancy explanation. The student needs to revise and understand the potential positive impacts of population growth to provide a balanced and complete geographical analysis."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "22",
+      "student_id": "22",
+      "student_name": "Santos madol",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 87.5,
+      "sync_time": "2026-05-14 13:47",
+      "questions": {
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified and clearly explained five distinct reasons for Uganda's rapid population increase: high fertility rate, early marriage and pregnancies, increased refugee influx, high life expectancy, and immigration effect. Each point was well-articulated with relevant details specific to Uganda, demonstrating excellent knowledge and understanding of population dynamics. The answer exceeded the requirement of \"at least four clear reasons\" and was presented in well-organised paragraphs, earning full marks. A complete answer required at least four clearly explained reasons for the population increase, which the student provided with exceptional clarity and detail."
+        },
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified and thoroughly explained six negative impacts of rapid population growth: increased crime rate, unemployment, land fragmentation and conflicts, environmental degradation, growth of slums, and easy spread of diseases. Each explanation was detailed and relevant to the Ugandan context, demonstrating strong understanding of the challenges associated with population explosion. However, the student completely omitted any discussion of the *positive* impacts of rapid population growth, which was explicitly requested in the question (\"both positive and negative\"). A complete answer required a balanced discussion covering both the positive and negative impacts of rapid population growth on community members."
+        }
+      },
+      "overall_feedback": "Item 1 (Reasons for rapid population increase in Uganda): The student correctly identified and clearly explained five distinct reasons for Uganda's rapid population increase: high fertility rate, early marriage and pregnancies, increased refugee influx, high life expectancy, and immigration effect. Each point was well-articulated with relevant details specific to Uganda, demonstrating excellent knowledge and understanding of population dynamics. The answer exceeded the requirement of \"at least four clear reasons\" and was presented in well-organised paragraphs, earning full marks. A complete answer required at least four clearly explained reasons for the population increase, which the student provided with exceptional clarity and detail.\n\nItem 2 (Impacts of rapid population growth in Uganda): The student correctly identified and thoroughly explained six negative impacts of rapid population growth: increased crime rate, unemployment, land fragmentation and conflicts, environmental degradation, growth of slums, and easy spread of diseases. Each explanation was detailed and relevant to the Ugandan context, demonstrating strong understanding of the challenges associated with population explosion. However, the student completely omitted any discussion of the *positive* impacts of rapid population growth, which was explicitly requested in the question (\"both positive and negative\"). A complete answer required a balanced discussion covering both the positive and negative impacts of rapid population growth on community members.",
+      "strengths": [
+        "Santos demonstrated excellent content knowledge regarding population dynamics in Uganda, providing specific and relevant examples. The explanations for each point were clear, detailed, and well-reasoned. The student also showed strong organisational skills, presenting answers in well-structured paragraphs."
+      ],
+      "areas_for_improvement": [
+        "Santos must improve on thoroughly reading and addressing all components of a question. In Item 2, the explicit instruction to discuss \"both positive and negative\" impacts was not fully followed, leading to a significant omission. Future answers should ensure all aspects of the prompt are covered to achieve full marks."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

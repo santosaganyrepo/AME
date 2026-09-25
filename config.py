@@ -21,13 +21,13 @@ class Config:
     DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
     
     SUBJECTS = [
-        'English Language', 'Literature in English', 'Mathematics',
-        'Biology', 'Chemistry', 'Physics', 'Geography',
+        'English Language', 'Literature in English', 'Mathematics','Additional Mathematics',
+        'Biology', 'Chemistry', 'Physics', 'Geography','Citizenship',
         'History and Political Education', 'Kiswahili',
-        'Christian Religious Education (CRE)',
+        'Christian Religious Education (CRE)','Commerce',
         'Islamic Religious Education (IRE)',
         'Art and Design', 'Performing Arts', 'Entrepreneurship',
-        'Information and Communication Technology (ICT)',
+        'Information and Communication Technology (ICT)','Accounting',
         'Skills Technology and Design', 'Nutrition and Food Technology',
         'Agriculture', 'Physical Education', 'General Science (Special Needs)',
         'French', 'German', 'Arabic', 'Latin', 'Chinese (Mandarin)',
@@ -36,7 +36,7 @@ class Config:
         'Lumasaba', 'Lusoga'
     ]
     
-    CLASSES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7']
+    CLASSES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7','P8']
     TERMS = ['Term 1', 'Term 2', 'Term 3']
     
     @staticmethod

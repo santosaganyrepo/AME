@@ -1,0 +1,26 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 1",
+    "class": "S5",
+    "stream": "C",
+    "subject": "Physics",
+    "exam_type": "Midterm"
+  },
+  "students": [
+    {
+      "id": "007",
+      "student_id": "007",
+      "student_name": "Adhieu Madol",
+      "total_pages": 4,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-12 14:47",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "21d4e81cae7658c1606532576cfece84aadc0bd98db9094e59100766dfebecf3": {
+    "success": true,
+    "student_id": "212",
+    "student_name": "33332",
+    "total_score": 36.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": "The student identified 8 distinct roles of NGOs/CSOs, each earning 2 marks. These points align directly with the marking scheme, such as provision of social services, disaster relief, and advocacy for human"
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:48:13"
+  },
+  "f4231ac7e9b174ee5ccb3f8682713083ad6845376f5832cacc83ce9a52e8cc44": {
+    "success": true,
+    "student_id": "11",
+    "student_name": "122",
+    "total_score": 28.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student provided 6 distinct roles of NGOs and CSOs, each earning 2 marks from the rubric. The raw score of 12/10 is scaled to 12/20"
+      },
+      "Item 3": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:48:25"
+  },
+  "52fa4f2cc63ce9bbd1ebec2b20e81be023ccf9b66568719fb08efe5c4430d648": {
+    "success": true,
+    "student_id": "222",
+    "student_name": "232",
+    "total_score": 31.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": "The student scored 16/20. Eight distinct roles of NGOs and CSOs were correctly identified and elaborated upon, each earning 2 marks as per the rubric."
+      },
+      "Item 2": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:48:37"
+  },
+  "453628a69230931823b55f9c44b351f2b8acf755185e1967f4d98760a28bb9ca": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "323",
+    "total_score": 28.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": "The student earned marks for provision of social services, advocacy for human rights, advocacy for good governance, and promotion of gender equality. The point on mobilization of resources was not explicitly stated."
+      },
+      "Item 2": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:48:48"
+  },
+  "b62a29810b2bea41a021982fbf9eee4e3fd27fbbbdeecd9eb955a8c794102852": {
+    "success": true,
+    "student_id": "32",
+    "student_name": "43",
+    "total_score": 0.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student attempted this item. No marks can be awarded as the official marking scheme/rubric for this question was not provided."
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:49:00"
+  },
+  "45c61e0affa11453952f7f1613a5ec9ae30be47b64c7f771293a1382b1513d45": {
+    "success": true,
+    "student_id": "111",
+    "student_name": "12121",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student earned 12/20 marks. Points awarded for providing social services, emergency relief, poverty reduction, advocating for human rights, promoting gender equality, and promoting transparency/accountability."
+      },
+      "Item 2": {
+        "score": 8.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 11:58:46"
+  },
+  "127b9612247e96a6633bcaa9551b117cdb5074f141e6b8490de2980fd6cfd707": {
+    "success": true,
+    "student_id": "8822",
+    "student_name": "333",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": "The student earned 6/20 marks. Points were awarded for mentioning NGOs providing social services, emergency aid, and mobilizing resources to fight poverty."
+      },
+      "Item 2": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 12:19:05"
+  },
+  "bf81e82baa6605447254120dc975bc9ffa660cc5bf09356afaedcbb2431b09c5": {
+    "success": true,
+    "student_id": "09933",
+    "student_name": "3322",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student provided a partial definition and several causes of land fragmentation, including urbanization, commercial purposes, increased agriculture, and land policies. The answer lacks depth and specific examples"
+      },
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 12:19:48"
+  },
+  "ff31e7fab5c6b8bf9f19dc0594ac995b82c1068b779d9d12aae5b7ce40b9ee85": {
+    "success": true,
+    "student_id": "334",
+    "student_name": "34",
+    "total_score": 2.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student did not attempt this item, nor is there any content on the submitted page that could be attributed to it. This item scores 0/20."
+      },
+      "Item 3": {
+        "score": 2.0,
+        "max_score": 20,
+        "feedback": "The student did not provide a"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 12:20:02"
+  }
+}

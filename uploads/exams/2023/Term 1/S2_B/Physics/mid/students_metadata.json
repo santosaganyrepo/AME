@@ -1,0 +1,152 @@
+{
+  "exam_info": {
+    "year": "2023",
+    "term": "Term 1",
+    "class": "S2",
+    "stream": "B",
+    "subject": "Physics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "7837",
+      "student_id": "7837",
+      "student_name": "Pros",
+      "total_pages": 7,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 59.0,
+      "sync_time": "2026-05-23 14:24",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system."
+        },
+        "Item 2": {
+          "score": 19.0,
+          "max_score": 20,
+          "feedback": "The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner"
+        },
+        "Item 3": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 7.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 7": {
+          "score": 3.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 1 (Simple instrument design and light sources): The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system.\nItem 2 (Nuclear power explanation): The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "567",
+      "student_id": "567",
+      "student_name": "Geu Alier",
+      "total_pages": 7,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-23 14:37",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "343",
+      "student_id": "343",
+      "student_name": "Agany Madol",
+      "total_pages": 7,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 59.0,
+      "sync_time": "2026-05-23 14:48",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system."
+        },
+        "Item 2": {
+          "score": 19.0,
+          "max_score": 20,
+          "feedback": "The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner"
+        },
+        "Item 3": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 7.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 7": {
+          "score": 3.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 1 (Simple instrument design and light sources): The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system.\nItem 2 (Nuclear power explanation): The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Agany Madol",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 59.0,
+      "sync_time": "2026-05-23 14:49",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system."
+        },
+        "Item 2": {
+          "score": 19.0,
+          "max_score": 20,
+          "feedback": "The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner"
+        },
+        "Item 3": {
+          "score": 12.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 7.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 7": {
+          "score": 3.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 1 (Simple instrument design and light sources): The student correctly chose a mirror for the simple instrument, provided a clear diagram of a concave mirror focusing light, and accurately explained the principle of reflection. The student also correctly identified four key differences between light from a regular bulb and a laser (divergence, monochromaticity, coherence, intensity) and provided sound advice on the laser's suitability for a security system.\nItem 2 (Nuclear power explanation): The student accurately described nuclear fission as the process for producing nuclear power, including the role of heavy nuclei and neutrons, and the release of energy. The student also correctly listed benefits such as large energy output and no greenhouse gases, identified risks like harm to human health and long-term radioactivity, and suggested appropriate control measures for radioactive waste. The explanation for \"sustainable manner",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

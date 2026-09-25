@@ -1,0 +1,265 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 1",
+    "class": "S2",
+    "stream": "A",
+    "subject": "History and Political Education",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "74398",
+      "student_id": "74398",
+      "student_name": "ajak",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 20.0,
+      "sync_time": "2026-05-30 11:08",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student provided a good introduction and identified several roles of NGOs/CSOs, earning marks for service delivery, advocacy, emergency aid, poverty reduction, good governance, gender equality, and mobilization. However"
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "877",
+      "student_id": "877",
+      "student_name": "cxcc",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 34.0,
+      "sync_time": "2026-05-30 11:09",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "The student scored 14/20. The answer provided a good introduction, conclusion, and examples, earning"
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 3": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 4": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "7837",
+      "student_id": "7837",
+      "student_name": "2323",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 20.0,
+      "sync_time": "2026-05-30 11:09",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student provided a reasonable introduction and discussed several roles of NGOs/CSOs, including service delivery, advocacy for human rights, promotion of democracy, and good governance. However, the discussion lacks depth and specific"
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "8982",
+      "student_id": "8982",
+      "student_name": "333",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 28.0,
+      "sync_time": "2026-05-30 11:09",
+      "questions": {
+        "Item 1": {
+          "score": 8.0,
+          "max_score": 20,
+          "feedback": "The student earned 8/20 marks by identifying four distinct roles of NGOs/CSOs: service delivery, economic growth/poverty reduction, human rights advocacy, and good governance/anti-corruption. The"
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "333",
+      "student_id": "333",
+      "student_name": "444",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 34.0,
+      "sync_time": "2026-05-30 11:09",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "The student provided a clear introduction, discussed all five required roles of NGOs/CSOs with examples, and offered a concluding statement. However, the answer lacked a summary of challenges, specific discussion of the Uganda/"
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "444",
+      "student_id": "444",
+      "student_name": "33",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 10.0,
+      "sync_time": "2026-05-30 11:10",
+      "questions": {
+        "Item 1": {
+          "score": 5.0,
+          "max_score": 20,
+          "feedback": "The student provided a partial definition of NGOs and several roles. Marks were awarded for identifying service delivery, human rights advocacy, and promotion of democracy, each earning 1 mark."
+        },
+        "Item 2": {
+          "score": 5.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "33",
+      "student_id": "33",
+      "student_name": "1222",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 10.0,
+      "sync_time": "2026-05-30 11:10",
+      "questions": {
+        "Item 3": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student correctly identified urbanization, increased agriculture, and land policies as causes of land fragmentation, earning 10 marks. However, the student did not address the \"BAC Background\" section of the marking scheme ("
+        },
+        "Item 1": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "32323",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 15.0,
+      "sync_time": "2026-05-30 11:10",
+      "questions": {
+        "Item 1": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": "The student attempted to discuss NGOs but did not provide a definition or specific roles that align with the marking scheme's explicit points. The answer lacks the required depth and specific examples for any marks."
+        },
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "32",
+      "student_id": "32",
+      "student_name": "333",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 15.0,
+      "sync_time": "2026-05-30 11:10",
+      "questions": {
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": "The student attempted to answer Item 2, specifically the causes of land fragmentation. The answer correctly identifies urbanization, land history, and agricultural land use as causes, aligning with rubric points for population pressure and land tenure."
+        },
+        "Item 1": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

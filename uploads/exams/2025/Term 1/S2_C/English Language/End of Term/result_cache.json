@@ -1,0 +1,42 @@
+{
+  "dd8815a55eb6e6042b5dedfeac5b8afec2e7d86dbf07cec85ede7a6173f765bf": {
+    "success": true,
+    "student_id": "65725",
+    "student_name": "Agany Santos",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 12 marks for correctly identifying a prism for TIR and providing a partially labeled diagram, along with explaining coherence and monochromatic properties of a laser. The explanation of prism operation was incomplete, and the conclusion on laser suitability for security was missing."
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for correctly identifying charge dissipation and a safe path to ground for a lightning conductor, and for listing fire hazard and electric shock as dangers"
+      },
+      "Item 5": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-25 12:08:14"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "25f686049c2d95d93b1d1f55b589dbde587bf576eb386013649403cfe670b6a6": {
+    "success": true,
+    "student_id": "544",
+    "student_name": "4344",
+    "total_score": 30.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": "The student earned marks for service delivery, advocacy for human rights, and economic growth/poverty reduction. The answer lacked specific points on good governance/anti-corruption and environmental protection as distinct, well-"
+      },
+      "Item 2": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 12:41:54"
+  },
+  "57e01b4421b53ad30c23874670c33a7e35e710573fd5d2e5cd36a51cfc30b4e0": {
+    "success": true,
+    "student_id": "1112",
+    "student_name": "121212",
+    "total_score": 30.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student provided a good introduction and conclusion, earning full marks for those sections. Four out of five specific roles of NGOs/CSOs were clearly identified and explained, but environmental conservation was absent."
+      },
+      "Item 2": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-30 12:42:06"
+  }
+}

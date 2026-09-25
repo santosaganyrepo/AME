@@ -1,600 +1,1827 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Setup - Configure & Mark</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            min-height: 100vh; 
-            padding: 20px; 
-        }
-        .setup-card { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 15px; 
-            max-width: 720px; 
-            margin: 30px auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25); 
-        }
-        h1 { 
-            color: #667eea; 
-            text-align: center; 
-            margin-bottom: 8px; 
-            font-size: 2.1em;
-        }
-        .subtitle { 
-            text-align: center; 
-            color: #666; 
-            margin-bottom: 25px; 
-            font-size: 1.1em;
-        }
-        .warning { 
-            background: #fff3cd; 
-            border-left: 4px solid #ffc107; 
-            padding: 15px; 
-            margin: 0 0 25px 0; 
-            border-radius: 6px; 
-        }
-        .warning strong { color: #856404; }
-        .info-box {
-            background: #d1ecf1;
-            border-left: 4px solid #0c5460;
-            padding: 15px;
-            margin: 0 0 25px 0;
-            border-radius: 6px;
-        }
-        .info-box strong { color: #0c5460; }
-        .form-section {
-            margin-bottom: 32px;
-            padding-bottom: 28px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .form-section:last-of-type { border-bottom: none; }
-        .section-title {
-            color: #667eea;
-            font-size: 1.35em;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .form-group { 
-            margin-bottom: 22px; 
-        }
-        label { 
-            display: block; 
-            font-weight: 600; 
-            margin-bottom: 8px; 
-            color: #555; 
-        }
-        label .required { color: #e74c3c; }
-        label .optional {
-            color: #95a5a6;
-            font-weight: 400;
-            font-size: 0.9em;
-        }
-        input, select, textarea { 
-            width: 100%; 
-            padding: 13px 14px; 
-            border: 2px solid #e0e0e0; 
-            border-radius: 8px; 
-            font-size: 1em;
-            transition: border-color 0.25s, box-shadow 0.25s;
-        }
-        input:focus, select:focus, textarea:focus { 
-            outline: none; 
-            border-color: #667eea; 
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
-        }
-        textarea { min-height: 110px; resize: vertical; }
-        .input-hint {
-            color: #777;
-            font-size: 0.86em;
-            margin-top: 6px;
-            display: block;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduMark AI — Exam Setup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    // Apply the saved theme + sidebar state before first paint — same key
+    // dashboard.html writes to, so nothing shifts/jumps between pages.
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
+        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
+        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
 
-        /* File upload styling from nice version */
-        .file-upload-box {
-            border: 2px dashed #667eea;
-            border-radius: 10px;
-            padding: 32px 20px;
-            text-align: center;
-            background: #f9fbff;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            margin-top: 10px;
-        }
-        .file-upload-box:hover {
-            background: #f0f4ff;
-            border-color: #5a6fd1;
-        }
-        .file-upload-box.required {
-            border-color: #e74c3c;
-            background: #fff8f8;
-        }
-        .file-upload-box.has-files {
-            border-color: #28a745;
-            background: #f6fff8;
-        }
-        .file-upload-box input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .file-upload-box .icon { font-size: 2.8em; margin-bottom: 12px; }
-        .file-upload-box p {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 1.08em;
-        }
-        .file-upload-box.required p { color: #e74c3c; }
-        .file-upload-box.has-files p { color: #28a745; }
-        .file-upload-box small { color: #888; font-size: 0.92em; }
-        .file-list { margin-top: 16px; }
-        .file-item {
-            background: #e8f5e9;
-            border: 1px solid #a5d6a7;
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .file-item .filename {
-            color: #1b5e20;
-            font-weight: 500;
-            flex: 1;
-        }
-        .file-item .remove {
-            color: #c62828;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 4px 10px;
-            border: 1px solid #c62828;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        .file-item .remove:hover {
-            background: #c62828;
-            color: white;
-        }
-        .file-count-badge {
-            background: #28a745;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.88em;
-            margin-left: 12px;
-            font-weight: bold;
-        }
+  <style>
+    /* ══════════════════════════════════════════════
+       DESIGN TOKENS — shared 2-theme system (light / dark),
+       identical values to dashboard.html / view_students.html.
+    ══════════════════════════════════════════════ */
+    :root, html[data-theme="dark"] {
+      /* Backgrounds */
+      --bg:           #0f172a;
+      --bg-panel:     #131c2e;
+      --bg-elevated:  #1b2436;
+      --bg-card:      rgba(255,255,255,0.055);
+      --bg-card-h:    rgba(255,255,255,0.09);
+      --bg-input:     rgba(255,255,255,0.05);
+      --bg-input-h:   rgba(255,255,255,0.09);
 
-        /* Main button */
-        button.main-btn { 
-            width: 100%; 
-            padding: 18px; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-size: 1.18em; 
-            font-weight: 600; 
-            cursor: pointer; 
-            margin-top: 28px;
-            transition: all 0.3s;
-        }
-        button.main-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 30px rgba(102,126,234,0.35); 
-        }
-        button.main-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
+      /* Borders */
+      --border:       rgba(255,255,255,0.11);
+      --border-h:     rgba(255,255,255,0.22);
+      --border-focus: rgba(255,255,255,0.55);
 
-        /* Messages */
-        .message { 
-            padding: 16px; 
-            border-radius: 8px; 
-            margin-top: 24px; 
-            text-align: center;
-            display: none;
-        }
-        .message.success { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
-        .message.error   { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+      /* Brand / Accent — monochrome */
+      --accent:       #818cf8;
+      --accent-2:     #ffffff;
+      --accent-soft:  rgba(255,255,255,0.12);
+      --accent-glow:  rgba(255,255,255,0.14);
+      --grad-main:    var(--accent);
+      --grad-subtle:  var(--accent-soft);
+      --purple:       var(--accent);
+      --purple-soft:  var(--accent-soft);
 
-        /* Loading spinner */
-        .loading {
-            display: inline-block;
-            width: 20px; height: 20px;
-            border: 3px solid rgba(255,255,255,0.35);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+      /* Semantic */
+      --success:      #34d399;
+      --success-soft: rgba(52,211,153,0.15);
+      --warning:      #fbbf24;
+      --warning-soft: rgba(251,191,36,0.15);
+      --danger:       #f87171;
+      --danger-soft:  rgba(248,113,113,0.15);
+      --info:         #60c8ff;
+      --info-soft:    rgba(96,200,255,0.13);
 
-        /* ────────────────────────────────────────────── */
-        /* Duplicate modal (from version B, restyled)      */
-        /* ────────────────────────────────────────────── */
-        .modal-overlay {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65);
-            z-index: 1000;
-        }
-        .duplicate-modal {
-            display: none;
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 36px 32px;
-            border-radius: 16px;
-            box-shadow: 0 20px 70px rgba(0,0,0,0.4);
-            max-width: 520px;
-            width: 92%;
-            z-index: 1001;
-            text-align: center;
-        }
-        .modal-icon { font-size: 3.8em; margin-bottom: 16px; color: #ff9800; }
-        .modal-title { font-size: 1.6em; color: #333; margin-bottom: 12px; font-weight: 700; }
-        .modal-message { font-size: 1.05em; color: #555; line-height: 1.5; margin-bottom: 20px; }
-        .session-details {
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 0.98em;
-        }
-        .session-details p { margin: 6px 0; }
-        .modal-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 24px;
-        }
-        .btn-modal {
-            padding: 12px 32px;
-            font-size: 1.05em;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-no  { background: #6c757d; color: white; }
-        .btn-yes { background: #dc3545; color: white; }
-        .btn-no:hover  { background: #5a6268; }
-        .btn-yes:hover { background: #c82333; }
-        .warning-text {
-            color: #dc3545;
-            font-weight: 600;
-            margin-top: 16px;
-            font-size: 0.96em;
-        }
-    </style>
+      /* Text */
+      --text-1:       #f2f2f3;
+      --text-2:       #b2b2b8;
+      --text-3:       #7a7a80;
+      --text-label:   #d4d4d9;
+
+      /* Layout */
+      --sidebar-w:    252px;
+      --sidebar-col:  68px;
+      --header-h:     60px;
+
+      /* Shape */
+      --radius-xs: 7px;
+      --radius-sm: 11px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+
+      /* Shadows */
+      --shadow-md:  0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg:  0 16px 48px rgba(0,0,0,0.5);
+      --shadow-glow: none;
+
+      --transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+      --font-serif: 'Space Grotesk', sans-serif;
+      --font-body:  'DM Sans', system-ui, sans-serif;
+    }
+
+    /* ══════════════════════════════════════════════
+       LIGHT MODE — pure white & black
+    ══════════════════════════════════════════════ */
+    html[data-theme="light"] {
+      --bg:           #ffffff;
+      --bg-panel:     rgba(255,255,255,0.85);
+      --bg-elevated:  #f2f2f2;
+      --bg-card:      #ffffff;
+      --bg-card-h:    #f4f4f4;
+      --bg-input:     #ffffff;
+      --bg-input-h:   #f4f4f4;
+      --border:       rgba(0,0,0,0.10);
+      --border-h:     rgba(0,0,0,0.20);
+      --border-focus: rgba(0,0,0,0.55);
+      --accent:       #4f46e5;
+      --accent-2:     #0a0a0a;
+      --accent-soft:  rgba(0,0,0,0.06);
+      --accent-glow:  rgba(0,0,0,0.10);
+      --grad-main:    var(--accent);
+      --grad-subtle:  var(--accent-soft);
+      --purple:       var(--accent);
+      --purple-soft:  var(--accent-soft);
+      --success:      #16a34a;
+      --success-soft: rgba(22,163,74,0.10);
+      --warning:      #d97706;
+      --warning-soft: rgba(217,119,6,0.10);
+      --danger:       #dc2626;
+      --danger-soft:  rgba(220,38,38,0.10);
+      --info:         #0284c7;
+      --info-soft:    rgba(2,132,199,0.10);
+      --text-1:       #0a0a0a;
+      --text-2:       #45454a;
+      --text-3:       #8a8a90;
+      --text-label:   #26262c;
+      --shadow-md:  0 8px 24px rgba(0,0,0,0.08);
+      --shadow-lg:  0 16px 48px rgba(0,0,0,0.12);
+      --shadow-glow: none;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 99px; }
+
+    /* ══════════════════════════════════════════════
+       APP SHELL
+    ══════════════════════════════════════════════ */
+    .shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+    /* ══════════════════════════════════════════════
+       SIDEBAR
+    ══════════════════════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg-panel);
+border-right: 1px solid var(--border);
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100; overflow: hidden;
+      transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+
+    .sidebar.collapsed { width: var(--sidebar-col); }
+    html.sb-collapsed .sidebar:not(.mobile-open) { width: var(--sidebar-col); }
+
+    .sb-brand {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
+      min-height: var(--header-h);
+      flex-shrink: 0;
+    }
+    .sb-toggle-btn {
+      width: 34px; height: 34px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-xs); color: var(--text-1);
+      cursor: pointer; font-size: 14px; transition: var(--transition);
+    }
+    .sb-toggle-btn:hover { background: var(--bg-card-h); border-color: var(--border-h); }
+    .sb-brand-link {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; overflow: hidden; min-width: 0;
+    }
+    .sidebar.collapsed .sb-brand { justify-content: center; padding: 13px 0; }
+    .sidebar.collapsed .sb-brand-link { display: none; }
+
+    .sb-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 0 20px var(--purple-soft);
+    }
+
+    .sb-brand-text { overflow: hidden; transition: var(--transition); white-space: nowrap; }
+    .sb-name    { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--text-1); display: block; line-height: 1.2; }
+    .sb-tagline { font-size: 10px; color: var(--text-3); letter-spacing: 0.8px; text-transform: uppercase; }
+    .sidebar.collapsed .sb-brand-text { opacity: 0; width: 0; }
+
+    .sb-nav { flex: 1; padding: 12px 10px; overflow: hidden; }
+
+    .sb-section-label {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 1.4px;
+      color: var(--text-3); padding: 0 8px; margin: 14px 0 5px;
+      white-space: nowrap; transition: var(--transition);
+    }
+    .sidebar.collapsed .sb-section-label { opacity: 0; }
+
+    .sb-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 10px 10px; border-radius: var(--radius-sm);
+      cursor: pointer; transition: var(--transition);
+      margin-bottom: 2px; text-decoration: none;
+      color: var(--text-2); border: 1px solid transparent;
+      white-space: nowrap; position: relative;
+    }
+    .sb-item:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border); }
+    .sb-item.active {
+      background: var(--accent-soft);
+      color: var(--text-1);
+      border-color: rgba(128,128,128,0.22);
+    }
+    .sb-item.active .sb-ico { color: var(--accent); }
+
+    .sb-ico  { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+    .sb-lbl  { font-size: 13.5px; font-weight: 500; overflow: hidden; transition: var(--transition); }
+    .sidebar.collapsed .sb-lbl { opacity: 0; width: 0; }
+
+    .sb-badge {
+      margin-left: auto; background: var(--purple);
+      color: #fff; font-size: 9px; font-weight: 700;
+      padding: 2px 7px; border-radius: 99px; flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .sidebar.collapsed .sb-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
+
+    .sidebar.collapsed .sb-item::after {
+      content: attr(data-tip);
+      position: absolute; left: calc(100% + 10px); top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      color: var(--text-1); font-size: 12px; font-weight: 500;
+      padding: 5px 11px; border-radius: var(--radius-xs);
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.15s; box-shadow: var(--shadow-md);
+    }
+    .sidebar.collapsed .sb-item:hover::after { opacity: 1; }
+
+    .sb-footer { padding: 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .sb-footer-nav { margin-bottom: 0; }
+
+    .sb-toggle {
+      width: 100%; display: flex; align-items: center; gap: 11px;
+      padding: 9px 10px; border-radius: var(--radius-sm);
+      background: none; border: 1px solid var(--border);
+      color: var(--text-2); cursor: pointer; transition: var(--transition);
+      font-size: 13px; font-family: var(--font-body);
+      white-space: nowrap; overflow: hidden;
+    }
+    .sb-toggle:hover { background: var(--bg-card-h); color: var(--text-1); }
+    .sb-toggle i { flex-shrink: 0; transition: var(--transition); }
+    .sidebar.collapsed .sb-toggle i { transform: rotate(180deg); }
+    .sb-toggle-lbl { transition: var(--transition); }
+    .sidebar.collapsed .sb-toggle-lbl { opacity: 0; width: 0; }
+
+    /* ══════════════════════════════════════════════
+       MAIN CONTENT AREA
+    ══════════════════════════════════════════════ */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+      transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+    .main-content.expanded { margin-left: var(--sidebar-col); }
+    html.sb-collapsed .main-content { margin-left: var(--sidebar-col); }
+
+    /* ══════════════════════════════════════════════
+       TOPBAR
+    ══════════════════════════════════════════════ */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: var(--header-h);
+      background: var(--bg-panel);
+border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50;
+    }
+
+    .tb-left { display: flex; align-items: center; gap: 14px; }
+
+    .hamburger {
+      display: none; width: 34px; height: 34px;
+      align-items: center; justify-content: center;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-xs); cursor: pointer;
+      font-size: 14px; color: var(--text-1); transition: var(--transition);
+    }
+    .hamburger:hover { background: var(--bg-card-h); }
+
+    .tb-title { font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: var(--text-1); }
+    .tb-subtitle { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+
+    .tb-right { display: flex; align-items: center; gap: 10px; }
+
+    .tb-link {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 14px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-xs);
+      color: var(--text-2); font-size: 12.5px; font-weight: 500;
+      text-decoration: none; transition: var(--transition);
+    }
+    .tb-link:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border-h); }
+    .tb-link i { font-size: 12px; }
+
+    /* ══════════════════════════════════════════════
+       SCROLL AREA
+    ══════════════════════════════════════════════ */
+    .scroll-area {
+      flex: 1;
+      padding: 24px 32px 56px;
+      max-width: 1180px;
+      width: 100%;
+    }
+
+    /* ══════════════════════════════════════════════
+       TWO-COLUMN SETUP LAYOUT — primary config left,
+       live session summary + validation right. Fills
+       the dead space the single narrow column left on
+       wide screens, and collapses to one column on
+       tablets/phones so nothing is ever cramped.
+    ══════════════════════════════════════════════ */
+    .setup-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 20px;
+      align-items: start;
+    }
+    .setup-summary { position: sticky; top: 20px; display: flex; flex-direction: column; gap: 14px; }
+    @media (max-width: 980px) {
+      .setup-layout { grid-template-columns: 1fr; }
+      .setup-summary { position: static; }
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+    .summary-card-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text-3); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .summary-card-title i { color: var(--accent); font-size: 12px; }
+    .summary-row {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(128,128,128,0.12);
+      font-size: 12.5px;
+    }
+    .summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .summary-row .sr-label { color: var(--text-3); flex-shrink: 0; }
+    .summary-row .sr-value { color: var(--text-1); font-weight: 600; text-align: right; }
+    .summary-row .sr-value.sr-empty { color: var(--text-3); font-weight: 400; font-style: italic; }
+
+    .checklist { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+    .checklist-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--text-2); }
+    .checklist-item .ci-dot {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 9px;
+      background: var(--bg-elevated); border: 1.5px solid var(--border-h); color: transparent;
+      transition: var(--transition);
+    }
+    .checklist-item.done .ci-dot { background: var(--success); border-color: var(--success); color: #fff; }
+    .checklist-item.done span.ci-label { color: var(--text-1); }
+
+    .tip-card {
+      background: var(--info-soft);
+      border: 1px solid rgba(96,200,255,0.18);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      font-size: 12px; color: var(--text-2); line-height: 1.65;
+    }
+    .tip-card strong { color: var(--text-1); }
+    .tip-card i { color: var(--info); margin-right: 6px; }
+
+    /* ══════════════════════════════════════════════
+       PAGE HERO
+    ══════════════════════════════════════════════ */
+    .page-hero {
+      margin-bottom: 22px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid rgba(128,128,128,0.2);
+      padding: 4px 12px; border-radius: 99px;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 26px; font-weight: 600;
+      color: var(--text-1); line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .hero-title em {
+      font-style: normal;
+      font-weight: 700;
+      background: var(--grad-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub { font-size: 13.5px; color: var(--text-2); }
+
+    /* ══════════════════════════════════════════════
+       BANNER
+    ══════════════════════════════════════════════ */
+    .banner {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 15px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px; line-height: 1.55;
+      color: var(--text-2);
+      margin-bottom: 18px;
+    }
+    .banner-warn {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.22);
+    }
+    .banner i { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+    .banner-warn i   { color: var(--warning); }
+    .banner strong   { color: var(--warning); }
+
+    /* ══════════════════════════════════════════════
+       FORM CARDS
+    ══════════════════════════════════════════════ */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+    .form-card:hover { border-color: rgba(128,128,128,0.28); }
+
+    .card-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px 0;
+    }
+
+    .card-head-icon {
+      width: 30px; height: 30px;
+      background: var(--accent-soft);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .card-head-title {
+      font-size: 12px; font-weight: 700;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-body { padding: 16px 20px 20px; }
+
+    /* ══════════════════════════════════════════════
+       FORM FIELDS — high visibility
+    ══════════════════════════════════════════════ */
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      color: var(--text-label);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 7px;
+    }
+    .form-label .req { color: var(--danger); }
+    .form-label .opt {
+      color: var(--text-3); font-weight: 400;
+      text-transform: none; letter-spacing: 0; font-size: 10px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--bg-input);
+      border: 1px solid rgba(128,128,128,0.18);
+      border-radius: var(--radius-sm);
+      color: var(--text-1);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      transition: var(--transition);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-input:hover,
+    .form-select:hover {
+      border-color: rgba(128,128,128,0.35);
+      background: var(--bg-input-h);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--border-focus);
+      background: var(--bg-input-h);
+      box-shadow: 0 0 0 3px rgba(128,128,128,0.14);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: var(--text-3); }
+
+    .form-select option { background: var(--bg-input); color: var(--text-1); }
+
+    /* Custom select arrow */
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 34px;
+    }
+
+    .form-textarea {
+      resize: vertical; min-height: 90px; line-height: 1.55;
+      background: var(--bg-input);
+      border: 1px solid rgba(128,128,128,0.18);
+    }
+
+    .input-hint {
+      font-size: 11px; color: var(--text-3);
+      margin-top: 5px; display: block; line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════════════════
+       SECTION DIVIDER
+    ══════════════════════════════════════════════ */
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(128,128,128,0.12);
+      margin: 16px 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       MATERIAL UPLOAD BLOCKS
+    ══════════════════════════════════════════════ */
+    .material-block { margin-bottom: 20px; }
+    .material-block:last-of-type { margin-bottom: 0; }
+
+    .material-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .material-label {
+      font-size: 12.5px; font-weight: 600;
+      color: var(--text-1);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .material-label .req { color: var(--danger); }
+
+    .file-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 9px;
+      background: var(--success-soft);
+      color: var(--success);
+      border: 1px solid rgba(52,211,153,0.22);
+      border-radius: 99px;
+      display: none;
+    }
+
+    /* Info tip */
+    .tip-box {
+      display: flex; align-items: flex-start; gap: 9px;
+      padding: 10px 13px;
+      background: var(--info-soft);
+      border: 1px solid rgba(96,200,255,0.18);
+      border-radius: var(--radius-xs);
+      margin-bottom: 14px;
+      font-size: 12px; color: var(--text-2); line-height: 1.5;
+    }
+    .tip-box i { color: var(--info); font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+    .tip-box strong { color: var(--text-1); }
+
+    /* Mode toggle */
+    .mode-toggle {
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .mode-btn {
+      flex: 1; padding: 8px 10px;
+      border: none; border-radius: 8px;
+      background: transparent;
+      color: var(--text-2);
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      position: relative; z-index: 10;
+      pointer-events: all;
+    }
+    .mode-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(128,128,128,0.2);
+    }
+    .mode-btn i { font-size: 12px; }
+
+    /* Upload area */
+    .upload-area { display: none; }
+    .upload-area.show { display: block; }
+
+    .drop-zone {
+      border: 2px dashed rgba(128,128,128,0.28);
+      border-radius: var(--radius-md);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      background: rgba(128,128,128,0.03);
+    }
+    .drop-zone:hover {
+      border-color: rgba(128,128,128,0.55);
+      background: rgba(128,128,128,0.07);
+    }
+    .drop-zone.has-files {
+      border-color: rgba(52,211,153,0.4);
+      background: rgba(52,211,153,0.04);
+    }
+    /* File input ONLY covers the drop-zone box, NOT the buttons above */
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .drop-icon  { font-size: 26px; margin-bottom: 8px; opacity: 0.55; }
+    .drop-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-2); margin-bottom: 4px;
+    }
+    .drop-zone.has-files .drop-title { color: var(--success); }
+    .drop-hint  { font-size: 11px; color: var(--text-3); }
+
+    /* Camera area */
+    .camera-area { display: none; }
+    .camera-area.show { display: block; }
+
+    .cam-view {
+      position: relative; width: 100%;
+      border-radius: var(--radius-md); overflow: hidden;
+      background: #000; border: 1px solid var(--border);
+      aspect-ratio: 4/3; margin-bottom: 8px;
+    }
+    .cam-view video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .cam-status {
+      position: absolute; top: 8px; left: 8px;
+      background: rgba(0,0,0,0.75); color: var(--text-2);
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 500;
+border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; gap: 5px;
+      transition: var(--transition);
+    }
+    .cam-status.live {
+      background: rgba(52,211,153,0.85);
+      color: white; border-color: rgba(52,211,153,0.3);
+    }
+    .cam-status.live::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: white; border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .cam-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .cam-select-wrap { flex: 1; }
+    .cam-select {
+      width: 100%; padding: 8px 11px;
+      background: var(--bg-input);
+      border: 1px solid rgba(128,128,128,0.2);
+      border-radius: var(--radius-xs);
+      color: var(--text-1);
+      font-family: var(--font-body);
+      font-size: 12px; outline: none; cursor: pointer;
+    }
+    .cam-select option { background: var(--bg-input); }
+
+    .shutter-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--grad-main);
+      border: 3px solid rgba(255,255,255,0.18);
+      color: var(--bg); font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: var(--transition); flex-shrink: 0;
+    }
+    .shutter-btn:hover { transform: scale(1.08); }
+    .shutter-btn:active { transform: scale(0.94); }
+
+    /* File list */
+    .file-list { margin-top: 8px; display: flex; flex-direction: column; gap: 5px; }
+
+    .file-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 11px;
+      background: var(--success-soft);
+      border: 1px solid rgba(52,211,153,0.22);
+      border-radius: 8px;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+
+    .file-source {
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 4px; flex-shrink: 0;
+    }
+    .file-name {
+      flex: 1; font-size: 12px; color: var(--success);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .file-remove {
+      font-size: 11px; font-weight: 700;
+      color: var(--danger); cursor: pointer;
+      padding: 2px 7px;
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 4px; transition: var(--transition); flex-shrink: 0;
+    }
+    .file-remove:hover { background: var(--danger); color: white; }
+
+    /* ══════════════════════════════════════════════
+       SUBMIT BUTTON
+    ══════════════════════════════════════════════ */
+    .submit-btn {
+      width: 100%; padding: 16px;
+      background: var(--grad-main);
+      border: none; border-radius: var(--radius-md);
+      color: var(--bg);
+      font-family: var(--font-body);
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 4px;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      letter-spacing: 0.3px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(128,128,128,0.45); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled {
+      background: var(--bg-elevated);
+      box-shadow: none; cursor: not-allowed; transform: none;
+    }
+
+    /* ══════════════════════════════════════════════
+       MESSAGE BOX
+    ══════════════════════════════════════════════ */
+    .message-box {
+      display: none; padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px; margin-top: 12px;
+      align-items: center; gap: 8px;
+    }
+    .message-box.show { display: flex; }
+    .message-box.success {
+      background: var(--success-soft);
+      border: 1px solid rgba(52,211,153,0.28);
+      color: var(--success);
+    }
+    .message-box.error {
+      background: var(--danger-soft);
+      border: 1px solid rgba(248,113,113,0.28);
+      color: var(--danger);
+    }
+
+    /* ══════════════════════════════════════════════
+       SPINNER
+    ══════════════════════════════════════════════ */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(128,128,128,0.35);
+      border-radius: 50%; border-top-color: var(--bg);
+      animation: spin 0.8s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════════════════════════════════════
+       DUPLICATE MODAL
+    ══════════════════════════════════════════════ */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; }
+
+    .modal-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 30px 26px;
+      width: 100%; max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      animation: popIn 0.28s cubic-bezier(.175,.885,.32,1.275);
+      text-align: center;
+    }
+    @keyframes popIn { from{transform:scale(0.82);opacity:0} to{transform:scale(1);opacity:1} }
+
+    .modal-icon  { font-size: 40px; margin-bottom: 14px; }
+    .modal-title { font-family: var(--font-serif); font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+    .modal-body  { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 16px; }
+
+    .modal-details {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      text-align: left; font-size: 12px;
+      color: var(--text-2); margin-bottom: 14px;
+    }
+    .modal-details p { margin: 4px 0; }
+    .modal-details strong { color: var(--text-1); }
+
+    .modal-warn { font-size: 12px; color: var(--danger); font-weight: 600; margin-bottom: 18px; }
+
+    .modal-btns { display: flex; gap: 10px; }
+
+    .btn-cancel {
+      flex: 1; padding: 12px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-2); font-family: var(--font-body);
+      font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition);
+    }
+    .btn-cancel:hover { background: var(--bg-card-h); color: var(--text-1); }
+
+    .btn-overwrite {
+      flex: 1; padding: 12px;
+      background: var(--danger-soft); border: 1px solid rgba(248,113,113,0.28);
+      border-radius: var(--radius-sm);
+      color: var(--danger); font-family: var(--font-body);
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition);
+    }
+    .btn-overwrite:hover { background: rgba(248,113,113,0.22); transform: translateY(-1px); }
+
+    /* ══════════════════════════════════════════════
+       MOBILE OVERLAY
+    ══════════════════════════════════════════════ */
+    .mobile-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.62); z-index: 90;
+}
+    .mobile-overlay.show { display: block; }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
+      .main-content { margin-left: 0 !important; }
+      .hamburger { display: flex; }
+      .scroll-area { padding: 20px 16px 48px; }
+      .topbar { padding: 0 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .form-grid-3 { grid-template-columns: 1fr 1fr; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .cam-controls { flex-wrap: wrap; }
+      .shutter-btn { margin: 0 auto; }
+      .hero-title { font-size: 21px; }
+      .card-body { padding: 13px 14px 16px; }
+      .setup-layout { gap: 14px; }
+      .summary-card, .tip-card { padding: 14px 15px; }
+    }
+
+    @media (min-width: 900px) {
+      .scroll-area { padding: 32px 40px 64px; }
+    }
+
+    /* ══════════════════════════════════════════════
+       MOBILE / TABLET COMPATIBILITY HARDENING
+    ══════════════════════════════════════════════ */
+    html, body { max-width: 100vw; overflow-x: hidden; }
+
+    /* iPad-portrait widths also collapse to the hamburger sidebar. */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
+      .main-content { margin-left: 0 !important; }
+      .hamburger { display: flex; }
+    }
+
+    /* The "session already exists" confirm modal can otherwise overflow a
+       short phone viewport with its buttons unreachable. */
+    .modal-card { max-height: 88vh; overflow-y: auto; }
+
+    /* Prevent iOS auto-zoom-on-focus, which otherwise leaves the page
+       stuck zoomed in until manually corrected. */
+    @media (max-width: 900px) {
+      .form-input, .form-select, .form-textarea, .cam-select { font-size: 16px; }
+    }
+
+    @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+  body { animation: pageIn 0.05s linear; }
+</style>
 </head>
 <body>
 
-    <div class="setup-card">
-        <h1>🔒 Exam Session Setup</h1>
-        <p class="subtitle">Configure once • Mark many students</p>
+<!-- Mobile overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobile()"></div>
 
-        <div class="warning">
-            <strong>⚠️ Important:</strong> These settings will apply to every student in this session.
-            You'll only need to enter Student ID and upload answer sheets afterward.
+<!-- Duplicate Modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-card">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Session Already Exists</div>
+    <div class="modal-body">
+      There are already <strong id="studentCount">0</strong> student record(s) in this session.
+      Do you want to overwrite them?
+    </div>
+    <div class="modal-details" id="sessionDetails"></div>
+    <div class="modal-warn">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      This cannot be undone. A backup will be created.
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cancelOverwrite()">
+        <i class="fa-solid fa-xmark"></i> Cancel
+      </button>
+      <button class="btn-overwrite" onclick="confirmOverwrite()">
+        <i class="fa-solid fa-trash"></i> Yes, Overwrite
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- App Shell -->
+<div class="shell">
+
+  <!-- ══════════════════════════════
+       SIDEBAR
+  ══════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <button class="sb-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a class="sb-brand-link" href="/">
+        <div class="sb-icon">🎓</div>
+        <div class="sb-brand-text">
+          <span class="sb-name">EduMark AI</span>
+          <span class="sb-tagline">Smart Exam Grading</span>
         </div>
-
-        <form id="setupForm" enctype="multipart/form-data">
-            <div class="form-section">
-                <h3 class="section-title">📋 Exam Details</h3>
-
-                <div class="form-group">
-                    <label>Year <span class="required">*</span></label>
-                    <input type="number" name="year" required value="2025" min="2020" max="2035">
-                </div>
-
-                <div class="form-group">
-                    <label>Term <span class="required">*</span></label>
-                    <select name="term" required>
-                        <option value="">Select Term</option>
-                        {% for term in terms %}
-                        <option value="{{ term }}">{{ term }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Class / Form <span class="required">*</span></label>
-                    <select name="class" required>
-                        <option value="">Select Class</option>
-                        {% for class_name in classes %}
-                        <option value="{{ class_name }}">{{ class_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Stream / Section <span class="required">*</span></label>
-                    <input type="text" name="stream" required placeholder="e.g. A, B, East, Gold">
-                </div>
-
-                <div class="form-group">
-                    <label>Subject <span class="required">*</span></label>
-                    <select name="subject" required>
-                        <option value="">Select Subject</option>
-                        {% for subject in subjects %}
-                        <option value="{{ subject }}">{{ subject }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Exam Type <span class="required">*</span></label>
-                    <input type="text" name="exam_type" required placeholder="e.g. Midterm, EOT, Quiz 4, Mock">
-                    <small class="input-hint">You can type any descriptive name</small>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3 class="section-title">📎 Exam Materials</h3>
-
-                <div class="info-box">
-                    <strong>Tip:</strong> Upload at least one question paper and one marking scheme.
-                    You can upload multiple files.
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        Question Papers 
-                        <span class="required">* (at least one)</span>
-                        <span class="file-count-badge" id="qpCount" style="display:none;">0</span>
-                    </label>
-                    <div class="file-upload-box required" id="qpBox">
-                        <input type="file" name="question_papers[]" id="question_papers" multiple accept=".pdf,.jpg,.jpeg,.png">
-                        <div class="icon">📄</div>
-                        <p>Click or drag question papers here</p>
-                        <small>PDF, JPG, PNG – max ~10 MB each</small>
-                    </div>
-                    <div class="file-list" id="qpList"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        Marking Schemes / Rubrics 
-                        <span class="required">* (at least one)</span>
-                        <span class="file-count-badge" id="rubricCount" style="display:none;">0</span>
-                    </label>
-                    <div class="file-upload-box required" id="rubricBox">
-                        <input type="file" name="rubrics[]" id="rubrics" multiple accept=".pdf,.jpg,.jpeg,.png">
-                        <div class="icon">✓</div>
-                        <p>Click or drag rubrics here</p>
-                        <small>PDF, JPG, PNG – max ~10 MB each</small>
-                    </div>
-                    <div class="file-list" id="rubricList"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Additional Rubric Notes <span class="optional">(optional)</span></label>
-                    <textarea name="rubric_text" rows="4" placeholder="Extra instructions, special rules, penalties..."></textarea>
-                </div>
-            </div>
-
-            <button type="submit" id="submitBtn" class="main-btn">🔒 Lock Settings & Continue</button>
-
-            <div id="messageBox" class="message"></div>
-        </form>
+      </a>
     </div>
 
-    <!-- ─── Duplicate Warning Modal ─── -->
-    <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="duplicate-modal" id="duplicateModal">
-        <div class="modal-icon">⚠️</div>
-        <h2 class="modal-title">Duplicate Session Detected</h2>
-        <p class="modal-message">
-            There are already <strong id="studentCount">0</strong> student record(s) in this session.<br><br>
-            Do you want to <strong>overwrite</strong> them?
-        </p>
+    <nav class="sb-nav">
+      <div class="sb-section-label">Main</div>
 
-        <div class="session-details" id="sessionDetails"></div>
+      <a class="sb-item" href="/" data-tip="Dashboard">
+        <span class="sb-ico"><i class="fa-solid fa-gauge-high"></i></span>
+        <span class="sb-lbl">Dashboard</span>
+      </a>
 
-        <p class="warning-text">This cannot be undone. A backup of the old data will be created.</p>
+      <a class="sb-item active" href="/setup-start" data-tip="Mark Exams">
+        <span class="sb-ico"><i class="fa-solid fa-pen-to-square"></i></span>
+        <span class="sb-lbl">Mark Exams</span>
+        <span class="sb-badge">AI</span>
+      </a>
 
-        <div class="modal-buttons">
-            <button class="btn-modal btn-no" onclick="cancelOverwrite()">No – Cancel</button>
-            <button class="btn-modal btn-yes" onclick="confirmOverwrite()">Yes – Overwrite</button>
+      <a class="sb-item" href="/students" data-tip="View Results">
+        <span class="sb-ico"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="sb-lbl">View Results</span>
+      </a>
+
+      <div class="sb-section-label">System</div>
+
+      <a class="sb-item" href="/settings" data-tip="Settings">
+        <span class="sb-ico"><i class="fa-solid fa-sliders"></i></span>
+        <span class="sb-lbl">Settings</span>
+      </a>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-footer-nav">
+        <a class="sb-item" href="/#help" data-tip="Help & About">
+          <span class="sb-ico"><i class="fa-solid fa-circle-question"></i></span>
+          <span class="sb-lbl">Help &amp; About</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════ -->
+  <div class="main-content" id="mainContent">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="tb-left">
+        <button class="hamburger" onclick="openMobile()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <div class="tb-title">Exam Setup</div>
+          <div class="tb-subtitle">Configure your marking session</div>
         </div>
+      </div>
+      <div class="tb-right">
+        <a class="tb-link" href="/">
+          <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+        <a class="tb-link" href="/students">
+          <i class="fa-solid fa-chart-bar"></i> Results
+        </a>
+      </div>
     </div>
 
-    <script>
-        // ─── File handling (from nice version) ───
-        let qpFiles = [];
-        let rubricFiles = [];
+    <!-- Scroll area -->
+    <div class="scroll-area">
 
-        document.getElementById('question_papers').addEventListener('change', e => handleFiles(e.target.files, 'qp'));
-        document.getElementById('rubrics').addEventListener('change',       e => handleFiles(e.target.files, 'rubric'));
+      <!-- Page Hero -->
+      <div class="page-hero">
+        <div class="hero-eyebrow">
+          <i class="fa-solid fa-lock" style="font-size:10px;"></i>
+          Session Setup
+        </div>
+        <h1 class="hero-title">Configure <em>Exam Session</em></h1>
+        <p class="hero-sub">Set up once — mark multiple students without reconfiguring.</p>
+      </div>
 
-        function handleFiles(files, type) {
-            const arr = Array.from(files);
-            if (type === 'qp') {
-                qpFiles = qpFiles.concat(arr);
-                displayFiles('qp');
-            } else {
-                rubricFiles = rubricFiles.concat(arr);
-                displayFiles('rubric');
-            }
-        }
+      <!-- Warning Banner -->
+      <div class="banner banner-warn">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div>
+          <strong>Lock once:</strong> These settings apply to every student in this marking session. You'll only set this up once per exam.
+        </div>
+      </div>
 
-        function displayFiles(type) {
-            const files   = type === 'qp' ? qpFiles : rubricFiles;
-            const listId  = type === 'qp' ? 'qpList'  : 'rubricList';
-            const countId = type === 'qp' ? 'qpCount' : 'rubricCount';
-            const boxId   = type === 'qp' ? 'qpBox'   : 'rubricBox';
+      <div class="setup-layout">
+      <form id="setupForm" style="min-width:0;">
 
-            const list = document.getElementById(listId);
-            const count = document.getElementById(countId);
-            const box  = document.getElementById(boxId);
+        <!-- ── Card 1: Exam Details ────────────────────────── -->
+        <div class="form-card">
+          <div class="card-head">
+            <div class="card-head-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+            <span class="card-head-title">Exam Details</span>
+          </div>
+          <div class="card-body">
 
-            list.innerHTML = '';
+            <!-- Year · Term · Class -->
+            <div class="form-grid-3" style="margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label">Year <span class="req">*</span></label>
+                <input class="form-input" type="number" id="f_year"
+                       required value="2025" min="2020" max="2035" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Term <span class="req">*</span></label>
+                <select class="form-select" id="f_term" required>
+                  <option value="">Select</option>
+                  {% for term in terms %}
+                  <option value="{{ term }}">{{ term }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Class <span class="req">*</span></label>
+                <select class="form-select" id="f_class" required>
+                  <option value="">Select</option>
+                  {% for class_name in classes %}
+                  <option value="{{ class_name }}">{{ class_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
 
-            if (files.length > 0) {
-                count.style.display = 'inline-block';
-                count.textContent = files.length + ' file' + (files.length > 1 ? 's' : '');
-                box.classList.remove('required');
-                box.classList.add('has-files');
+            <!-- Stream · Subject -->
+            <div class="form-grid-2" style="margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label">Stream <span class="req">*</span></label>
+                <input class="form-input" type="text" id="f_stream"
+                       required placeholder="e.g. A, B, East, Gold" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Subject <span class="req">*</span></label>
+                <select class="form-select" id="f_subject" required>
+                  <option value="">Select subject</option>
+                  {% for subject in subjects %}
+                  <option value="{{ subject }}">{{ subject }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
 
-                files.forEach((file, i) => {
-                    const item = document.createElement('div');
-                    item.className = 'file-item';
-                    item.innerHTML = `
-                        <span class="filename">${i+1}. ${file.name}  (${(file.size/1024/1024).toFixed(2)} MB)</span>
-                        <span class="remove" onclick="removeFile('${type}', ${i})">✕ Remove</span>
-                    `;
-                    list.appendChild(item);
-                });
-            } else {
-                count.style.display = 'none';
-                box.classList.add('required');
-                box.classList.remove('has-files');
-            }
-        }
+            <!-- Exam Type · Total Marks -->
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Exam Type <span class="req">*</span></label>
+                <input class="form-input" type="text" id="f_exam_type"
+                       required placeholder="e.g. Midterm, EOT, Quiz 4, Mock Exam" />
+                <span class="input-hint">Any descriptive name works</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Total Marks <span class="req">*</span></label>
+                <input class="form-input" type="number" id="f_total_marks"
+                       required placeholder="e.g. 100" min="1" step="1" value="100" />
+                <span class="input-hint">Full marks obtainable in this paper</span>
+              </div>
+            </div>
 
-        window.removeFile = function(type, idx) {
-            if (type === 'qp') {
-                qpFiles.splice(idx, 1);
-                displayFiles('qp');
-            } else {
-                rubricFiles.splice(idx, 1);
-                displayFiles('rubric');
-            }
-        };
+          </div>
+        </div>
 
-        // ─── Modal logic (from version B) ───
-        const modalOverlay   = document.getElementById('modalOverlay');
-        const duplicateModal = document.getElementById('duplicateModal');
-        let pendingFormData = null;
+        <!-- ── Card 2: Exam Materials ──────────────────────── -->
+        <div class="form-card">
+          <div class="card-head">
+            <div class="card-head-icon"><i class="fa-solid fa-paperclip"></i></div>
+            <span class="card-head-title">Exam Materials</span>
+          </div>
+          <div class="card-body">
 
-        function showDuplicateModal(data) {
-            document.getElementById('studentCount').textContent = data.student_count;
+            <!-- Tip -->
+            <div class="tip-box">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Upload at least one <strong>question paper</strong> and one <strong>marking scheme</strong>. Use camera or file upload for each.</span>
+            </div>
 
-            const info = data.session_info;
-            document.getElementById('sessionDetails').innerHTML = `
-                <p><strong>Year:</strong> ${info.year}</p>
-                <p><strong>Term:</strong> ${info.term}</p>
-                <p><strong>Class:</strong> ${info.class} – ${info.stream}</p>
-                <p><strong>Subject:</strong> ${info.subject}</p>
-                <p><strong>Exam:</strong> ${info.exam_type}</p>
-            `;
+            <!-- Question Papers -->
+            <div class="material-block">
+              <div class="material-header">
+                <span class="material-label">
+                  <i class="fa-solid fa-file-lines" style="color:var(--accent);"></i>
+                  Question Papers <span class="req">*</span>
+                </span>
+                <span class="file-badge" id="qpBadge">0 files</span>
+              </div>
 
-            modalOverlay.style.display = 'block';
-            duplicateModal.style.display = 'block';
-        }
+              <!-- Hidden file input - triggered programmatically -->
+              <input type="file" id="qpFileInput" multiple
+                     accept=".pdf,.jpg,.jpeg,.png"
+                     style="display:none; position:static;"
+                     onchange="handleFileInput(event,'qp')" />
 
-        function hideModal() {
-            modalOverlay.style.display = 'none';
-            duplicateModal.style.display = 'none';
-        }
+              <div class="mode-toggle">
+                <button type="button" class="mode-btn active" onclick="setMode('qp','upload',this)">
+                  <i class="fa-solid fa-folder-open"></i> Upload Files
+                </button>
+                <button type="button" class="mode-btn" onclick="setMode('qp','camera',this)">
+                  <i class="fa-solid fa-camera"></i> Use Camera
+                </button>
+              </div>
 
-        function cancelOverwrite() {
-            hideModal();
-            pendingFormData = null;
-            submitBtn.disabled = false;
-            submitBtn.textContent = '🔒 Lock Settings & Continue';
-            showMessage('Session creation cancelled. Data preserved.', 'error');
-        }
+              <div class="upload-area show" id="qp-upload-area">
+                <div class="drop-zone" id="qpDropBox" onclick="document.getElementById('qpFileInput').click()">
+                  <div class="drop-icon">📄</div>
+                  <div class="drop-title">Click or drag question papers here</div>
+                  <div class="drop-hint">PDF, JPG, PNG</div>
+                </div>
+              </div>
 
-        async function confirmOverwrite() {
-            hideModal();
-            pendingFormData.append('force_overwrite', 'true');
+              <div class="camera-area" id="qp-camera-area">
+                <div class="cam-view">
+                  <video id="qpVideo" autoplay playsinline muted></video>
+                  <div class="cam-status" id="qpCamStatus">
+                    <i class="fa-solid fa-circle-dot"></i> Off
+                  </div>
+                </div>
+                <div class="cam-controls">
+                  <div class="cam-select-wrap">
+                    <select class="cam-select" id="qpCamSelect" onchange="switchCam('qp')">
+                      <option value="">Loading cameras…</option>
+                    </select>
+                  </div>
+                  <button type="button" class="shutter-btn" onclick="shoot('qp')" title="Capture">
+                    <i class="fa-solid fa-camera"></i>
+                  </button>
+                </div>
+                <canvas id="qpCanvas" style="display:none;"></canvas>
+              </div>
 
-            submitBtn.textContent = 'Overwriting session...';
+              <div class="file-list" id="qpFileList"></div>
+            </div>
 
-            try {
-                const res = await fetch('/setup', { method: 'POST', body: pendingFormData });
-                const result = await res.json();
+            <hr class="section-divider" />
 
-                if (result.success) {
-                    showMessage('Session overwritten successfully!', 'success');
-                    setTimeout(() => location.href = '/upload-student', 1400);
-                } else {
-                    showMessage('Error: ' + result.message, 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '🔒 Lock Settings & Continue';
-                }
-            } catch (err) {
-                showMessage('Network error – please try again', 'error');
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🔒 Lock Settings & Continue';
-            }
+            <!-- Marking Schemes / Rubrics -->
+            <div class="material-block">
+              <div class="material-header">
+                <span class="material-label">
+                  <i class="fa-solid fa-circle-check" style="color:var(--success);"></i>
+                  Marking Schemes / Rubrics <span class="req">*</span>
+                </span>
+                <span class="file-badge" id="rubricBadge">0 files</span>
+              </div>
 
-            pendingFormData = null;
-        }
+              <!-- Hidden file input - triggered programmatically -->
+              <input type="file" id="rubricFileInput" multiple
+                     accept=".pdf,.jpg,.jpeg,.png"
+                     style="display:none; position:static;"
+                     onchange="handleFileInput(event,'rubric')" />
 
-        // ─── Form submit ───
-        const setupForm = document.getElementById('setupForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const messageBox = document.getElementById('messageBox');
+              <div class="mode-toggle">
+                <button type="button" class="mode-btn active" onclick="setMode('rubric','upload',this)">
+                  <i class="fa-solid fa-folder-open"></i> Upload Files
+                </button>
+                <button type="button" class="mode-btn" onclick="setMode('rubric','camera',this)">
+                  <i class="fa-solid fa-camera"></i> Use Camera
+                </button>
+              </div>
 
-        function showMessage(text, type) {
-            messageBox.textContent = text;
-            messageBox.className = 'message ' + type;
-            messageBox.style.display = 'block';
-        }
+              <div class="upload-area show" id="rubric-upload-area">
+                <div class="drop-zone" id="rubricDropBox" onclick="document.getElementById('rubricFileInput').click()">
+                  <div class="drop-icon">✅</div>
+                  <div class="drop-title">Click or drag rubric files here</div>
+                  <div class="drop-hint">PDF, JPG, PNG</div>
+                </div>
+              </div>
 
-        setupForm.addEventListener('submit', async e => {
-            e.preventDefault();
+              <div class="camera-area" id="rubric-camera-area">
+                <div class="cam-view">
+                  <video id="rubricVideo" autoplay playsinline muted></video>
+                  <div class="cam-status" id="rubricCamStatus">
+                    <i class="fa-solid fa-circle-dot"></i> Off
+                  </div>
+                </div>
+                <div class="cam-controls">
+                  <div class="cam-select-wrap">
+                    <select class="cam-select" id="rubricCamSelect" onchange="switchCam('rubric')">
+                      <option value="">Loading cameras…</option>
+                    </select>
+                  </div>
+                  <button type="button" class="shutter-btn" onclick="shoot('rubric')" title="Capture">
+                    <i class="fa-solid fa-camera"></i>
+                  </button>
+                </div>
+                <canvas id="rubricCanvas" style="display:none;"></canvas>
+              </div>
 
-            // Basic client check
-            if (qpFiles.length === 0 || rubricFiles.length === 0) {
-                showMessage('Please upload at least one question paper and one rubric.', 'error');
-                return;
-            }
+              <div class="file-list" id="rubricFileList"></div>
+            </div>
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="loading"></span> Checking session...';
+            <hr class="section-divider" />
 
-            const formData = new FormData(setupForm);
-            pendingFormData = formData;
+            <!-- Additional Rubric Notes -->
+            <div class="form-group">
+              <label class="form-label">
+                Additional Rubric Notes
+                <span class="opt">(optional)</span>
+              </label>
+              <textarea class="form-textarea" id="f_rubric_text"
+                        placeholder="Any extra marking instructions for the AI…"></textarea>
+            </div>
 
-            // Append files (since FormData from form doesn't include JS-added files)
-            qpFiles.forEach(f => formData.append('question_papers[]', f));
-            rubricFiles.forEach(f => formData.append('rubrics[]', f));
+          </div>
+        </div>
 
-            try {
-                const response = await fetch('/setup', {
-                    method: 'POST',
-                    body: formData
-                });
+        <!-- Submit -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i class="fa-solid fa-lock"></i>
+          Lock Settings &amp; Start Marking
+        </button>
 
-                const result = await response.json();
+        <!-- Message -->
+        <div class="message-box" id="messageBox">
+          <i class="fa-solid fa-circle-info"></i>
+          <span id="messageText"></span>
+        </div>
 
-                if (response.status === 409 && result.duplicate_session) {
-                    showDuplicateModal(result);
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '🔒 Lock Settings & Continue';
-                } else if (result.success) {
-                    showMessage('Session ready! Redirecting...', 'success');
-                    setTimeout(() => location.href = '/upload-student', 1200);
-                } else {
-                    showMessage('Error: ' + (result.message || 'Unknown issue'), 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '🔒 Lock Settings & Continue';
-                }
-            } catch (err) {
-                showMessage('Network error – check connection', 'error');
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🔒 Lock Settings & Continue';
-            }
-        });
-    </script>
+      </form>
+
+      <!-- ── Right column: live Session Summary + guidance ── -->
+      <div class="setup-summary">
+        <div class="summary-card">
+          <div class="summary-card-title"><i class="fa-solid fa-list-check"></i> Session Summary</div>
+          <div class="summary-row"><span class="sr-label">Subject</span><span class="sr-value sr-empty" id="sumSubject">Not selected</span></div>
+          <div class="summary-row"><span class="sr-label">Class</span><span class="sr-value sr-empty" id="sumClass">Not selected</span></div>
+          <div class="summary-row"><span class="sr-label">Term / Year</span><span class="sr-value sr-empty" id="sumTerm">Not selected</span></div>
+          <div class="summary-row"><span class="sr-label">Exam type</span><span class="sr-value sr-empty" id="sumExamType">Not set</span></div>
+          <div class="summary-row"><span class="sr-label">Total marks</span><span class="sr-value" id="sumMarks">100</span></div>
+          <div class="summary-row"><span class="sr-label">Question papers</span><span class="sr-value sr-empty" id="sumQp">0 uploaded</span></div>
+          <div class="summary-row"><span class="sr-label">Rubric files</span><span class="sr-value sr-empty" id="sumRubric">0 uploaded</span></div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-card-title"><i class="fa-solid fa-shield-halved"></i> Ready to lock?</div>
+          <div class="checklist" id="setupChecklist">
+            <div class="checklist-item" id="ck-details"><span class="ci-dot"><i class="fa-solid fa-check"></i></span><span class="ci-label">Exam details complete</span></div>
+            <div class="checklist-item" id="ck-qp"><span class="ci-dot"><i class="fa-solid fa-check"></i></span><span class="ci-label">Question paper added</span></div>
+            <div class="checklist-item" id="ck-rubric"><span class="ci-dot"><i class="fa-solid fa-check"></i></span><span class="ci-label">Rubric added</span></div>
+          </div>
+        </div>
+
+        <div class="tip-card">
+          <div><i class="fa-solid fa-circle-info"></i><strong>Tip:</strong> Upload the clearest scan of the rubric you have — the AI reads it stage-by-stage, so legible scoring breakdowns produce more consistent marks across the whole class.</div>
+        </div>
+      </div>
+      </div><!-- /setup-layout -->
+    </div><!-- /scroll-area -->
+  </div><!-- /main-content -->
+</div><!-- /shell -->
+
+<script>
+/* ─────────────────────────────────────────────────────────
+   Sidebar
+───────────────────────────────────────────────────────── */
+let sidebarCollapsed = document.documentElement.classList.contains('sb-collapsed');
+if (sidebarCollapsed) {
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('sidebar').classList.add('collapsed');
+    document.getElementById('mainContent').classList.add('expanded');
+  });
+}
+
+function toggleSidebar() {
+  sidebarCollapsed = !sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  document.getElementById('mainContent').classList.toggle('expanded', sidebarCollapsed);
+  document.documentElement.classList.toggle('sb-collapsed', sidebarCollapsed);
+  try {
+    var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
+    s.sidebarCollapsed = sidebarCollapsed;
+    localStorage.setItem('edumark_settings_v2', JSON.stringify(s));
+  } catch (e) {}
+}
+
+function openMobile() {
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('mobileOverlay').classList.add('show');
+}
+
+function closeMobile() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('mobileOverlay').classList.remove('show');
+}
+
+/* ─────────────────────────────────────────────────────────
+   File store (single source of truth)
+───────────────────────────────────────────────────────── */
+const store    = { qp: [], rubric: [] };
+const streams  = { qp: null, rubric: null };
+const cameras  = { qp: [],   rubric: [] };
+const selCamId = { qp: null, rubric: null };
+
+let pendingFormData = null;
+
+function el(id) { return document.getElementById(id); }
+
+/* ─────────────────────────────────────────────────────────
+   Badge + File List rendering
+───────────────────────────────────────────────────────── */
+function updateBadge(type) {
+  const badge = el(type === 'qp' ? 'qpBadge' : 'rubricBadge');
+  const n = store[type].length;
+  if (n > 0) {
+    badge.textContent = n + ' file' + (n !== 1 ? 's' : '');
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+  updateSummary();
+}
+
+/* ─────────────────────────────────────────────────────────
+   Live Session Summary (right column) — mirrors form state
+   as the teacher fills it in, so nothing has to be re-read
+   from a submitted form to know what this session contains.
+───────────────────────────────────────────────────────── */
+function setSummaryField(id, value, fallback) {
+  const node = el(id);
+  if (!node) return;
+  if (value) { node.textContent = value; node.classList.remove('sr-empty'); }
+  else { node.textContent = fallback; node.classList.add('sr-empty'); }
+}
+
+function setChecklistItem(id, done) {
+  const node = el(id);
+  if (node) node.classList.toggle('done', !!done);
+}
+
+function updateSummary() {
+  const year   = el('f_year') ? el('f_year').value.trim() : '';
+  const term   = el('f_term') ? el('f_term').value.trim() : '';
+  const cls    = el('f_class') ? el('f_class').value.trim() : '';
+  const stream = el('f_stream') ? el('f_stream').value.trim() : '';
+  const subj   = el('f_subject') ? el('f_subject').value.trim() : '';
+  const etype  = el('f_exam_type') ? el('f_exam_type').value.trim() : '';
+  const marks  = el('f_total_marks') ? el('f_total_marks').value.trim() : '';
+
+  setSummaryField('sumSubject', subj, 'Not selected');
+  setSummaryField('sumClass', cls ? (cls + (stream ? ' ' + stream : '')) : '', 'Not selected');
+  setSummaryField('sumTerm', (term && year) ? (term + ' · ' + year) : (term || year), 'Not selected');
+  setSummaryField('sumExamType', etype, 'Not set');
+  el('sumMarks').textContent = marks || '100';
+
+  const qpCount     = store.qp.length;
+  const rubricCount = store.rubric.length;
+  setSummaryField('sumQp', qpCount ? (qpCount + ' uploaded') : '', '0 uploaded');
+  setSummaryField('sumRubric', rubricCount ? (rubricCount + ' uploaded') : '', '0 uploaded');
+
+  const detailsDone = !!(year && term && cls && stream && subj && etype && marks);
+  setChecklistItem('ck-details', detailsDone);
+  setChecklistItem('ck-qp', qpCount > 0);
+  setChecklistItem('ck-rubric', rubricCount > 0);
+}
+
+function renderFileList(type) {
+  const list    = el(type === 'qp' ? 'qpFileList'  : 'rubricFileList');
+  const dropBox = el(type === 'qp' ? 'qpDropBox'   : 'rubricDropBox');
+
+  list.innerHTML = '';
+  store[type].forEach((f, i) => {
+    const src = f._isCamera ? 'camera' : 'file';
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `
+      <span class="file-source">${src}</span>
+      <span class="file-name">${i + 1}. ${f.name}</span>
+      <span class="file-remove" onclick="removeFile('${type}',${i})">✕</span>`;
+    list.appendChild(item);
+  });
+
+  if (dropBox) {
+    dropBox.className = 'drop-zone' + (store[type].length ? ' has-files' : '');
+  }
+  updateBadge(type);
+}
+
+function removeFile(type, idx) {
+  store[type].splice(idx, 1);
+  renderFileList(type);
+}
+
+/* ─────────────────────────────────────────────────────────
+   File input handler
+───────────────────────────────────────────────────────── */
+function handleFileInput(e, type) {
+  Array.from(e.target.files).forEach(f => {
+    const tagged = new File([f], f.name, { type: f.type });
+    tagged._isCamera = false;
+    store[type].push(tagged);
+  });
+  e.target.value = '';
+  renderFileList(type);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Mode toggle (upload ↔ camera)
+───────────────────────────────────────────────────────── */
+function setMode(type, mode, btn) {
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const uploadArea = el(type + '-upload-area');
+  const cameraArea = el(type + '-camera-area');
+
+  if (mode === 'camera') {
+    uploadArea.classList.remove('show');
+    cameraArea.classList.add('show');
+    startCam(type);
+  } else {
+    cameraArea.classList.remove('show');
+    uploadArea.classList.add('show');
+    stopCam(type);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Camera
+───────────────────────────────────────────────────────── */
+async function loadCameraList(type) {
+  try {
+    const tmp = await navigator.mediaDevices.getUserMedia({ video: true });
+    tmp.getTracks().forEach(t => t.stop());
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    cameras[type] = devices.filter(d => d.kind === 'videoinput');
+
+    const sel = el(type === 'qp' ? 'qpCamSelect' : 'rubricCamSelect');
+    sel.innerHTML = '';
+    cameras[type].forEach((c, i) => {
+      const o = document.createElement('option');
+      o.value = c.deviceId;
+      o.text  = c.label || `Camera ${i + 1}`;
+      sel.appendChild(o);
+    });
+
+    selCamId[type] = cameras[type].length > 1
+      ? cameras[type][cameras[type].length - 1].deviceId
+      : cameras[type][0]?.deviceId || null;
+    if (selCamId[type]) sel.value = selCamId[type];
+  } catch(e) {
+    console.warn('Camera list error:', e);
+  }
+}
+
+async function startCam(type) {
+  if (!cameras[type].length) await loadCameraList(type);
+
+  const video    = el(type === 'qp' ? 'qpVideo'     : 'rubricVideo');
+  const statusEl = el(type === 'qp' ? 'qpCamStatus' : 'rubricCamStatus');
+  statusEl.className = 'cam-status';
+  statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Starting…';
+
+  try {
+    const s = await navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: selCamId[type] ? { exact: selCamId[type] } : undefined,
+        width: { ideal: 1920 }, height: { ideal: 1080 }
+      }
+    });
+    streams[type]   = s;
+    video.srcObject = s;
+    const cam = cameras[type].find(c => c.deviceId === selCamId[type]);
+    statusEl.className   = 'cam-status live';
+    statusEl.textContent = cam ? cam.label.split('(')[0].trim() : 'Live';
+  } catch(e) {
+    statusEl.innerHTML = '<i class="fa-solid fa-xmark"></i> Error';
+    console.error(e);
+  }
+}
+
+function stopCam(type) {
+  if (streams[type]) {
+    streams[type].getTracks().forEach(t => t.stop());
+    streams[type] = null;
+  }
+  const statusEl = el(type === 'qp' ? 'qpCamStatus' : 'rubricCamStatus');
+  statusEl.className = 'cam-status';
+  statusEl.innerHTML = '<i class="fa-solid fa-circle-dot"></i> Off';
+}
+
+function switchCam(type) {
+  const sel = el(type === 'qp' ? 'qpCamSelect' : 'rubricCamSelect');
+  selCamId[type] = sel.value;
+  stopCam(type);
+  startCam(type);
+}
+
+function shoot(type) {
+  const video  = el(type === 'qp' ? 'qpVideo'  : 'rubricVideo');
+  const canvas = el(type === 'qp' ? 'qpCanvas' : 'rubricCanvas');
+
+  if (!video.videoWidth) { showMsg('Camera not ready yet.', 'error'); return; }
+
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+
+  canvas.toBlob(blob => {
+    const idx  = store[type].length + 1;
+    const name = `${type === 'qp' ? 'question_paper' : 'rubric'}_cam_${idx}.jpg`;
+    const file = new File([blob], name, { type: 'image/jpeg' });
+    file._isCamera = true;
+    store[type].push(file);
+    renderFileList(type);
+    const view = el(type === 'qp' ? 'qp-camera-area' : 'rubric-camera-area').querySelector('.cam-view');
+    if (view) { view.style.opacity = '0.3'; setTimeout(() => view.style.opacity = '1', 120); }
+  }, 'image/jpeg', 0.88);
+}
+
+/* ─────────────────────────────────────────────────────────
+   Message helper
+───────────────────────────────────────────────────────── */
+function showMsg(text, type) {
+  const box = el('messageBox');
+  const txt = el('messageText');
+  txt.textContent = text;
+  box.className   = 'message-box show ' + type;
+  box.querySelector('i').className =
+    type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+}
+
+function hideMsg() {
+  el('messageBox').className = 'message-box';
+}
+
+/* ─────────────────────────────────────────────────────────
+   Validation
+───────────────────────────────────────────────────────── */
+function validateForm() {
+  const checks = {
+    'Year':        el('f_year').value.trim(),
+    'Term':        el('f_term').value.trim(),
+    'Class':       el('f_class').value.trim(),
+    'Stream':      el('f_stream').value.trim(),
+    'Subject':     el('f_subject').value.trim(),
+    'Exam Type':   el('f_exam_type').value.trim(),
+    'Total Marks': el('f_total_marks').value.trim(),
+  };
+  for (const [k, v] of Object.entries(checks)) {
+    if (!v) { showMsg(`Please fill in: ${k}`, 'error'); return false; }
+  }
+  const totalMarksNum = parseFloat(el('f_total_marks').value);
+  if (isNaN(totalMarksNum) || totalMarksNum <= 0) {
+    showMsg('Total Marks must be a positive number.', 'error'); return false;
+  }
+  if (!store.qp.length) {
+    showMsg('Please add at least one question paper.', 'error'); return false;
+  }
+  if (!store.rubric.length) {
+    showMsg('Please add at least one rubric / marking scheme.', 'error'); return false;
+  }
+  return true;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Build FormData
+───────────────────────────────────────────────────────── */
+function buildFormData(extras = {}) {
+  const fd = new FormData();
+  fd.append('year',        el('f_year').value.trim());
+  fd.append('term',        el('f_term').value.trim());
+  fd.append('class',       el('f_class').value.trim());
+  fd.append('stream',      el('f_stream').value.trim());
+  fd.append('subject',     el('f_subject').value.trim());
+  fd.append('exam_type',   el('f_exam_type').value.trim());
+  fd.append('total_marks', el('f_total_marks').value.trim());
+  fd.append('rubric_text', el('f_rubric_text').value);
+  for (const [k, v] of Object.entries(extras)) fd.append(k, v);
+  store.qp.forEach(f     => fd.append('question_papers[]', f, f.name));
+  store.rubric.forEach(f => fd.append('rubrics[]',         f, f.name));
+  return fd;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Duplicate modal
+───────────────────────────────────────────────────────── */
+function showDuplicateModal(data) {
+  el('studentCount').textContent = data.student_count;
+  const info = data.session_info || {};
+  const totalMarksLine = info.total_marks
+    ? `<p><strong>Total Marks:</strong> ${info.total_marks}</p>`
+    : '';
+  el('sessionDetails').innerHTML = `
+    <p><strong>Year:</strong> ${info.year} &nbsp;·&nbsp; <strong>Term:</strong> ${info.term}</p>
+    <p><strong>Class:</strong> ${info.class} ${info.stream} &nbsp;·&nbsp; <strong>Subject:</strong> ${info.subject}</p>
+    <p><strong>Exam:</strong> ${info.exam_type}</p>
+    ${totalMarksLine}`;
+  el('modalBackdrop').classList.add('show');
+}
+
+function hideModal() { el('modalBackdrop').classList.remove('show'); }
+
+function cancelOverwrite() {
+  hideModal();
+  pendingFormData = null;
+  const btn = el('submitBtn');
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+  showMsg('Cancelled. Existing session data preserved.', 'error');
+}
+
+async function confirmOverwrite() {
+  hideModal();
+  const fd  = buildFormData({ force_overwrite: 'true' });
+  const btn = el('submitBtn');
+  btn.innerHTML = '<span class="spinner"></span> Overwriting…';
+
+  try {
+    const res    = await fetch('/setup', { method: 'POST', body: fd });
+    const result = await res.json();
+    if (result.success) {
+      showMsg('✅ Overwritten! Redirecting…', 'success');
+      setTimeout(() => location.href = '/choose-method', 1000);
+    } else {
+      showMsg('Error: ' + result.message, 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+    }
+  } catch(e) {
+    showMsg('Network error during overwrite.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+  }
+  pendingFormData = null;
+}
+
+/* ─────────────────────────────────────────────────────────
+   Form Submit
+───────────────────────────────────────────────────────── */
+el('setupForm').onsubmit = async function(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+
+  const btn = el('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Uploading materials…';
+  hideMsg();
+
+  const fd = buildFormData();
+  pendingFormData = fd;
+
+  try {
+    const res    = await fetch('/setup', { method: 'POST', body: fd });
+    const result = await res.json();
+
+    if (res.status === 409 && result.duplicate_session) {
+      showDuplicateModal(result);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+      return;
+    }
+
+    if (result.success) {
+      const marksNote = result.total_marks ? ` · Total marks: ${result.total_marks}` : '';
+      showMsg(
+        `✅ Session ready — ${result.files_saved.question_papers} paper(s), ${result.files_saved.rubrics} rubric(s) saved${marksNote}. Redirecting…`,
+        'success'
+      );
+      setTimeout(() => location.href = '/choose-method', 1200);
+    } else {
+      showMsg('Error: ' + (result.message || 'Unknown error'), 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+    }
+  } catch(e) {
+    console.error('Setup error:', e);
+    showMsg('Upload failed. Check your connection and try again.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-lock"></i> Lock Settings &amp; Start Marking';
+  }
+};
+
+
+/* ─────────────────────────────────────────────────────────
+   Pre-load cameras quietly on page load + wire drag-drop
+───────────────────────────────────────────────────────── */
+(async () => {
+  try {
+    await loadCameraList('qp');
+    await loadCameraList('rubric');
+  } catch(_) {}
+
+  // Wire drag-and-drop for both drop zones
+  ['qpDropBox', 'rubricDropBox'].forEach(id => {
+    const type = id === 'qpDropBox' ? 'qp' : 'rubric';
+    const box  = document.getElementById(id);
+    if (!box) return;
+
+    box.addEventListener('dragover', e => {
+      e.preventDefault();
+      box.classList.add('has-files');
+    });
+    box.addEventListener('dragleave', e => {
+      if (!store[type].length) box.classList.remove('has-files');
+    });
+    box.addEventListener('drop', e => {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files)
+        .filter(f => /\.(pdf|jpg|jpeg|png)$/i.test(f.name));
+      files.forEach(f => {
+        const tagged = new File([f], f.name, { type: f.type });
+        tagged._isCamera = false;
+        store[type].push(tagged);
+      });
+      renderFileList(type);
+    });
+  });
+
+  // Live Session Summary — wire every exam-detail field so the right
+  // column always mirrors current form state, then run once for the
+  // pre-filled defaults (year, total marks) already in the markup.
+  ['f_year','f_term','f_class','f_stream','f_subject','f_exam_type','f_total_marks']
+    .forEach(id => {
+      const node = el(id);
+      if (!node) return;
+      node.addEventListener('input', updateSummary);
+      node.addEventListener('change', updateSummary);
+    });
+  updateSummary();
+})();
+</script>
 </body>
 </html>

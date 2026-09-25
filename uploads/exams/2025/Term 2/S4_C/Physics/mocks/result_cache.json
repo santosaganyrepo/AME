@@ -1,0 +1,492 @@
+{
+  "f77d06059d6f532ac5b265a82b9abcf017b9386f17da59f41d0cba939ab2a5b3": {
+    "success": true,
+    "student_id": "2039",
+    "student_name": "Santo",
+    "total_score": 30.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": "The student earned 4 marks for explaining inertia and injury risk related to seatbelts, but failed to calculate the refrigerator's energy consumption or the tyre temperature."
+      },
+      "Item 2": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": "The student earned 4 marks for correctly stating that a prism is better than a mirror for total internal reflection and mentioning that mirrors can break, but did not provide a diagram or further explanation of operation."
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student earned 10 marks for correctly identifying the purpose of"
+      },
+      "Item 5": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:29:54"
+  },
+  "83f9854a135bcd58ea1c187b78e484ccfda0d314b5d274f7d103b5357ba56e82": {
+    "success": true,
+    "student_id": "444",
+    "student_name": "444",
+    "total_score": 30.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 5": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 4 marks for correctly explaining the concept of inertia and injury risk related to seatbelts, but received no marks for the incorrect momentum calculation for overspeeding or the irrelevant energy calculations for tyre temperature."
+      },
+      "Item 7": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 14 marks for accurately describing how the sun produces energy through nuclear fusion and for outlining the life cycle of a star, but received no marks for part (b) as the answer discussed star colours and brightness instead of the importance of life on Earth"
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:30:16"
+  },
+  "05f2ad2d0a2649f396d3a3cef476e5441955e3007cfb86b05b9fbe30f53d76b0": {
+    "success": true,
+    "student_id": "545",
+    "student_name": "445",
+    "total_score": 50.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student earned 14 marks for correctly identifying prism as the better choice for total internal reflection and providing a comprehensive comparison between laser and bulb light properties, including a correct conclusion on laser suitability. The student lost marks for not providing a diagram for the prism instrument and not fully explaining its operation."
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student earned 0 marks as the entire answer for this item was irrelevant to the question about lightning conductors, transformers, or safety, instead discussing reactor cores and impurities."
+      },
+      "Item 5": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:30:56"
+  },
+  "094e85b726f1ad9a8f4e63f1a588e004cbe794637b907e3f4ac4e1d9d740394d": {
+    "success": true,
+    "student_id": "454",
+    "student_name": "776",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 7.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 7 marks for correctly explaining the importance of seatbelts by mentioning inertia and injury risk, but failed to calculate refrigerator energy consumption or convert mercury thread lengths to temperature."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for correctly choosing a prism for total internal reflection and explaining its operation, but did not provide a diagram or compare laser light properties to a bulb for security suitability."
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded"
+      },
+      "Item 5": {
+        "score": 13.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:31:17"
+  },
+  "b836aecd8e9b3d5727b53e3eef3420f0a8ab93671cc3d21c8dc37134dad82145": {
+    "success": true,
+    "student_id": "343",
+    "student_name": "545",
+    "total_score": 40.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student earned marks for a neat diagram of a prism showing total internal reflection, correctly identifying prism as better, listing properties of laser light, and calculating frequency to confirm suitability. Marks were lost due to a confused explanation of prism operation and an incomplete list of laser properties."
+      },
+      "Item 5": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student earned marks for correct momentum calculations, a correct conclusion about overspeeding (despite flawed reasoning), and a good explanation of seatbelt importance by referencing inertia and injury risk. Marks were lost because the reasoning for overspeeding was based on final velocity instead of"
+      },
+      "Item 6": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:31:38"
+  },
+  "d33577c5b1b09adedec1314cd8ebddd4c4d7010b2101c324afdf36b2968e0e75": {
+    "success": true,
+    "student_id": "1233",
+    "student_name": "434",
+    "total_score": 66.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 18 marks for correctly choosing a prism for total internal reflection, drawing a suitable diagram, explaining the phenomenon, and accurately describing the key properties of a laser and its suitability for security systems."
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for a comprehensive explanation of a lightning conductor's function, accurate calculations for transformer suitability including output voltage and power, and a thorough list of dangers associated with delaying fuse replacement."
+      },
+      "Item 5": {
+        "score": 8.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 8 marks"
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:31:59"
+  },
+  "baa5813c86600c8e76d96d44978bae97f80a4034b9f97027e21b0018b51f787e": {
+    "success": true,
+    "student_id": "121",
+    "student_name": "455",
+    "total_score": 54.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 14 marks for correctly identifying prism as better for TIR and explaining laser properties, but lost marks for not providing a diagram and not fully explaining the instrument's operation."
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the entire answer for this item was irrelevant to the question asked, discussing nuclear reactor components instead of lightning conductors and transformers."
+      },
+      "Item 5": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for correctly calculating the total momentum before and after collision, determining the velocity"
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:32:19"
+  },
+  "c65526250f78f1dc2519386e727d9edf87750f852a2b3776dcbaf0121760907a": {
+    "success": true,
+    "student_id": "133",
+    "student_name": "453",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "Awarded 20 marks for correctly explaining the choice of prism for total internal reflection with a neat diagram, and accurately comparing laser light to bulb light with a suitable conclusion for security systems."
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "Awarded 20 marks for correctly explaining how a lightning conductor protects a building, accurately determining the transformer's unsuitability through calculations, and identifying the dangers of delaying fuse replacement and earth connection."
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "Awarded 0 marks because the student only attempted part (c"
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:32:42"
+  },
+  "c399a5b8d8f154a1b7c1305f7e16a3dfa1d6e5589eefb871615917094f8c4fbd": {
+    "success": true,
+    "student_id": "123635",
+    "student_name": "124",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 7": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks because the content provided was for Question 6 (daily power usage calculation, generator choice, energy saving suggestions) instead of the requested Question 7 (sun's energy, importance of life, star characteristics)."
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for correctly explaining total internal reflection with a neat, labeled diagram and accurately comparing laser light properties to a light bulb for security systems."
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the attempted calculation was for kinetic energy with incorrect velocity units, rather than the required tyre temperature calculation."
+      }
+    },
+    "overall_feedback": "The student demonstrated a strong understanding of light phenomena, particularly total internal reflection and the properties of laser light, achieving full marks on Item 2. However, a significant gap was identified in following exam instructions, as the student answered content from Question 6 while labeling it as Question 7, and provided an irrelevant kinetic energy calculation for a tyre temperature question in Item 5. To improve, the student must carefully read and adhere to question numbers and specific requirements for each item. A concrete study tip is to practice identifying the core concept of each question before attempting to answer, ensuring the response directly addresses the prompt.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:33:03"
+  },
+  "da612860cbe5df69133d4bc079347f7900f5d2e9524006cc8c1bfc7af28aa016": {
+    "success": true,
+    "student_id": "24",
+    "student_name": "5545",
+    "total_score": 40.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for correctly drawing a prism and mirror diagram and explaining total internal reflection in part (a), and for identifying properties of laser light in part (b); however"
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 7.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 7 marks for correctly stating the momentum formula and identifying variables in part (a), and for explaining the function of a seatbelt in part (b); however, the momentum calculation was incorrect due to misapplication of vector quantities and the tyre temperature calculation was entirely missing."
+      },
+      "Item 7": {
+        "score": 13.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:33:34"
+  },
+  "5f3b49a0b7e80ba694863a4cb92107fd4db4d7011e21256f20e0018e53dc3450": {
+    "success": true,
+    "student_id": "123",
+    "student_name": "5645",
+    "total_score": 12.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the entire response discussed nuclear fission and energy sources, which was completely irrelevant to the question about refrigerator energy and car collision."
+      },
+      "Item 2": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 12 marks for correctly comparing the properties of laser light and regular light, and providing a suitable conclusion for laser use in security systems, but the diagram for the simple instrument was unclear and the choice between prism and mirror was not explicitly made."
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks because the calculation provided for part (c) involved kinetic and potential energy, which was entirely incorrect for the required tyre temperature calculation."
+      }
+    },
+    "overall_feedback": "The student's overall performance was weak, demonstrating a significant lack of understanding of the questions asked in Item 1 and Item 5. The strongest demonstrated concept was the comparison of laser light properties (coherence, monochromaticity, directionality, intensity) in Item 2, where they earned full marks for this section. The most critical gap is the inability to correctly identify and apply relevant physics concepts to specific problems, as evidenced by the completely off-topic answers for Item 1 and Item 5(c). The student needs to revise question comprehension and the application of fundamental physics principles to problem-solving scenarios.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:33:55"
+  },
+  "b5ed594eb8e8152ebe504bcd3b00a5022cf360e656b6b2eaf289186eb4c65d41": {
+    "success": true,
+    "student_id": "3782",
+    "student_name": "837",
+    "total_score": 26.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks because the answer provided discussed reactor cores and nuclear power, which is irrelevant to the question about refrigerator energy and car collision."
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks because the answer provided discussed star colors and temperature, which is irrelevant to the question about laser security systems."
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks because the answer provided discussed light reflection and calculations for wavelength, which is irrelevant to the question"
+      },
+      "Item 5": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:36:53"
+  },
+  "203a688b0eed29ce8453fbe0f56fb1d665c9bc6f2e39c8e5be04a4118429bfe2": {
+    "success": true,
+    "student_id": "84084",
+    "student_name": "2940",
+    "total_score": 67.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 3": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": "The student scored 17 marks, correctly explaining the function of a lightning conductor, performing accurate transformer calculations and concluding its unsuitability, and identifying dangers of delaying fuse and earth connection replacement. A more detailed explanation of charge dissipation for the lightning conductor was missing."
+      },
+      "Item 2": {
+        "score": 15.0,
+        "max_score": 20,
+        "feedback": "The student scored 15 marks, correctly drawing and explaining the simple periscope with TIR, and providing a good comparison between laser and bulb light. The diagram for the periscope was not fully labeled with all"
+      },
+      "Item 5": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:37:14"
+  },
+  "c6d995e9938c18fefaa23f81568a38b0711b35653ce1cbda449ef0dd3c5d9a00": {
+    "success": true,
+    "student_id": "267",
+    "student_name": "232",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student labeled this item as Item 1 but provided content related to Item 7 (Sun & Stars), resulting in 0 marks as the content did not address the required topics of refrigerator energy or car collision."
+      },
+      "Item 2": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 18 marks for correctly choosing a prism for total internal reflection with a good diagram and accurately explaining the differences between laser and bulb light, concluding on laser suitability for security, though not explicitly mentioning intensity as a laser property."
+      },
+      "Item 3": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student"
+      },
+      "Item 5": {
+        "score": 28.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 12:38:58"
+  }
+}

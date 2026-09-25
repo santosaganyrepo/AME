@@ -1,0 +1,34 @@
+{
+  "exam_info": {
+    "year": "2027",
+    "term": "Term 1",
+    "class": "S3",
+    "stream": "C",
+    "subject": "Geography",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Santos madol",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 75.0,
+      "sync_time": "2026-05-14 13:41",
+      "questions": {
+        "Item 1": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 1 (a) (Reasons for rapid population increase): The student correctly identified and explained five distinct reasons for Uganda's rapid population increase: high fertility rate, early marriage and pregnancies, increased refugee influx, high life expectancy, and immigration effect. Each of these five points was clearly articulated with relevant explanations, earning 2 marks per point for a total of 10 marks. The student successfully provided more than the required 'at least four clear reasons'. No significant omissions or errors were identified in this section. A complete answer required at least four clear reasons for the rapid population increase, each briefly explained.\n\nItem 1 (b) (Impacts of rapid population growth): The student correctly identified and explained six negative impacts of rapid population growth: increased crime rate, unemployment, land fragmentation and conflicts, environmental degradation, growth of slums, and easy spread of diseases. These points were relevant and well-articulated, earning the full 5 marks allocated for the negative impacts component. However, the student completely failed to address the requirement for",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

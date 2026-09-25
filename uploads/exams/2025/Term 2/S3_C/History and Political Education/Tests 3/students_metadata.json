@@ -1,0 +1,77 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "Tests 3",
+    "total_marks": 40
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "Siima",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 77.5,
+      "sync_time": "2026-08-03 09:08",
+      "questions": {},
+      "overall_feedback": "The student demonstrated a strong overall performance across both scenarios in this assessment, showing a solid understanding of East African history and social development concepts. The work in Scenario One was particularly impressive, where the candidate provided accurate details regarding pre",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 31.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "002",
+      "student_id": "002",
+      "student_name": "Ayen",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 67.5,
+      "sync_time": "2026-08-03 09:08",
+      "questions": {},
+      "overall_feedback": "The candidate demonstrated a solid foundational understanding of historical concepts and contemporary societal issues across the assessment. Overall performance was commendable, with structured responses that attempted to address the core requirements of each task. The candidate performed strongest in analyzing colonial administrative",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 27.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "003",
+      "student_id": "003",
+      "student_name": "Namuganza",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 70.0,
+      "sync_time": "2026-08-03 09:09",
+      "questions": {},
+      "overall_feedback": "The student demonstrated a solid overall understanding of the curriculum, delivering clear and well-structured responses across the required tasks. Performance was strongest in the section addressing British indirect rule and its impact on national unity, where the learner",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 28.0,
+      "max_score": 40.0
+    },
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "Shalom",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 82.5,
+      "sync_time": "2026-08-03 09:10",
+      "questions": {},
+      "overall_feedback": "Shalom performed exceptionally well across this examination paper, demonstrating a thorough understanding of East African history, colonial administration, and heritage management. The script exhibits strong clarity, coherent logical structure, and impressive historical detail throughout most",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 33.0,
+      "max_score": 40.0
+    }
+  ]
+}

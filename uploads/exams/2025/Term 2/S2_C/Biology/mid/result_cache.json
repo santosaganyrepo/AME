@@ -1,0 +1,842 @@
+{
+  "9ca3cec8fb90b831e9b527a0b7107f3fda5df70cc6ff2a292eb8eb37c4da93c2": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "alixe",
+    "total_score": 40.0,
+    "raw_score": 16.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Item 1 Part (a)",
+        "marks": 4.0
+      },
+      {
+        "stage": "Item 1 Part (b)",
+        "marks": 7.0
+      },
+      {
+        "stage": "Item 2 Part (a)",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 2 Part (b)",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a good foundational understanding of human digestive processes and protein deficiency in Item 1, correctly identifying kwashiorkor and providing a reasonable sequential breakdown of protein digestion involving stomach pepsin and pancreatic trypsin. The strongest performance was shown in describing digestive pathways and refuting the misconception regarding a child's ability to digest thick protein foods. However,",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:07:51"
+  },
+  "bafd5cea7ff7624bfe34da068353a772d2ceccfac1e96fff336b65f007b0c1cb": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "akia",
+    "total_score": 52.5,
+    "raw_score": 21.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Item 1 Part (a) Identification",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (a) Explanation of Damage",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (b) Importance of Protein in Children",
+        "marks": 4.5
+      },
+      {
+        "stage": "Item 1 Part (b) Digestion of Proteins",
+        "marks": 5.5
+      },
+      {
+        "stage": "Item 2 Part (a) Osmotic Mechanism",
+        "marks": 5.0
+      },
+      {
+        "stage": "Item 2 Part (b) Effect of Leaf Spraying",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:08:25"
+  },
+  "ce2ffc5d37ac5a80dbc68a26c5e115dd7f9ebd38cd083dd76cd775007df45e3e": {
+    "success": true,
+    "student_id": "0021",
+    "student_name": "alice",
+    "total_score": 42.5,
+    "raw_score": 17.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a foundational grasp of basic biological terms across both items, particularly in identifying Kwashiorkor and providing a reasonable narrative for protein digestion. In Item 1, the learner correctly identified the deficiency disease and accurately detailed the roles of gastric juice, hydrochloric acid, pepsin, and trypsin in breaking down proteins into polypeptides, successfully concluding with advice that refutes the mothers' misconception. However, overall performance was limited by significant conceptual confusions and incomplete biological",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:10:23"
+  },
+  "93266d8d4bdc9199f853f6dfc6675d0bb862be9b67336cfc643d86e90bd70b64": {
+    "success": true,
+    "student_id": "0212",
+    "student_name": "akia",
+    "total_score": 62.5,
+    "raw_score": 25.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 5.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a solid grasp of physiological and biological concepts across both assessment tasks, responding effectively to the scenario scenarios. Their strongest performance was evident in explaining protein digestion in Item 1 Part (b), where they correctly mapped out the enzymatic pathway from the stomach through the duodenum and ileum, specifically identifying pepsin, trypsin, and peptidase and their respective breakdown products. Similarly, the candidate performed well on plant water relations, demonstrating a clear understanding of hypertonic soil solutions",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:10:44"
+  },
+  "488e19e36e270360d3745e080c2cebfd08fb21e561d93741739d6fce4ad6be40": {
+    "success": true,
+    "student_id": "0092",
+    "student_name": "namuli",
+    "total_score": 47.5,
+    "raw_score": 19.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a broad, partial understanding of basic biological concepts across both items, showing familiarity with key terminology but regularly lacking detailed mechanical depth. Performance was generally consistent between the two tasks, though responses tended to rely on simplified qualitative explanations rather than precise biological mechanisms. The candidate’s strongest performance occurred in identifying the primary deficiency condition as Kwashiorkor and outlining the basic digestive pathway in Item 1. For example, the script correctly identified that gastric juice in the stomach contains",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:11:33"
+  },
+  "d1760ab2a3ae0b84ddf9d2c4811041f7f51450b739532ef6410961367f21a254": {
+    "success": true,
+    "student_id": "0012",
+    "student_name": "makula",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a foundational grasp of basic biological terminology and successfully identified Kwashiorkor as the nutritional condition in Item 1. Across both items, however, performance was constrained by a reliance on superficial scenario descriptions and non-scientific misconceptions rather than detailed biological mechanics. \n\nIn Item 1, the candidate's strongest area was describing protein digestion, where they correctly identified the role of hydrochloric acid and pepsin in the stomach converting proteins to polypeptides, followed by final breakdown into",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:11:52"
+  },
+  "ebdd74cb5c0e182417270cf60f564c5a891c1fb1cdc9af8717cddbfc5947776a": {
+    "success": true,
+    "student_id": "902",
+    "student_name": "nsereko",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 0.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a good foundational understanding of human biology in Item 1, but struggled significantly with the plant physiology and osmotic principles presented in Item 2. In Item 1, the candidate correctly identified the nutritional deficiency as Kwashiorkor and provided a clear, logical explanation of the importance of proteins for growth, tissue repair, and hair pigmentation. Furthermore, the description of protein digestion was reasonably detailed, correctly detailing mechanical breakdown, gastric juice action involving pepsin in the",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:13:41"
+  },
+  "1b91b171d5cab6a93b40a70a55acc9f5b836a0a9f5b04bd4c108e0931d5508cf": {
+    "success": true,
+    "student_id": "223",
+    "student_name": "namuli",
+    "total_score": 50.0,
+    "raw_score": 20.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 6.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 6.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a satisfactory basic understanding of key biological concepts across both items, showing particular strength in identifying core physiological mechanisms and enzymatic pathways. In Item 1, the candidate correctly identified kwashiorkor and provided a reasonable outline of protein digestion in the digestive tract, accurately naming gastric pepsin and pancreatic trypsin along with their respective locations and action on proteins. However, the explanation of pathophysiology was limited; while symptoms were restated, the candidate failed to explain the underlying biological mechanisms of damage, such as blood plasma protein",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:19:22"
+  },
+  "e212103ee49924f4d4df3021d070b5cf6528ca19096199ef2fd78d1475ed2e58": {
+    "success": true,
+    "student_id": "12121",
+    "student_name": "nsereko",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a solid foundational understanding of human nutrition and digestive physiology in Item 1, but struggles significantly with plant physiology and osmotic mechanisms in Item 2. Performance in the first item is strong, particularly where the student correctly identifies Kwashiorkor as the nutritional disorder and clearly outlines the functional importance of proteins in growing children, such as maintaining hair pigmentation and facilitating cell replacement. The student also details the mechanical and chemical digestive pathway reasonably well, noting the action of stomach pepsin",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:20:09"
+  },
+  "f54cb3999160dbf812d0e169d894e5a1781bbd07125c0b470c5916184810b9a4": {
+    "success": true,
+    "student_id": "921",
+    "student_name": "makula",
+    "total_score": 42.5,
+    "raw_score": 17.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a partial understanding of biological concepts across both items, showing stronger performance in descriptive physiology than in physical plant mechanisms and agricultural applications. In Item 1, the candidate correctly identified Kwashiorkor and described its basic physical manifestations, such as stunted growth and reddish hair, though the biological explanations remained superficial and lacked detailed mechanisms like fluid retention and plasma osmotic pressure. The response on protein functions recognized body building and tissue maintenance, while the pathway of protein digestion was attempted with some",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:20:34"
+  },
+  "229f5de1679a401935ad6284b1a149f54d284cf62f6af2447c926bc1cdc610cc": {
+    "success": true,
+    "student_id": "092",
+    "student_name": "akaia",
+    "total_score": 60.0,
+    "raw_score": 24.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 6.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a solid foundational understanding of biological concepts across both assessment items, displaying notable strength in explaining human digestive processes and fundamental osmotic movement. The student performed strongest in detailing the sequential pathway of protein digestion, where they accurately identified stomach gastric juice with pepsin breaking down proteins into polypeptides, followed by duodenal and ileal enzyme actions yielding absorbable amino acids. Similarly, the explanation of osmosis in plant roots successfully captured the creation of a hypertonic soil solution leading to",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:20:54"
+  },
+  "f98715897ef0e5405f8c8f2e97c9fe94b07086e88453cade6e868f7f45ebbb7b": {
+    "success": true,
+    "student_id": "100",
+    "student_name": "akia",
+    "total_score": 60.0,
+    "raw_score": 24.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a strong overall understanding of biological concepts across both items, with particularly impressive performance in the physiological pathways. \n\nIn Item 1, the candidate correctly identified kwashiorkor and provided an exceptionally detailed, accurate description of protein digestion. They correctly traced the enzymatic breakdown from pepsin in the stomach to trypsin in the duodenum and peptidases in the ileum, culminating in amino acid absorption into the bloodstream. However, the explanation of how a starch-",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:39:24"
+  },
+  "a6949e0354cf217d2d750e27a6a214d7ef417c42a259fec4eb8ec73d62b4cb07": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "alice",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a basic understanding of key biological concepts, showing the strongest performance in describing protein digestion during Item 1(b). In that section, the learner correctly identified digestive structures such as the stomach, gastric juice, pepsin, the duodenum, and trypsin, while successfully applying this knowledge to refute the mothers' misconception regarding thick foods. Conversely, the candidate's weakest performance occurred in Item 2, particularly when attempting to explain osmotic movement and providing agricultural",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:39:43"
+  },
+  "d5100777bc39cab57243a3f241f75594bfea6d45ccf83bcf1cc61ea9f4b42bb6": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "nsereko",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 8.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates a solid foundational understanding of human nutrition and digestive biology, but struggles significantly with plant physiology and osmotic mechanisms. In Item 1, the candidate correctly identified Kwashiorkor as the nutritional deficiency disease and provided a clear explanation of how an exclusive starch diet impairs cellular growth and tissue repair. The response to protein digestion was particularly well-structured, accurately outlining mechanical breakdown in the mouth, enzymatic action of pepsin in the stomach, and pancreatic trypsin in the duodenum. However, the student failed to explain the role of",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:40:09"
+  },
+  "593e3f284b9333f231563cf61daf62c961489662db68871079a3e8e15d52f59d": {
+    "success": true,
+    "student_id": "0023",
+    "student_name": "namuli",
+    "total_score": 45.0,
+    "raw_score": 18.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a fair understanding of introductory human nutrition and protein digestion, but struggles significantly with plant physiology and osmotic mechanisms. Performance was notably stronger in Item 1, where the candidate correctly identified Kwashiorkor as the clinical condition and effectively outlined key physical symptoms associated with protein deficiency, such as stunted growth, hair discoloration, and abdominal swelling. Furthermore, the candidate presented a coherent overview of protein digestion in the stomach and small intestine, accurately naming enzymes such as pepsin",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:40:28"
+  },
+  "086178023896ef60f47fd8892ef9077a15a6af7a9ba3d7c5b750a1f676e4307e": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "makila",
+    "total_score": 47.5,
+    "raw_score": 19.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 2.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a clear foundational understanding of basic biological terms across both items, correctly identifying kwashiorkor in Item 1 and identifying key digestive enzymes such as pepsin and trypsin. In Item 2, the candidate successfully recognized osmosis as the underlying mechanism for water movement, correctly noting the presence of a hypertonic environment and a semi-permeable membrane. However, performance was constrained by superficial explanations and occasional scientific inaccuracies regarding physiological mechanisms. The strongest area was shown in Item",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:40:47"
+  },
+  "70b5f880be3b782afd5c702020e1a8ff3a5e5d2b7e12dc8c9d6ce86706e151d6": {
+    "success": true,
+    "student_id": "3232",
+    "student_name": "alice",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a basic understanding of key biological concepts across both items, showing relative strength in human nutrition and digestive mechanisms compared to plant transport processes. In Item 1, the script correctly identifies Kwashiorkor and provides a reasonable description of protein digestion, accurately detailing the roles of gastric juice, hydrochloric acid, pepsin, and pancreatic trypsin in breaking down proteins within the stomach and duodenum. However, the explanation of digestion remains incomplete due to the omission of peptidases and the",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:43:13"
+  },
+  "811174cf3936e95e962f99360903d7a358804b684e93c53db54aa3965f322b7d": {
+    "success": true,
+    "student_id": "11111",
+    "student_name": "alice",
+    "total_score": 37.5,
+    "raw_score": 15.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 1.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrates a basic understanding of biological concepts across both items, though responses vary significantly in scientific depth and accuracy between topics. Performance is markedly stronger in human nutrition and digestion (Item 1) compared to plant transport mechanisms and agricultural applications (Item 2).\n\nIn Item 1, the student correctly identifies Kwashiorkor as the health condition and recognizes key clinical signs such as swollen bellies, reddish hair, and growth retardation. For example, on page",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:46:29"
+  },
+  "3f1e87350e2c74575b1153cc1f8eedcb196838235d84e5dc52ccb9e7dab58d71": {
+    "success": true,
+    "student_id": "1111",
+    "student_name": "namuli",
+    "total_score": 50.0,
+    "raw_score": 20.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 1.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "The candidate demonstrated a fair foundational understanding across both examination items, showing good familiarity with primary biological terms and practical context. Performance was strongest in the application of agricultural practices in Item 2 Part (b), where the candidate provided sensible advice by recommending the use of pure water for irrigation and suggesting that fertilizers should be applied during wet seasons so that sufficient soil moisture is available. The student also correctly identified kwashiorkor as the condition in Item 1 Part (a). However",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:47:19"
+  },
+  "acfdc0976e72a6ce7e6e09bb0c7aea675b302b52f6056c690366677dfc1320b0": {
+    "success": true,
+    "student_id": "11111",
+    "student_name": "akia",
+    "total_score": 52.5,
+    "raw_score": 21.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Stage 1",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 2",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 3",
+        "marks": 4.0
+      },
+      {
+        "stage": "Stage 4",
+        "marks": 5.0
+      },
+      {
+        "stage": "Stage 5",
+        "marks": 3.0
+      },
+      {
+        "stage": "Stage 6",
+        "marks": 2.0
+      },
+      {
+        "stage": "Stage 7",
+        "marks": 3.0
+      }
+    ],
+    "overall_feedback": "The student demonstrated a foundational understanding of biological concepts across both items but exhibited inconsistent technical precision and logical depth. In Item 1, the candidate correctly identified Kwashiorkor and outlined basic protein functions such as tissue repair and enzyme synthesis, though explanations regarding pathophysiology lacked detailed cellular mechanisms like plasma oncotic pressure and albumin synthesis. The description of protein digestion was a notable strength, accurately detailing the sequential enzymatic breakdown involving pepsin in the acidic stomach, trypsin in the duodenum, and peptidases",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-05 10:47:42"
+  }
+}

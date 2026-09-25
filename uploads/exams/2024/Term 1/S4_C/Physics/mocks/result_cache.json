@@ -1,0 +1,97 @@
+{
+  "9396a64e19ecb49f24391d889c912a043a141da25eed9c992859e9a8b903e966": {
+    "success": true,
+    "student_id": "782",
+    "student_name": "Sameyo",
+    "total_score": 50.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student earned marks for correctly explaining nuclear fusion in the sun and describing star colours, brightness, and the life cycle stages of stars, but did not address the importance of the sun for life on Earth."
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student attempted to answer a question about nuclear energy and radioisotopes, but no corresponding marking scheme was provided for this specific question, resulting in 0 marks."
+      },
+      "Item 5": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student earned full marks for correctly analyzing the car collision using momentum principles, providing appropriate advice regarding seat"
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-26 14:55:27"
+  },
+  "94b78ccf3d507f93d2bb9a57ae8fcca04558a23381c496621962900058fad82d": {
+    "success": true,
+    "student_id": "782",
+    "student_name": "Mad",
+    "total_score": 30.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was asked about lightning conductors and transformers but provided a detailed explanation of a nuclear reactor, which is completely irrelevant to the question."
+      },
+      "Item 5": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the momentum before and after the collision for both vehicles, earning 10 marks. The calculation for kinetic energy and potential energy was incorrect or incomplete, and the advice on seatbelts was not provided."
+      },
+      "Item 7": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the daily power usage for all listed electrical instruments and the total daily power usage, earning full marks for the calculation. The student also"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-26 14:57:12"
+  },
+  "923fcf5df68301e85efb1bea02c65968467860ccd2971591fd2cda6bcd780e89": {
+    "success": true,
+    "student_id": "122",
+    "student_name": "Santop",
+    "total_score": 25.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 6": {
+        "score": 8.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 8 marks for correctly calculating the daily power usage for all three electrical instruments, but failed to provide a suitable generator choice with explanation, diagram, or wiring details, and did not address energy saving methods."
+      },
+      "Item 2": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 17 marks for a good explanation and diagram for prism vs mirror and a comprehensive comparison of laser vs bulb, but the diagram for prism vs mirror could have been more detailed on the TIR principle."
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 0 marks as the attempted calculation for kinetic and potential energy was"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-26 14:59:14"
+  }
+}

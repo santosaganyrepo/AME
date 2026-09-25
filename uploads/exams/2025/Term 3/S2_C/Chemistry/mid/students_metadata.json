@@ -1,0 +1,68 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 3",
+    "class": "S2",
+    "stream": "C",
+    "subject": "Chemistry",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "343",
+      "student_id": "343",
+      "student_name": "Lukwago Renon",
+      "total_pages": 6,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-07 16:57",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "22",
+      "student_id": "22",
+      "student_name": "Ssentongo Aselem",
+      "total_pages": 6,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-08 13:34",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "212",
+      "student_id": "212",
+      "student_name": "Agany Madol",
+      "total_pages": 6,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-07 17:04",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "323",
+      "student_id": "323",
+      "student_name": "Santos madol",
+      "total_pages": 6,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-08 13:54",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    }
+  ]
+}

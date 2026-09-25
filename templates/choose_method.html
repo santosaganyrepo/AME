@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduMark AI — Choose Upload Method</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
+        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
+        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <style>
+    :root, html[data-theme="dark"] {
+      --bg: #0f172a; --bg-panel: #131c2e; --bg-elevated: #1b2436;
+      --bg-card: rgba(255,255,255,0.055); --bg-card-h: rgba(255,255,255,0.09);
+      --border: rgba(255,255,255,0.11); --border-h: rgba(255,255,255,0.22);
+      --accent: #818cf8; --accent-soft: rgba(129,140,248,0.16); --accent-glow: rgba(129,140,248,0.20);
+      --purple: var(--accent); --purple-soft: var(--accent-soft);
+      --success: #34d399; --success-soft: rgba(52,211,153,0.15);
+      --info: #60c8ff; --info-soft: rgba(96,200,255,0.13);
+      --text-1: #f2f2f3; --text-2: #b2b2b8; --text-3: #7a7a80;
+      --radius-xs: 7px; --radius-sm: 11px; --radius-md: 16px; --radius-lg: 20px; --radius-xl: 24px;
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.4); --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+      --sidebar-w: 252px; --sidebar-col: 68px; --header-h: 60px;
+      --transition: all 0.1s cubic-bezier(0.4,0,0.2,1);
+      --font-serif: 'Space Grotesk', sans-serif; --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+    html[data-theme="light"] {
+      --bg: #ffffff; --bg-panel: rgba(255,255,255,0.85); --bg-elevated: #f2f2f2;
+      --bg-card: #ffffff; --bg-card-h: #f4f4f4;
+      --border: rgba(0,0,0,0.10); --border-h: rgba(0,0,0,0.20);
+      --accent: #4f46e5; --accent-soft: rgba(79,70,229,0.08); --accent-glow: rgba(79,70,229,0.14);
+      --purple: var(--accent); --purple-soft: var(--accent-soft);
+      --success: #16a34a; --success-soft: rgba(22,163,74,0.10);
+      --info: #0284c7; --info-soft: rgba(2,132,199,0.10);
+      --text-1: #0a0a0a; --text-2: #45454a; --text-3: #8a8a90;
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.08); --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text-1); min-height: 100vh; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 99px; }
+
+    .shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+    .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: var(--header-h);
+      background: var(--bg-panel);border-bottom: 1px solid var(--border);
+    }
+    .tb-left { display: flex; align-items: center; gap: 10px; }
+    .tb-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--purple), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .tb-title { font-family: var(--font-serif); font-size: 16px; font-weight: 700; }
+    .tb-link {
+      display: flex; align-items: center; gap: 7px; padding: 7px 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xs);
+      color: var(--text-2); font-size: 12.5px; font-weight: 500; text-decoration: none; transition: var(--transition);
+    }
+    .tb-link:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border-h); }
+
+    .center-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .choice-container { width: 100%; max-width: 900px; }
+
+    .session-strip {
+      display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;
+      margin-bottom: 20px; padding: 8px 14px;
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 99px;
+      font-size: 12px; color: var(--text-3); max-width: fit-content; margin-left: auto; margin-right: auto;
+    }
+    .session-strip i { color: var(--accent); font-size: 10px; }
+    .session-strip .sep { opacity: 0.5; }
+
+    .hero { text-align: center; margin-bottom: 34px; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--accent);
+      background: var(--accent-soft); border: 1px solid rgba(128,128,128,0.2);
+      padding: 4px 12px; border-radius: 99px; margin-bottom: 14px;
+    }
+    .hero-title { font-family: var(--font-serif); font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+    .hero-sub { font-size: 14px; color: var(--text-2); max-width: 480px; margin: 0 auto; }
+
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 760px) { .cards-grid { grid-template-columns: 1fr; } }
+
+    /* ── Mobile / tablet compatibility hardening ── */
+    html, body { max-width: 100vw; overflow-x: hidden; }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 24px; }
+      .choice-card { padding: 22px 18px; }
+      .session-strip { max-width: calc(100% - 20px); }
+    }
+
+    .choice-card {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px 26px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 14px; transition: var(--transition);
+      cursor: pointer;
+    }
+    .choice-card:hover { border-color: rgba(128,128,128,0.4); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    .choice-badge {
+      position: absolute; top: 18px; right: 18px; font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 99px; background: var(--success-soft); color: var(--success);
+      border: 1px solid rgba(52,211,153,0.25); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .choice-icon {
+      width: 52px; height: 52px; border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .choice-icon.individual { background: var(--info-soft); color: var(--info); }
+    .choice-icon.batch { background: var(--purple-soft); color: var(--purple); }
+
+    .choice-title { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: var(--text-1); }
+    .choice-desc { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+    .choice-points { display: flex; flex-direction: column; gap: 7px; margin-top: 2px; }
+    .choice-point { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text-3); }
+    .choice-point i { color: var(--success); font-size: 11px; margin-top: 2px; flex-shrink: 0; }
+
+    .choice-cta {
+      margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px; border-radius: var(--radius-md); font-weight: 700; font-size: 13.5px;
+      background: var(--accent); color: var(--bg); transition: var(--transition);
+    }
+    .choice-card:hover .choice-cta { transform: translateY(-1px); box-shadow: 0 4px 16px var(--accent-glow); }
+    .choice-cta.outline { background: transparent; border: 1px solid var(--border-h); color: var(--text-1); }
+
+    @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+    body { animation: pageIn 0.05s linear; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="main">
+      <div class="topbar">
+        <div class="tb-left">
+          <div class="tb-icon">🎓</div>
+          <div class="tb-title">EduMark AI</div>
+        </div>
+        <a class="tb-link" href="/"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+      </div>
+
+      <div class="center-wrap">
+        <div class="choice-container">
+
+          <div class="session-strip">
+            <i class="fa-solid fa-lock"></i>
+            <span>{{ exam_data.class }} {{ exam_data.stream }}</span>
+            <span class="sep">·</span>
+            <span>{{ exam_data.subject }}</span>
+            <span class="sep">·</span>
+            <span>{{ exam_data.exam_type }}</span>
+            <span class="sep">·</span>
+            <span>{{ exam_data.term }} {{ exam_data.year }}</span>
+          </div>
+
+          <div class="hero">
+            <div class="hero-eyebrow"><i class="fa-solid fa-check" style="font-size:10px;"></i> Session Ready</div>
+            <h1 class="hero-title">How do you want to add students?</h1>
+            <p class="hero-sub">Pick whichever fits this exam — you can always come back and use the other method later in this same session.</p>
+          </div>
+
+          <div class="cards-grid">
+            <a class="choice-card" href="/upload-student">
+              <div class="choice-icon individual"><i class="fa-solid fa-camera"></i></div>
+              <div>
+                <div class="choice-title">Upload Individually</div>
+                <div class="choice-desc">Capture or upload each student's answer sheets one at a time — best for a handful of scripts or live camera capture.</div>
+              </div>
+              <div class="choice-points">
+                <div class="choice-point"><i class="fa-solid fa-circle-check"></i> Camera capture or file upload per student</div>
+                <div class="choice-point"><i class="fa-solid fa-circle-check"></i> Great for small classes or quick tests</div>
+              </div>
+              <div class="choice-cta outline"><i class="fa-solid fa-arrow-right"></i> Continue Individually</div>
+            </a>
+
+            <a class="choice-card" href="/batch-upload">
+              <span class="choice-badge">Best for full classes</span>
+              <div class="choice-icon batch"><i class="fa-solid fa-file-zipper"></i></div>
+              <div>
+                <div class="choice-title">Batch Upload (ZIP)</div>
+                <div class="choice-desc">Upload one ZIP containing a folder per student (named "ID_Name") and EduMark AI will sort, validate, and queue everyone automatically.</div>
+              </div>
+              <div class="choice-points">
+                <div class="choice-point"><i class="fa-solid fa-circle-check"></i> Marks an entire class in one upload</div>
+                <div class="choice-point"><i class="fa-solid fa-circle-check"></i> Full validation &amp; review screen before marking starts</div>
+              </div>
+              <div class="choice-cta"><i class="fa-solid fa-arrow-right"></i> Continue with Batch</div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

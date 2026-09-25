@@ -1,0 +1,125 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 2",
+    "class": "S3",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "Tests"
+  },
+  "students": [
+    {
+      "id": "001",
+      "student_id": "001",
+      "student_name": "Empty",
+      "total_pages": 4,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 10:54",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "002",
+      "student_id": "002",
+      "student_name": "Siima",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-08-02 10:54",
+      "questions": {},
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "003",
+      "student_id": "003",
+      "student_name": "Ayen",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 30.0,
+      "sync_time": "2026-08-02 10:55",
+      "questions": {
+        "Item 1": {
+          "score": 5.0,
+          "max_score": 20,
+          "feedback": "The student scored 5/20. Points earned include promotion of friendship, hard work, and extension of"
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 3": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 4": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "004",
+      "student_id": "004",
+      "student_name": "namuganza",
+      "total_pages": 4,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-08-02 10:55",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "005",
+      "student_id": "005",
+      "student_name": "shaalom",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 40.0,
+      "sync_time": "2026-08-02 10:55",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student attempted only part (a) of Question 1, scoring 10/10 for relevant points on pre-colonial trade impact. Part"
+        },
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 3": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

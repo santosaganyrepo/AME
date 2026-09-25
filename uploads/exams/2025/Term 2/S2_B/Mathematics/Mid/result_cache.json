@@ -1,0 +1,134 @@
+{
+  "759f88a072626ea9e3382544fafb9efbd5826acc33d519f811a95db4d4cc3493": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "aki",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Item 1 Part (a) Phase 1 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (a) Phase 2 bag count & revenue calculation",
+        "marks": 3.0
+      },
+      {
+        "stage": "Item 1 Part (a) Phase 3 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (a) Total Revenue summation",
+        "marks": 1.0
+      },
+      {
+        "stage": "Item 1 Part (a) Net Profit Calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (b) Profit Distribution",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 11:23:48"
+  },
+  "58aff057a9523dcf9d0d1f76246c15c74eb2e0983a15b48bea84db57b14c06c1": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "ak",
+    "total_score": 100.0,
+    "raw_score": 40.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Item 1 Part (a) Net Profit Calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (b) Profit Distribution",
+        "marks": 4.0
+      },
+      {
+        "stage": "Item 1 Part (b) Calculation of total revenue if sold at a flat rate of UGX",
+        "marks": 85.0
+      },
+      {
+        "stage": "000 per bag",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (b) Comparison and analytical interpretation of phased selling vs. flat rate",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "The student demonstrates good competence in executing basic arithmetic operations for net profit and profit sharing, accurately dividing the net earnings among all forty members to determine each individual share. However",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 11:24:07"
+  },
+  "a3de9f677a6302edf4f4175a6b6479485925a28a315c541d04518098dc6d61a0": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "akia",
+    "total_score": 100.0,
+    "raw_score": 40.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Phase 1 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Phase 2 bag count & revenue calculation",
+        "marks": 3.0
+      },
+      {
+        "stage": "Phase 3 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Total Revenue summation",
+        "marks": 1.0
+      },
+      {
+        "stage": "Net Profit Calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Profit Distribution",
+        "marks": 4.0
+      },
+      {
+        "stage": "Calculation of overall weighted average price per bag in phased sales",
+        "marks": 0.0
+      },
+      {
+        "stage": "Calculation of total revenue if sold at a flat rate of UGX",
+        "marks": 85.0
+      },
+      {
+        "stage": "000 per bag",
+        "marks": 2.0
+      },
+      {
+        "stage": "Comparison and analytical interpretation of phased selling vs. flat rate",
+        "marks": 0.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 11:25:46"
+  }
+}

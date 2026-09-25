@@ -1,0 +1,38 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 3",
+    "class": "S4",
+    "stream": "C",
+    "subject": "Physics",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "323",
+      "student_id": "323",
+      "student_name": "Agany Madol",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 100.0,
+      "sync_time": "2026-05-11 21:22",
+      "questions": {
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly defined solar eclipse as the moon blocking the sun's light and casting a shadow on Earth, and lunar eclipse as the Earth blocking the sun's light and casting a shadow on the moon. They accurately drew and labeled diagrams for both, showing the Sun, Earth, Moon alignment, light rays, umbra, and penumbra, earning 10 marks. They also provided correct definitions for eclipse, opaque object, umbra, and penumbra, earning 4 marks. Furthermore, they listed four safe methods for viewing an eclipse: using eclipse glasses, a pinhole camera, welding glasses, and a bucket of water, earning 4 marks. The overall clarity and structure of the answer were good, earning 2 marks. However, the student omitted specific details such as the new moon phase for a solar eclipse and the full moon phase for a lunar eclipse. They also did not explicitly state the precise Sun-Moon-Earth or Sun-Earth-Moon alignment for each type. While they mentioned eclipses are \"rare phenomena,\" they did not elaborate on the conditions that make them rare (e.g., orbital planes). The answer also lacked the specific tone and depth expected for a \"presentation to community members,\" appearing more as a factual report. The inclusion of \"dark glasses\" as a safe method is incorrect and potentially dangerous. A complete answer required a clear explanation of both solar and lunar eclipses, including the specific celestial body alignments (Sun-Moon-Earth for solar, Sun-Earth-Moon for lunar), the corresponding moon phases (new moon for solar, full moon for lunar), and a detailed explanation of the umbra and penumbra shadow regions. It also required accurate, labeled diagrams for both types of eclipses. Additionally, the presentation should have been tailored for a community audience, explaining why eclipses are rare and why specific viewing methods are safe/unsafe, concluding with a comprehensive list of safe viewing recommendations."
+        }
+      },
+      "overall_feedback": "Item 2 (Eclipses): The student correctly defined solar eclipse as the moon blocking the sun's light and casting a shadow on Earth, and lunar eclipse as the Earth blocking the sun's light and casting a shadow on the moon. They accurately drew and labeled diagrams for both, showing the Sun, Earth, Moon alignment, light rays, umbra, and penumbra, earning 10 marks. They also provided correct definitions for eclipse, opaque object, umbra, and penumbra, earning 4 marks. Furthermore, they listed four safe methods for viewing an eclipse: using eclipse glasses, a pinhole camera, welding glasses, and a bucket of water, earning 4 marks. The overall clarity and structure of the answer were good, earning 2 marks. However, the student omitted specific details such as the new moon phase for a solar eclipse and the full moon phase for a lunar eclipse. They also did not explicitly state the precise Sun-Moon-Earth or Sun-Earth-Moon alignment for each type. While they mentioned eclipses are \"rare phenomena,\" they did not elaborate on the conditions that make them rare (e.g., orbital planes). The answer also lacked the specific tone and depth expected for a \"presentation to community members,\" appearing more as a factual report. The inclusion of \"dark glasses\" as a safe method is incorrect and potentially dangerous. A complete answer required a clear explanation of both solar and lunar eclipses, including the specific celestial body alignments (Sun-Moon-Earth for solar, Sun-Earth-Moon for lunar), the corresponding moon phases (new moon for solar, full moon for lunar), and a detailed explanation of the umbra and penumbra shadow regions. It also required accurate, labeled diagrams for both types of eclipses. Additionally, the presentation should have been tailored for a community audience, explaining why eclipses are rare and why specific viewing methods are safe/unsafe, concluding with a comprehensive list of safe viewing recommendations.",
+      "strengths": [
+        "The student demonstrated a strong understanding of the basic mechanics of solar and lunar eclipses, including the roles of the Sun, Earth, and Moon. They also showed an ability to accurately illustrate scientific concepts through clear and correctly labeled diagrams, particularly for the umbra and penumbra shadow regions. Furthermore, the student possesses knowledge of several practical and safe methods for observing eclipses."
+      ],
+      "areas_for_improvement": [
+        "The student must revise conceptual depth, elaborating on the specific conditions and phases of the moon required for each type of eclipse (e.g., new moon for solar, full moon for lunar) and the reasons for their rarity. They also need to improve audience-specific communication skills, practicing tailoring scientific explanations for a specific audience (e.g., community members) to ensure the language and level of detail are appropriate for a presentation rather than a simple factual report. Finally, the student should enhance critical evaluation of information, particularly in identifying safe versus unsafe practices, such as avoiding the recommendation of \"dark glasses\" for eclipse viewing."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

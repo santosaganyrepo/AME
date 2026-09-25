@@ -1,0 +1,104 @@
+{
+  "exam_info": {
+    "year": "2024",
+    "term": "Term 1",
+    "class": "S4",
+    "stream": "C",
+    "subject": "Physics",
+    "exam_type": "mocks"
+  },
+  "students": [
+    {
+      "id": "782",
+      "student_id": "782",
+      "student_name": "Sameyo",
+      "total_pages": 7,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 30.0,
+      "sync_time": "2026-05-26 14:56",
+      "questions": {
+        "Item 3": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": "The student was asked about lightning conductors and transformers but provided a detailed explanation of a nuclear reactor, which is completely irrelevant to the question."
+        },
+        "Item 5": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student correctly calculated the momentum before and after the collision for both vehicles, earning 10 marks. The calculation for kinetic energy and potential energy was incorrect or incomplete, and the advice on seatbelts was not provided."
+        },
+        "Item 7": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student correctly calculated the daily power usage for all listed electrical instruments and the total daily power usage, earning full marks for the calculation. The student also"
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "899",
+      "student_id": "899",
+      "student_name": "8787",
+      "total_pages": 2,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-26 14:57",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "121",
+      "student_id": "121",
+      "student_name": "121",
+      "total_pages": 2,
+      "status": "Uploaded",
+      "marked": false,
+      "total_score": 0,
+      "sync_time": "2026-05-26 14:58",
+      "questions": {},
+      "overall_feedback": "",
+      "strengths": [],
+      "areas_for_improvement": []
+    },
+    {
+      "id": "122",
+      "student_id": "122",
+      "student_name": "Santop",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 25.0,
+      "sync_time": "2026-05-26 14:58",
+      "questions": {
+        "Item 6": {
+          "score": 8.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 8 marks for correctly calculating the daily power usage for all three electrical instruments, but failed to provide a suitable generator choice with explanation, diagram, or wiring details, and did not address energy saving methods."
+        },
+        "Item 2": {
+          "score": 17.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 17 marks for a good explanation and diagram for prism vs mirror and a comprehensive comparison of laser vs bulb, but the diagram for prism vs mirror could have been more detailed on the TIR principle."
+        },
+        "Item 5": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 0 marks as the attempted calculation for kinetic and potential energy was"
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

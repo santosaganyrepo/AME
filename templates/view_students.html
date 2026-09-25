@@ -1,750 +1,1790 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marked Students - History</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .header h1 {
-            color: #667eea;
-            font-size: 2.2em;
-            margin-bottom: 10px;
-        }
-        
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-block;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-        
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-        
-        /* Stats Cards */
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: #764ba2;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        
-        /* Exam Session Cards */
-        .exam-session {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        
-        .exam-session:hover {
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        }
-        
-        .session-header {
-            background: #e6e6fa;
-            color: #4a4a4a;
-            padding: 12px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            border-bottom: 1px solid #d0d0e8;
-        }
-        
-        .session-header:hover {
-            background: #d8d8f0;
-        }
-        
-        .session-info {
-            flex: 1;
-        }
-        
-        .session-title {
-            font-size: 1.1em;
-            font-weight: 700;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #4a4a4a;
-        }
-        
-        .session-meta {
-            font-size: 0.85em;
-            opacity: 0.85;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            color: #5a5a5a;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .session-stats {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .mini-stat {
-            text-align: center;
-            background: rgba(102, 126, 234, 0.15);
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-        }
-        
-        .mini-stat-value {
-            font-size: 1.3em;
-            font-weight: 700;
-            display: block;
-            color: #667eea;
-        }
-        
-        .mini-stat-label {
-            font-size: 0.7em;
-            opacity: 0.8;
-            color: #5a5a5a;
-        }
-        
-        .expand-icon {
-            font-size: 1.2em;
-            transition: transform 0.3s;
-            color: #667eea;
-        }
-        
-        .exam-session.collapsed .expand-icon {
-            transform: rotate(-90deg);
-        }
-        
-        /* Student Table */
-        .session-content {
-            padding: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .exam-session.expanded .session-content {
-            max-height: 2000px;
-            transition: max-height 0.5s ease-in;
-        }
-        
-        .students-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .students-table thead {
-            background: #f8f9ff;
-        }
-        
-        .students-table th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 700;
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .students-table tbody tr {
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
-        }
-        
-        .students-table tbody tr:hover {
-            background: #f8f9ff;
-        }
-        
-        .students-table td {
-            padding: 15px;
-            color: #333;
-        }
-        
-        .student-name {
-            font-weight: 600;
-            color: #667eea;
-        }
-        
-        /* Diagnostic Report Button */
-        .btn-diagnostic {
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-diagnostic:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
-        }
-        
-        /* Diagnostic Report Section */
-        .diagnostic-row {
-            background: #f8f9ff;
-        }
-        
-        .diagnostic-report {
-            padding: 30px;
-            background: white;
-            border-radius: 12px;
-            margin: 10px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .diagnostic-header {
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .diagnostic-header h3 {
-            color: #667eea;
-            font-size: 1.5em;
-            margin-bottom: 8px;
-        }
-        
-        .diagnostic-subtitle {
-            color: #666;
-            font-size: 0.95em;
-        }
-        
-        .diagnostic-content {
-            display: grid;
-            gap: 25px;
-        }
-        
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: inline-block;
-        }
-        
-        .status-synced {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-        
-        .status-marked {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-        
-        .empty-state-icon {
-            font-size: 5em;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
-        
-        .empty-state h2 {
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-        
-        .empty-state p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        @media (max-width: 768px) {
-            .session-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .session-stats {
-                width: 100%;
-                justify-content: space-around;
-            }
-            
-            .students-table {
-                font-size: 0.85em;
-            }
-            
-            .students-table th,
-            .students-table td {
-                padding: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduMark AI — View Results</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    // Apply the saved theme + sidebar state before first paint — same key
+    // the Dashboard writes to, so nothing shifts/jumps between pages.
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
+        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
+        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <style>
+    /* ═══════════════════════════════════════
+       TOKENS — shared 2-theme system (light / dark),
+       dark mode is a true near-black palette (no purple tint),
+       matching dashboard.html so colors never shift between pages.
+    ═══════════════════════════════════════ */
+    :root,
+    html[data-theme="light"] {
+      --bg:           #ffffff;
+      --bg-panel:     #fafafa;
+      --bg-card:      #ffffff;
+      --bg-row:       #ffffff;
+      --bg-row-hover: #f4f4f4;
+      --bg-soft:      #f4f4f4;
+      --border:       rgba(0,0,0,0.10);
+      --border-h:     rgba(0,0,0,0.22);
+
+      --ink:          #0a0a0a;
+      --ink-soft:     #45454a;
+      --ink-mute:     #8a8a90;
+
+      --text-1: var(--ink);
+      --text-2: var(--ink-soft);
+      --text-3: var(--ink-mute);
+
+      --accent:       #4f46e5;
+      --accent-soft:  rgba(0,0,0,0.06);
+      --accent-border:rgba(0,0,0,0.16);
+      --purple:       var(--accent);
+      --purple-soft:  var(--accent-soft);
+
+      --success:      #16a34a;
+      --success-soft: rgba(22,163,74,0.12);
+      --warning:      #d97706;
+      --warning-soft: rgba(217,119,6,0.12);
+      --danger:       #dc2626;
+      --danger-soft:  rgba(220,38,38,0.12);
+      --info:         #0284c7;
+      --info-soft:    rgba(2,132,199,0.10);
+
+      --good:         #16a34a;
+      --bad:          #dc2626;
+
+      --sidebar-w: 250px;
+      --header-h:  58px;
+      --radius:    10px;
+      --radius-sm: 7px;
+      --transition: all 0.1s cubic-bezier(0.4,0,0.2,1);
+      /* Complex SaaS headings ("Marked Sessions", table/report titles) now use
+         the same legible sans as the rest of the app instead of a decorative
+         serif — see dashboard.html for the one place brand serif is kept. */
+      --font-serif: 'DM Sans', system-ui, sans-serif;
+      --font-body:  'DM Sans', system-ui, sans-serif;
+      --shadow: 0 8px 28px rgba(0,0,0,0.08);
+    }
+
+    html[data-theme="dark"] {
+      --bg:           #0f172a;
+      --bg-panel: #131c2e;
+      --bg-card:      #18202f;
+      --bg-row:       #101010;
+      --bg-row-hover: #1c1c1c;
+      --bg-soft:      #141414;
+      --border:       rgba(255,255,255,0.09);
+      --border-h:     rgba(255,255,255,0.20);
+
+      --ink:          #f2f2f3;
+      --ink-soft:     #b2b2b8;
+      --ink-mute:     #7a7a80;
+
+      --text-1: var(--ink);
+      --text-2: var(--ink-soft);
+      --text-3: var(--ink-mute);
+
+      --accent:       #818cf8;
+      --accent-soft:  rgba(255,255,255,0.08);
+      --accent-border:rgba(255,255,255,0.16);
+      --purple:       var(--accent);
+      --purple-soft:  var(--accent-soft);
+
+      --success:      #34d399;
+      --success-soft: rgba(52,211,153,0.15);
+      --warning:      #fbbf24;
+      --warning-soft: rgba(251,191,36,0.15);
+      --danger:       #f87171;
+      --danger-soft:  rgba(248,113,113,0.15);
+      --info:         #60c8ff;
+      --info-soft:    rgba(96,200,255,0.13);
+
+      --good:         #34d399;
+      --bad:          #f87171;
+      --shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 14px;
+      line-height: 1.6;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 99px; }
+
+    /* ═══════════════════════════════════════
+       LAYOUT
+    ═══════════════════════════════════════ */
+    .shell { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100; overflow: hidden;
+      transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+    .sidebar.collapsed { width: 66px; }
+    html.sb-collapsed .sidebar:not(.mobile-open) { width: 66px; }
+    .sb-brand {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--border);
+      min-height: var(--header-h);
+      flex-shrink: 0;
+    }
+    .sb-toggle-btn {
+      width: 32px; height: 32px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-1);
+      cursor: pointer; font-size: 13px; transition: var(--transition);
+    }
+    .sb-toggle-btn:hover { background: var(--bg-soft); border-color: var(--border-h); }
+    .sb-brand-link {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; overflow: hidden; min-width: 0;
+    }
+    .sidebar.collapsed .sb-brand { justify-content: center; padding: 12px 0; }
+    .sidebar.collapsed .sb-brand-link { display: none; }
+    .sb-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      color: var(--bg);
+    }
+    .sb-brand-text { overflow: hidden; transition: var(--transition); white-space: nowrap; }
+    .sb-name { font-family: var(--font-serif); font-size: 15px; color: var(--text-1); display: block; line-height: 1.2; }
+    .sb-tagline { font-size: 9px; color: var(--text-3); letter-spacing: 0.8px; text-transform: uppercase; }
+    .sidebar.collapsed .sb-brand-text { opacity: 0; width: 0; }
+
+    .sb-nav { flex: 1; padding: 10px 8px; overflow: hidden; }
+    .sb-label {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 1.4px;
+      color: var(--text-3); padding: 0 8px; margin: 12px 0 4px;
+      white-space: nowrap; transition: var(--transition);
+    }
+    .sidebar.collapsed .sb-label { opacity: 0; }
+
+    .sb-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 10px; border-radius: var(--radius-sm);
+      cursor: pointer; transition: var(--transition);
+      margin-bottom: 2px; text-decoration: none;
+      color: var(--text-2); border: 1px solid transparent;
+      white-space: nowrap; position: relative;
+    }
+    .sb-item:hover { background: var(--accent-soft); color: var(--text-1); border-color: var(--border); }
+    .sb-item.active { background: var(--accent-soft); color: var(--text-1); border-color: var(--accent-border); }
+    .sb-ico { width: 17px; text-align: center; font-size: 13px; flex-shrink: 0; }
+    .sb-lbl { font-size: 13px; font-weight: 500; overflow: hidden; transition: var(--transition); }
+    .sidebar.collapsed .sb-lbl { opacity: 0; width: 0; }
+    .sb-badge {
+      margin-left: auto; background: var(--purple);
+      color: var(--bg); font-size: 9px; font-weight: 700; padding: 2px 6px;
+      border-radius: 99px; flex-shrink: 0; transition: var(--transition);
+    }
+    .sidebar.collapsed .sb-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
+
+    .sidebar.collapsed .sb-item::after {
+      content: attr(data-tip);
+      position: absolute; left: calc(100% + 10px); top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg-card); border: 1px solid var(--border);
+      color: var(--text-1); font-size: 12px; font-weight: 500;
+      padding: 5px 10px; border-radius: var(--radius-sm);
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.15s; box-shadow: var(--shadow);
+    }
+    .sidebar.collapsed .sb-item:hover::after { opacity: 1; }
+
+    .sb-footer { padding: 8px; border-top: 1px solid var(--border); flex-shrink: 0; }
+    .sb-footer-nav { margin-bottom: 6px; }
+    .sb-footer-nav .sb-item { text-align: left; }
+    .sb-toggle {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: var(--radius-sm);
+      background: none; border: 1px solid var(--border);
+      color: var(--text-2); cursor: pointer; transition: var(--transition);
+      font-size: 12px; font-family: var(--font-body);
+      white-space: nowrap; overflow: hidden;
+    }
+    .sb-toggle:hover { background: var(--accent-soft); color: var(--text-1); }
+    .sb-toggle i { flex-shrink: 0; transition: var(--transition); }
+    .sidebar.collapsed .sb-toggle i { transform: rotate(180deg); }
+    .sb-toggle-lbl { transition: var(--transition); }
+    .sidebar.collapsed .sb-toggle-lbl { opacity: 0; width: 0; }
+
+    /* MAIN */
+    .main {
+      flex: 1; margin-left: var(--sidebar-w);
+      min-height: 100vh; transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+    .main.expanded { margin-left: 66px; }
+    html.sb-collapsed .main { margin-left: 66px; }
+
+    /* TOPBAR */
+    .topbar {
+      height: var(--header-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 26px;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .tb-left { display: flex; align-items: center; gap: 12px; }
+    .hamburger {
+      display: none; width: 32px; height: 32px;
+      align-items: center; justify-content: center;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); cursor: pointer;
+      font-size: 13px; color: var(--text-1); transition: var(--transition);
+    }
+    .hamburger:hover { background: var(--bg-soft); }
+    .tb-title { font-family: var(--font-serif); font-size: 17px; color: var(--text-1); }
+
+    .tb-right { display: flex; align-items: center; gap: 8px; }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--good);
+      flex-shrink: 0;
+    }
+    .live-dot.off { background: var(--text-3); }
+    .tb-status { font-size: 12px; color: var(--text-3); }
+
+    .tb-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-2);
+      cursor: pointer; transition: var(--transition); font-size: 13px;
+    }
+    .tb-btn:hover { background: var(--bg-soft); color: var(--text-1); }
+
+    .user-pill {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: 99px; padding: 4px 11px 4px 4px;
+    }
+    .user-av {
+      width: 22px; height: 22px;
+      background: var(--accent);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: var(--bg);
+    }
+    .user-name { font-size: 12px; font-weight: 500; color: var(--text-1); }
+
+    /* CONTENT */
+    .content { flex: 1; padding: 28px 26px 48px; }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Page Header */
+    .page-header { margin-bottom: 28px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: 32px; font-weight: 400;
+      color: var(--text-1); line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .page-title em { font-style: italic; }
+
+    .summary-strip { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .sum-item { display: flex; align-items: baseline; gap: 5px; }
+    .sum-val { font-family: var(--font-serif); font-size: 24px; font-weight: 400; line-height: 1; color: var(--text-1); }
+    .sum-lbl { font-size: 12px; color: var(--text-3); font-weight: 500; }
+    .sum-divider { width: 1px; height: 24px; background: var(--border); }
+
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 14px; background: var(--accent-soft);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-2); font-size: 12.5px; font-weight: 600; cursor: pointer;
+      transition: var(--transition);
+    }
+    .back-btn:hover { background: var(--bg-soft); color: var(--text-1); }
+
+    /* Search */
+    .search-wrap { position: relative; max-width: 420px; margin-bottom: 24px; }
+    .search-ico { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-3); font-size: 12px; pointer-events: none; }
+    .search-input {
+      width: 100%; padding: 10px 36px 10px 36px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text-1);
+      font-family: var(--font-body); font-size: 13px;
+      outline: none; transition: var(--transition);
+    }
+    .search-input:focus { border-color: var(--accent-border); }
+    .search-input::placeholder { color: var(--text-3); }
+    .search-clear {
+      position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+      color: var(--text-3); font-size: 11px; cursor: pointer;
+      padding: 3px 5px; border-radius: 4px; display: none; transition: var(--transition);
+    }
+    .search-clear:hover { color: var(--text-1); }
+    .search-clear.show { display: block; }
+
+    /* States */
+    .state-block {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 70px 20px; text-align: center;
+      border: 1px dashed var(--border); border-radius: var(--radius); gap: 12px;
+    }
+    .state-icon { font-size: 36px; opacity: 0.3; }
+    .state-title { font-family: var(--font-serif); font-size: 18px; color: var(--text-2); font-style: italic; }
+    .state-desc { font-size: 12px; color: var(--text-3); max-width: 320px; line-height: 1.7; }
+    .spin {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SESSION BLOCK */
+    .session-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 18px; overflow: visible;
+      transition: var(--transition);
+      position: relative;
+    }
+    .session-block:hover { border-color: var(--border-h); }
+
+    .session-head {
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .session-head-left { flex: 1; min-width: 0; }
+
+    .session-meta-row {
+      display: flex; align-items: center; gap: 6px;
+      flex-wrap: wrap; margin-bottom: 5px;
+    }
+    /* Session details at the top: kept intentionally light / low-contrast
+       rather than a heavy filled pill, per design request. */
+    .meta-chip {
+      font-size: 10px; font-weight: 500;
+      padding: 2px 8px; border-radius: 99px;
+      white-space: nowrap;
+      background: transparent; color: var(--text-3);
+      border: 1px solid var(--border);
+    }
+    .chip-subject { color: var(--text-2); font-weight: 600; }
+
+    .session-subject {
+      font-family: var(--font-serif);
+      font-size: 18px; font-weight: 400;
+      color: var(--text-1); line-height: 1.2;
+    }
+    .session-subject .ex-type { color: var(--text-3); font-size: 14px; font-style: italic; }
+
+    /* Kebab / more-options menu */
+    .session-head-actions { position: relative; flex-shrink: 0; }
+    .kebab-btn {
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      gap: 3px; background: var(--accent-soft); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);
+      color: var(--text-2);
+    }
+    .kebab-btn:hover { background: var(--bg-soft); color: var(--text-1); }
+    .kebab-btn.open { background: var(--bg-soft); color: var(--text-1); border-color: var(--border-h); }
+    .kebab-dots { display: flex; flex-direction: column; gap: 3px; }
+    .kebab-dots span { width: 3.5px; height: 3.5px; border-radius: 50%; background: currentColor; }
+
+    .kebab-menu {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      width: 240px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      z-index: 60; overflow: hidden; display: none;
+    }
+    .kebab-menu.show { display: block; animation: menuIn .16s ease; }
+    @keyframes menuIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+    .kebab-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; font-size: 12.5px; color: var(--text-2);
+      cursor: pointer; transition: var(--transition); border-bottom: 1px solid var(--border);
+    }
+    .kebab-item:last-child { border-bottom: none; }
+    .kebab-item:hover { background: var(--accent-soft); color: var(--text-1); }
+    .kebab-item i { width: 14px; text-align: center; font-size: 12px; }
+
+    .session-divider { height: 1px; background: var(--border); }
+
+    /* STUDENT TABLE */
+    .students-wrap { overflow-x: auto; }
+    .students-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .students-table thead tr { border-bottom: 1px solid var(--border); }
+    .students-table th {
+      padding: 10px 18px;
+      font-size: 9px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-3); font-weight: 600; text-align: left;
+      background: var(--bg-soft); white-space: nowrap;
+    }
+    .students-table th.th-score  { text-align: left; }
+    .students-table th.th-report { text-align: center; }
+    .students-table th.th-edit   { text-align: center; }
+
+    .students-table td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle; color: var(--text-2);
+    }
+    .students-table tr:last-child td { border-bottom: none; }
+    .students-table tbody tr { transition: var(--transition); }
+    .students-table tbody tr:hover td { background: var(--bg-row-hover); }
+
+    .name-main { font-weight: 600; color: var(--text-1); font-size: 13.5px; }
+    .name-id { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+    /* Status badges — Marked is green, Pending is amber, modernized pill style */
+    .badge-marked, .badge-pending {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 700;
+    }
+    .badge-marked { background: var(--success-soft); color: var(--success); border: 1px solid rgba(52,211,153,0.28); }
+    .badge-pending { background: var(--warning-soft); color: var(--warning); border: 1px solid rgba(251,191,36,0.28); }
+    .badge-marked i, .badge-pending i { font-size: 9px; }
+
+    /* Score coloring — high / medium / low bands, modernized */
+    .score-num { font-family: var(--font-serif); font-size: 16px; font-weight: 600; position: relative; cursor: default; }
+    .score-num.none { color: var(--text-3); font-weight: 400; }
+    .score-num.score-high { color: var(--success); }
+    .score-num.score-mid  { color: var(--warning); }
+    .score-num.score-low  { color: var(--danger); }
+    .score-raw-sub { font-size: 10px; color: var(--text-3); margin-top: 2px; }
+    .override-flag {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 15px; height: 15px; border-radius: 50%;
+      background: var(--accent); color: var(--bg);
+      font-size: 8px; margin-left: 5px; vertical-align: middle;
+      cursor: help;
+    }
+    .override-tooltip {
+      position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: var(--bg);
+      font-size: 10.5px; padding: 6px 10px; border-radius: 6px;
+      white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s;
+      z-index: 20;
+    }
+    .score-num:hover .override-tooltip { opacity: 1; }
+
+    .view-btn, .edit-btn, .save-btn, .cancel-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px;
+      background: var(--accent-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-2); font-family: var(--font-body);
+      font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: var(--transition); white-space: nowrap;
+    }
+    .view-btn:hover, .edit-btn:hover { border-color: var(--border-h); color: var(--text-1); background: var(--bg-soft); }
+    .save-btn { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .save-btn:hover { opacity: .85; }
+    .cancel-btn:hover { background: var(--bg-soft); color: var(--text-1); }
+    .edit-actions { display: flex; gap: 6px; justify-content: center; }
+
+    .row-actions { display: flex; gap: 6px; justify-content: center; align-items:center; }
+
+    .edit-input {
+      width: 100%; padding: 6px 8px; background: var(--bg-soft);
+      border: 1px solid var(--border-h); border-radius: 6px;
+      color: var(--text-1); font-family: var(--font-body); font-size: 12.5px; outline: none;
+    }
+    .edit-input:focus { border-color: var(--accent); }
+    .edit-input.marks { width: 80px; }
+
+    /* ═══════════════════════════════════════
+       MODALS
+    ═══════════════════════════════════════ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 500; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 100%; max-width: 440px;
+      box-shadow: var(--shadow); animation: modalIn .18s ease;
+    }
+    @keyframes modalIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+    .modal-head { padding: 18px 20px; border-bottom: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .modal-title { font-family: var(--font-serif); font-size: 17px; color: var(--text-1); }
+    .modal-x { cursor: pointer; color: var(--text-3); font-size: 15px; }
+    .modal-x:hover { color: var(--text-1); }
+    .modal-body { padding: 18px 20px; }
+    .modal-foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: var(--transition); border: 1px solid var(--border); background: var(--accent-soft); color: var(--text-2); }
+    .btn:hover { background: var(--bg-soft); color: var(--text-1); }
+    .btn-dark { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-dark:hover { opacity: .85; }
+
+    .col-checklist { display: flex; flex-direction: column; gap: 4px; }
+    .col-checklist label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); cursor: pointer; padding: 7px 9px; border-radius: 7px; }
+    .col-checklist label:hover { background: var(--accent-soft); }
+    .col-checklist input { accent-color: var(--accent); width: 14px; height: 14px; }
+
+    .confirm-compare { display:flex; gap:12px; margin: 10px 0 16px; }
+    .compare-box { flex:1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; text-align: center; }
+    .compare-box .cb-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .6px; color: var(--text-3); margin-bottom: 6px; }
+    .compare-box .cb-val { font-family: var(--font-serif); font-size: 22px; color: var(--text-1); }
+
+    /* Add-students choice modal */
+    .choice-row { display: flex; flex-direction: column; gap: 10px; }
+    .choice-option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border: 1px solid var(--border); border-radius: var(--radius);
+      cursor: pointer; transition: var(--transition); background: var(--bg-soft);
+      text-decoration: none; color: inherit;
+    }
+    .choice-option:hover { border-color: var(--border-h); background: var(--bg-row-hover); }
+    .choice-option-icon {
+      width: 40px; height: 40px; border-radius: var(--radius-sm); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .choice-option-icon.individual { background: var(--info-soft); color: var(--info); }
+    .choice-option-icon.batch { background: var(--success-soft); color: var(--success); }
+    .choice-option-title { font-size: 13.5px; font-weight: 700; color: var(--text-1); margin-bottom: 2px; }
+    .choice-option-desc { font-size: 11.5px; color: var(--text-3); line-height: 1.4; }
+
+    /* ═══════════════════════════════════════
+       SESSION REPORT VIEW
+    ═══════════════════════════════════════ */
+    .report-doc {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 30px; max-width: 900px;
+    }
+    .report-doc-head { display:flex; align-items:flex-start; justify-content:space-between; gap: 20px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .report-doc-title { font-family: var(--font-serif); font-size: 24px; color: var(--text-1); }
+    .report-doc-sub { font-size: 12.5px; color: var(--text-3); margin-top: 4px; }
+    .dl-btn {
+      width: 38px; height: 38px; border-radius: 50%; display: flex; align-items:center; justify-content:center;
+      background: var(--accent); color: var(--bg); cursor: pointer; transition: var(--transition); flex-shrink:0; border:none;
+    }
+    .dl-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+    .report-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-3); margin: 20px 0 8px; }
+    .report-text { font-size: 13.5px; color: var(--text-2); line-height: 1.9; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 8px; }
+    @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(3, 1fr); } }
+    .stat-box { padding: 14px; text-align: center; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-soft); }
+    .stat-box .sv { font-family: var(--font-serif); font-size: 20px; color: var(--text-1); }
+    .stat-box .sl { font-size: 9.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: .5px; margin-top: 3px; }
+
+    .hist-wrap { margin-top: 10px; border: 1px solid var(--border); border-radius: 8px; padding: 16px; background: var(--bg-soft); }
+    .hist-bars { display: flex; align-items: flex-end; gap: 14px; height: 160px; }
+    .hist-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px; }
+    .hist-bar { width: 100%; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; transition: height .5s ease; }
+    .hist-count { font-size: 11px; color: var(--text-2); font-weight: 700; }
+    .hist-label { font-size: 10px; color: var(--text-3); margin-top: 6px; }
+
+    /* ═══════════════════════════════════════
+       STUDENT REPORT VIEW — "paper" styling
+    ═══════════════════════════════════════ */
+    .paper-doc {
+      max-width: 780px; margin: 0 auto;
+      background: #fdf9ec; color: #1c1a12;
+      border: 1px solid #e4dcbd; border-radius: 4px;
+      padding: 46px 50px; box-shadow: var(--shadow);
+      position: relative;
+    }
+    html[data-theme="dark"] .paper-doc { box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+    .paper-dl {
+      position: absolute; top: 22px; right: 22px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #1c1a12; color: #fdf9ec; border: none;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      transition: var(--transition);
+    }
+    .paper-dl:hover { opacity: .8; }
+    .paper-head { border-bottom: 2px solid #1c1a12; padding-bottom: 16px; margin-bottom: 22px; }
+    .paper-school { font-family: var(--font-serif); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: #6b6142; margin-bottom: 6px; }
+    .paper-name { font-family: var(--font-serif); font-size: 28px; }
+    .paper-meta { font-size: 12.5px; color: #6b6142; margin-top: 4px; }
+    .paper-marks-row { display: flex; gap: 30px; margin-top: 16px; flex-wrap: wrap; }
+    .paper-marks-box { }
+    .paper-marks-box .pm-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: .7px; color: #6b6142; }
+    .paper-marks-box .pm-val { font-family: var(--font-serif); font-size: 22px; color: #1c1a12; }
+
+    .paper-section-title { font-family: var(--font-serif); font-size: 15px; margin: 22px 0 8px; border-bottom: 1px solid #e4dcbd; padding-bottom: 6px; }
+    .stage-list { display: flex; flex-direction: column; gap: 6px; }
+    .stage-row { display: flex; justify-content: space-between; font-size: 12.5px; padding: 5px 0; border-bottom: 1px dotted #e4dcbd; }
+    .stage-row span:last-child { font-weight: 700; }
+
+    .paper-para { font-size: 13px; line-height: 1.95; margin-bottom: 18px; text-align: justify; }
+
+    /* Print helpers */
+    @media print {
+      .sidebar, .topbar, .page-header, .search-wrap, .back-btn, .paper-dl, .dl-btn, .kebab-menu, .kebab-btn { display: none !important; }
+      .main { margin-left: 0 !important; }
+      .content { padding: 0 !important; }
+      body { background: #fff; }
+      .paper-doc { box-shadow: none; border: none; }
+    }
+
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 90; }
+    .mobile-overlay.show { display: block; }
+
+    .toasts { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: flex; flex-direction: column; gap: 7px; }
+    .toast {
+      display: flex; align-items: center; gap: 9px;
+      padding: 10px 14px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); box-shadow: var(--shadow);
+      font-size: 12.5px; color: var(--text-1); min-width: 220px;
+      animation: toastIn 0.28s ease;
+    }
+    .toast.out { animation: toastOut 0.22s ease forwards; }
+    @keyframes toastIn  { from{opacity:0;transform:translateX(28px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateX(28px)} }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:translateY(0); } }
+    .animate-in { animation: fadeUp 0.32s ease both; }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
+      .main { margin-left: 0 !important; }
+      .hamburger { display: flex; }
+      .content { padding: 18px 14px 36px; }
+      .topbar { padding: 0 14px; }
+      .session-head { flex-direction: column; align-items: flex-start; }
+      .session-head-actions { align-self: flex-end; margin-top: -8px; }
+      .paper-doc { padding: 26px 20px; }
+      .stat-grid { grid-template-columns: repeat(2,1fr); }
+    }
+
+    /* ══════════════════════════════════════════════════════
+       MOBILE / TABLET COMPATIBILITY HARDENING
+    ══════════════════════════════════════════════════════ */
+    html, body { max-width: 100vw; overflow-x: hidden; }
+
+    /* Tablet portrait (iPad) also gets the collapsible sidebar — a fixed
+       250px sidebar plus a 6-column stat grid gets cramped well before
+       phone width. */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
+      .main { margin-left: 0 !important; }
+      .hamburger { display: flex; }
+      .stat-grid { grid-template-columns: repeat(3,1fr); }
+    }
+
+    /* Modals: on a short phone screen (or a phone with the keyboard open)
+       a fixed-height modal can push its own footer buttons below the
+       visible viewport with no way to scroll to them. Cap height and
+       allow the body to scroll internally instead. */
+    .modal-box, .modal-overlay .modal-box { max-height: 88vh; display: flex; flex-direction: column; }
+    .modal-body { overflow-y: auto; }
+
+    /* The kebab (⋯) dropdown is positioned relative to the button that
+       opened it; on a narrow phone that can push it past the right edge
+       of the screen, making its options unreachable. Clamp its width and
+       let it hug the viewport edge instead of the button's rightmost
+       corner once things get tight. */
+    @media (max-width: 480px) {
+      .kebab-menu { width: min(240px, calc(100vw - 40px)); right: -8px; }
+      .students-table th, .students-table td { padding: 10px 12px; }
+      .row-actions { flex-wrap: wrap; }
+      .page-title { font-size: 26px; }
+      .summary-strip { gap: 14px; }
+      .paper-doc { padding: 18px 14px; }
+      .paper-marks-row { gap: 16px; }
+      .toasts { left: 12px; right: 12px; bottom: 12px; }
+      .toast { min-width: 0; max-width: 100%; }
+    }
+
+    /* iOS Safari auto-zooms into any input/select whose font-size is
+       under 16px, leaving the page stuck zoomed until manually corrected —
+       this reads as UI "disappearing" on first tap of any field. */
+    @media (max-width: 900px) {
+      .search-input, .edit-input, .edit-input.marks { font-size: 16px; }
+    }
+
+    @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+  body { animation: pageIn 0.05s linear; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Marked Students History</h1>
-            <div class="header-actions">
-                <div class="stats-overview" style="flex: 1; margin-right: 20px;">
-                    <div class="stat-card">
-                        <span class="stat-value">{{ stats.total_sessions }}</span>
-                        <span class="stat-label">Exam Sessions</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value">{{ stats.total_students }}</span>
-                        <span class="stat-label">Total Students</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-value">{{ stats.total_marked }}</span>
-                        <span class="stat-label">Marked</span>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-primary" onclick="showExcelModal()" style="background: #28a745;">
-                        📊 Generate Spreadsheet
-                    </button>
-                    <a href="/setup-start" class="btn btn-primary">➕ New Exam Session</a>
-                    <a href="/" class="btn btn-secondary">🏠 Dashboard</a>
-                </div>
-            </div>
+
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobile()"></div>
+<div class="toasts" id="toastContainer"></div>
+
+<div class="shell">
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <button class="sb-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <a class="sb-brand-link" href="/">
+        <div class="sb-icon">🎓</div>
+        <div class="sb-brand-text">
+          <span class="sb-name">EduMark AI</span>
+          <span class="sb-tagline">Smart Exam Grading</span>
         </div>
-        
-        {% if exam_sessions %}
-            {% for session in exam_sessions %}
-            <div class="exam-session expanded">
-                <div class="session-header" onclick="toggleSession(this)">
-                    <div class="session-info">
-                        <div class="session-title">
-                            <span>📚 {{ session.subject }} - {{ session.exam_type }}</span>
-                        </div>
-                        <div class="session-meta">
-                            <span class="meta-item">
-                                🎓 <strong>{{ session.class }} {{ session.stream }}</strong>
-                            </span>
-                            <span class="meta-item">
-                                📅 <strong>{{ session.term }} {{ session.year }}</strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="session-stats">
-                        <div class="mini-stat">
-                            <span class="mini-stat-value">{{ session.total_students }}</span>
-                            <span class="mini-stat-label">Students</span>
-                        </div>
-                        <div class="mini-stat">
-                            <span class="mini-stat-value">{{ session.marked_count }}</span>
-                            <span class="mini-stat-label">Marked</span>
-                        </div>
-                        <span class="expand-icon">▼</span>
-                    </div>
-                </div>
-                
-                <div class="session-content">
-                    <table class="students-table">
-                        <thead>
-                            <tr>
-                                <th>Student Name</th>
-                                <th>Student ID</th>
-                                <th>Pages</th>
-                                <th>Status</th>
-                                <th>Total Score</th>
-                                <th>Sync Time</th>
-                                <th>Diagnostic</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in session.students %}
-                            <tr class="student-row">
-                                <td class="student-name">{{ student.student_name }}</td>
-                                <td><strong>{{ student.student_id }}</strong></td>
-                                <td><strong>{{ student.total_pages }}</strong> pages</td>
-                                <td>
-                                    <span class="status-badge status-{{ student.status.lower() }}">
-                                        {% if student.status == 'Marked' %}
-                                            ✓ Marked
-                                        {% else %}
-                                            ⏳ Not Marked
-                                        {% endif %}
-                                    </span>
-                                </td>
-                                <td>
-                                    {% if student.status == 'Marked' %}
-                                        <strong style="color: #28a745; font-size: 1.1em;">{{ student.total_score }}%</strong>
-                                    {% else %}
-                                        <span style="color: #999;">—</span>
-                                    {% endif %}
-                                </td>
-                                <td style="color: #666;">{{ student.sync_time }}</td>
-                                <td>
-                                    {% if student.status == 'Marked' %}
-                                        <button class="btn-diagnostic" onclick="toggleDiagnostic('{{ student.student_id }}')">
-                                            📊 Report
-                                        </button>
-                                    {% else %}
-                                        <span style="color: #999;">—</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% if student.status == 'Marked' %}
-                            <tr class="diagnostic-row" id="diagnostic-{{ student.student_id }}" style="display: none;">
-                                <td colspan="7">
-                                    <div class="diagnostic-report">
-                                        <div class="diagnostic-header">
-                                            <h3>📋 AI Marking Report</h3>
-                                            <p class="diagnostic-subtitle">Student: <strong>{{ student.student_name }}</strong> (ID: {{ student.student_id }})</p>
-                                        </div>
-                                        
-                                        <div class="diagnostic-content">
-                                            <!-- Total Score Display -->
-                                            <div style="text-align: center; padding: 30px; background: linear-gradient(135deg, #f0fff4, #d4edda); border-radius: 12px; margin-bottom: 20px; border: 3px solid #28a745;">
-                                                <div style="font-size: 0.9em; color: #666; margin-bottom: 10px; font-weight: 600;">TOTAL SCORE</div>
-                                                <div style="font-size: 4em; font-weight: bold; color: #28a745;">{{ student.total_score }}%</div>
-                                            </div>
-                                            
-                                            <!-- AI Feedback -->
-                                            <div style="background: #f8f9ff; padding: 25px; border-radius: 12px; border-left: 5px solid #667eea;">
-                                                <h4 style="color: #667eea; font-size: 1.2em; margin-bottom: 15px;">📝 AI Feedback</h4>
-                                                <p style="font-size: 1.1em; line-height: 1.8; color: #333; margin-bottom: 20px;">
-                                                    {{ student.overall_feedback if student.overall_feedback else "No feedback available." }}
-                                                </p>
-                                            
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <h2>No Marked Students Yet</h2>
-                <p>Start marking your first exam to see student records here</p>
-                <a href="/setup-start" class="btn btn-primary">🚀 Start Marking Now</a>
-            </div>
-        {% endif %}
+      </a>
     </div>
-    
-    <!-- Excel Generation Modal -->
-    <div id="excelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; overflow-y: auto; padding: 20px;">
-        <div style="background: white; padding: 40px; border-radius: 20px; max-width: 900px; width: 90%; margin: 50px auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-            <h1 style="color: #667eea; text-align: center; margin-bottom: 30px; font-size: 2em;">📊 Generate Excel Spreadsheet</h1>
-            
-            <form id="excelForm">
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Year:</label>
-                    <input type="text" id="excel_year" required placeholder="e.g., 2025" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Term:</label>
-                    <select id="excel_term" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                        <option value="">Select Term</option>
-                        <option value="Term 1">Term 1</option>
-                        <option value="Term 2">Term 2</option>
-                        <option value="Term 3">Term 3</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Class:</label>
-                    <select id="excel_class" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                        <option value="">Select Class</option>
-                        <option value="S1">S1</option>
-                        <option value="S2">S2</option>
-                        <option value="S3">S3</option>
-                        <option value="S4">S4</option>
-                        <option value="S5">S5</option>
-                        <option value="S6">S6</option>
-                        <option value="P1">P1</option>
-                        <option value="P2">P2</option>
-                        <option value="P3">P3</option>
-                        <option value="P4">P4</option>
-                        <option value="P5">P5</option>
-                        <option value="P6">P6</option>
-                        <option value="P7">P7</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Stream:</label>
-                    <input type="text" id="excel_stream" required placeholder="e.g., A, B, C, East, West" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Subject:</label>
-                    <select id="excel_subject" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                        <option value="">Select Subject</option>
-                        <option value="English Language">English Language</option>
-                        <option value="Literature in English">Literature in English</option>
-                        <option value="Mathematics">Mathematics</option>
-                        <option value="Biology">Biology</option>
-                        <option value="Chemistry">Chemistry</option>
-                        <option value="Physics">Physics</option>
-                        <option value="Geography">Geography</option>
-                        <option value="History and Political Education">History and Political Education</option>
-                        <option value="Kiswahili">Kiswahili</option>
-                        <option value="Christian Religious Education (CRE)">Christian Religious Education (CRE)</option>
-                        <option value="Islamic Religious Education (IRE)">Islamic Religious Education (IRE)</option>
-                        <option value="Art and Design">Art and Design</option>
-                        <option value="Performing Arts">Performing Arts</option>
-                        <option value="Entrepreneurship">Entrepreneurship</option>
-                        <option value="Information and Communication Technology (ICT)">Information and Communication Technology (ICT)</option>
-                        <option value="Skills Technology and Design">Skills Technology and Design</option>
-                        <option value="Nutrition and Food Technology">Nutrition and Food Technology</option>
-                        <option value="Agriculture">Agriculture</option>
-                        <option value="Physical Education">Physical Education</option>
-                        <option value="General Science (Special Needs)">General Science (Special Needs)</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Arabic">Arabic</option>
-                        <option value="Latin">Latin</option>
-                        <option value="Chinese (Mandarin)">Chinese (Mandarin)</option>
-                        <option value="Luganda">Luganda</option>
-                        <option value="Jophadola (Dhopadhola)">Jophadola (Dhopadhola)</option>
-                        <option value="Leb-Acholi">Leb-Acholi</option>
-                        <option value="Leb-Lango">Leb-Lango</option>
-                        <option value="Lugbarati (Lugbara)">Lugbarati (Lugbara)</option>
-                        <option value="Lunyankole-Rukiga">Lunyankole-Rukiga</option>
-                        <option value="Runyoro-Rutoro">Runyoro-Rutoro</option>
-                        <option value="Lumasaba">Lumasaba</option>
-                        <option value="Lusoga">Lusoga</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Exam Type:</label>
-                    <input type="text" id="excel_exam_type" required placeholder="e.g., BOT, MOT, EOT, Mock, Activity of Integration" style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                </div>
-                
-                <div style="background: #f8f9ff; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #667eea;">
-                    <h3 style="color: #667eea; margin-bottom: 15px;">📄 File Format</h3>
-                    <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 600;">Choose Format:</label>
-                    <select id="excel_format" required style="width: 100%; padding: 12px; font-size: 1em; border: 2px solid #e0e0e0; border-radius: 8px;">
-                        <option value="xlsx">XLSX (Microsoft Excel)</option>
-                        <option value="ods">ODS (OpenDocument Spreadsheet)</option>
-                    </select>
-                    <p style="color: #666; font-size: 0.9em; margin-top: 10px; margin-bottom: 0;">
-                        XLSX is compatible with Microsoft Excel, Google Sheets, and Numbers.<br>
-                        ODS is compatible with LibreOffice, OpenOffice, and Google Sheets.
-                    </p>
-                </div>
-                
-                <div style="display: flex; gap: 15px;">
-                    <button type="button" onclick="hideExcelModal()" style="flex: 1; padding: 15px 40px; border-radius: 10px; font-size: 1.1em; font-weight: 600; cursor: pointer; background: #dc3545; color: white; border: none;">
-                        Cancel
-                    </button>
-                    <button type="submit" id="generateBtn" style="flex: 1; padding: 15px 40px; border-radius: 10px; font-size: 1.1em; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;">
-                        Generate Spreadsheet
-                    </button>
-                </div>
-            </form>
-            
-            <div id="excelMessage" style="display: none; margin-top: 20px; padding: 15px; border-radius: 5px; text-align: center; font-weight: 600;"></div>
+    <nav class="sb-nav">
+      <div class="sb-label">Main</div>
+      <a class="sb-item" href="/" data-tip="Dashboard">
+        <span class="sb-ico"><i class="fa-solid fa-gauge-high"></i></span>
+        <span class="sb-lbl">Dashboard</span>
+      </a>
+      <a class="sb-item" href="/setup-start" data-tip="Mark Exams">
+        <span class="sb-ico"><i class="fa-solid fa-pen-to-square"></i></span>
+        <span class="sb-lbl">Mark Exams</span>
+        <span class="sb-badge">AI</span>
+      </a>
+      <a class="sb-item active" href="/students" data-tip="View Results">
+        <span class="sb-ico"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="sb-lbl">View Results</span>
+      </a>
+      <div class="sb-label">System</div>
+      <a class="sb-item" href="/settings" data-tip="Settings">
+        <span class="sb-ico"><i class="fa-solid fa-sliders"></i></span>
+        <span class="sb-lbl">Settings</span>
+      </a>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-footer-nav">
+        <a class="sb-item" href="/#help" data-tip="Help & About">
+          <span class="sb-ico"><i class="fa-solid fa-circle-question"></i></span>
+          <span class="sb-lbl">Help &amp; About</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+  <div class="main" id="mainContent">
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="tb-left">
+        <button class="hamburger" onclick="openMobile()"><i class="fa-solid fa-bars"></i></button>
+        <span class="tb-title" id="topbarTitle">View Results</span>
+      </div>
+      <div class="tb-right">
+        <div class="live-dot" id="liveDot"></div>
+        <span class="tb-status" id="liveLabel">Connecting…</span>
+        <button class="tb-btn" title="Reload sessions" onclick="loadSessions()">
+          <i class="fa-solid fa-rotate" id="refreshIcon"></i>
+        </button>
+        <div class="user-pill">
+          <div class="user-av">T</div>
+          <span class="user-name">Teacher</span>
         </div>
+      </div>
     </div>
-    
-    <script>
-        function toggleSession(header) {
-            const session = header.parentElement;
-            session.classList.toggle('expanded');
-            session.classList.toggle('collapsed');
-        }
-        
-        function toggleDiagnostic(studentId) {
-            const diagnosticRow = document.getElementById('diagnostic-' + studentId);
-            const button = event.target;
-            
-            if (diagnosticRow.style.display === 'none' || diagnosticRow.style.display === '') {
-                diagnosticRow.style.display = 'table-row';
-                button.textContent = '✕ Close';
-                button.style.background = '#dc3545';
-                setTimeout(() => {
-                    diagnosticRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 100);
-            } else {
-                diagnosticRow.style.display = 'none';
-                button.textContent = '📊 Report';
-                button.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-            }
-        }
-        
-        // Excel Modal Functions
-        function showExcelModal() {
-            document.getElementById('excelModal').style.display = 'block';
-        }
-        
-        function hideExcelModal() {
-            document.getElementById('excelModal').style.display = 'none';
-            document.getElementById('excelForm').reset();
-            document.getElementById('excelMessage').style.display = 'none';
-        }
-        
-        function showExcelMessage(text, type) {
-            const msgBox = document.getElementById('excelMessage');
-            msgBox.style.display = 'block';
-            msgBox.textContent = text;
-            msgBox.style.background = type === 'success' ? '#d4edda' : '#f8d7da';
-            msgBox.style.color = type === 'success' ? '#155724' : '#721c24';
-        }
-        
-        // Excel Form Submission
-        document.getElementById('excelForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const generateBtn = document.getElementById('generateBtn');
-            generateBtn.disabled = true;
-            generateBtn.textContent = 'Generating...';
-            
-            const formData = {
-                year: document.getElementById('excel_year').value,
-                term: document.getElementById('excel_term').value,
-                class: document.getElementById('excel_class').value,
-                stream: document.getElementById('excel_stream').value,
-                subject: document.getElementById('excel_subject').value,
-                exam_type: document.getElementById('excel_exam_type').value,
-                format: document.getElementById('excel_format').value
-            };
-            
-            try {
-                const response = await fetch('/generate-excel', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(formData)
-                });
-                
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    
-                    const contentDisposition = response.headers.get('Content-Disposition');
-                    let filename = `exam_results_${formData.subject}_${Date.now()}.${formData.format}`;
-                    if (contentDisposition) {
-                        const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
-                        if (match && match[1]) filename = match[1].replace(/['"]/g, '');
-                    }
-                    
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                    
-                    showExcelMessage('✅ Spreadsheet generated successfully!', 'success');
-                    setTimeout(() => hideExcelModal(), 2000);
-                } else {
-                    const result = await response.json();
-                    showExcelMessage('❌ ' + (result.message || 'Failed to generate'), 'error');
-                }
-            } catch (error) {
-                showExcelMessage('❌ Error: ' + error.message, 'error');
-            }
-            
-            generateBtn.disabled = false;
-            generateBtn.textContent = 'Generate Spreadsheet';
-        });
-        
-        // Expand all sessions by default
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.exam-session').forEach(session => {
-                session.classList.add('expanded');
-            });
-        });
-    </script>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ═══════════ VIEW: SESSIONS LIST ═══════════ -->
+      <div class="view active" id="view-list">
+        <div class="page-header animate-in">
+          <div>
+            <h1 class="page-title">Marked <em>Sessions</em></h1>
+            <div class="summary-strip">
+              <div class="sum-item">
+                <span class="sum-val" id="sumSessions">—</span>
+                <span class="sum-lbl">Sessions</span>
+              </div>
+              <div class="sum-divider"></div>
+              <div class="sum-item">
+                <span class="sum-val" id="sumStudents">—</span>
+                <span class="sum-lbl">Students graded</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-wrap animate-in" style="animation-delay:0.04s">
+          <i class="fa-solid fa-magnifying-glass search-ico"></i>
+          <input class="search-input" id="searchInput" type="text"
+            placeholder="Search sessions, students, or IDs…"
+            oninput="onSearch(this.value)" autocomplete="off" />
+          <span class="search-clear" id="searchClear" onclick="clearSearch()">
+            <i class="fa-solid fa-xmark"></i>
+          </span>
+        </div>
+
+        <div id="sessionsWrap"></div>
+      </div>
+
+      <!-- ═══════════ VIEW: SESSION REPORT ═══════════ -->
+      <div class="view" id="view-session-report">
+        <div class="page-header animate-in">
+          <div>
+            <button class="back-btn" onclick="goToList()"><i class="fa-solid fa-arrow-left"></i> Back to sessions</button>
+          </div>
+        </div>
+        <div id="sessionReportWrap"></div>
+      </div>
+
+      <!-- ═══════════ VIEW: STUDENT REPORT ═══════════ -->
+      <div class="view" id="view-student-report">
+        <div class="page-header animate-in">
+          <div>
+            <button class="back-btn" onclick="goToList()"><i class="fa-solid fa-arrow-left"></i> Back to sessions</button>
+          </div>
+        </div>
+        <div id="studentReportWrap"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MODAL: GENERATE SPREADSHEET ═══════════ -->
+<div class="modal-overlay" id="ssModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">Generate Spreadsheet</span>
+      <span class="modal-x" onclick="closeModal('ssModal')"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--text-3);margin-bottom:12px;">Choose which columns to include, then download.</p>
+      <div class="col-checklist">
+        <label><input type="checkbox" id="ss_col_id" checked /> Student ID</label>
+        <label><input type="checkbox" id="ss_col_name" checked /> Student Name</label>
+        <label><input type="checkbox" id="ss_col_score" checked /> Total Score (%)</label>
+        <label><input type="checkbox" id="ss_col_feedback" checked /> AI Feedback</label>
+        <label><input type="checkbox" id="ss_col_status" checked /> Status</label>
+      </div>
+      <div style="margin-top:14px;">
+        <label class="form-label" style="font-size:11px;color:var(--text-3);display:block;margin-bottom:6px;">Format</label>
+        <select id="ss_format" class="edit-input" style="width:100%;">
+          <option value="xlsx">Excel (.xlsx)</option>
+          <option value="ods">OpenDocument (.ods)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('ssModal')">Cancel</button>
+      <button class="btn btn-dark" id="ssDownloadBtn" onclick="downloadSpreadsheet()"><i class="fa-solid fa-download"></i> Download Sheet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MODAL: DOWNLOAD ALL REPORTS ═══════════ -->
+<div class="modal-overlay" id="allReportsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">Export All Student Reports</span>
+      <span class="modal-x" onclick="closeModal('allReportsModal')"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;color:var(--text-2);line-height:1.7;">
+        This builds one PDF-ready document with each student's individual report on its own page
+        (<strong id="allReportsCount">0</strong> pages). Your browser's print dialog will open — choose
+        <strong>“Save as PDF”</strong> as the destination.
+      </p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('allReportsModal')">Cancel</button>
+      <button class="btn btn-dark" onclick="exportAllReports()"><i class="fa-solid fa-file-pdf"></i> Export Reports as PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MODAL: MARK OVERRIDE CONFIRM ═══════════ -->
+<div class="modal-overlay" id="markConfirmModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">Confirm Mark Change</span>
+      <span class="modal-x" onclick="closeModal('markConfirmModal')"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-compare">
+        <div class="compare-box">
+          <div class="cb-lbl">Original AI Mark</div>
+          <div class="cb-val" id="cmpOriginal">—</div>
+        </div>
+        <div class="compare-box">
+          <div class="cb-lbl">New Teacher Mark</div>
+          <div class="cb-val" id="cmpNew">—</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text-3);">The AI-generated mark is never overwritten — it stays on record alongside your final approved mark.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('markConfirmModal')">Cancel</button>
+      <button class="btn btn-dark" onclick="confirmMarkOverride()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MODAL: ADD STUDENTS — CHOOSE METHOD ═══════════ -->
+<div class="modal-overlay" id="addStudentsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">Add Students</span>
+      <span class="modal-x" onclick="closeModal('addStudentsModal')"><i class="fa-solid fa-xmark"></i></span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--text-3);margin-bottom:14px;">Pick how you'd like to add more students to this session.</p>
+      <div class="choice-row">
+        <a class="choice-option" id="addStudentsIndividualLink" href="#">
+          <div class="choice-option-icon individual"><i class="fa-solid fa-camera"></i></div>
+          <div>
+            <div class="choice-option-title">Upload Individually</div>
+            <div class="choice-option-desc">Capture or upload one student's scripts at a time.</div>
+          </div>
+        </a>
+        <a class="choice-option" id="addStudentsBatchLink" href="#">
+          <div class="choice-option-icon batch"><i class="fa-solid fa-file-zipper"></i></div>
+          <div>
+            <div class="choice-option-title">Batch Upload (ZIP)</div>
+            <div class="choice-option-desc">Upload one ZIP with a folder per student.</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const S = {
+  sessions: [], query: '', collapsed: document.documentElement.classList.contains('sb-collapsed'),
+  currentSessionId: null, currentStudentUid: null,
+  activeKebabSid: null,
+  pendingOverride: null, // {sid, uid, name, id, marks}
+  overrides: loadOverrides(), // localStorage fallback store keyed by `${sid}::${studentId}`
+};
+
+function ovKey(sid, studentId) { return `${sid}::${studentId}`; }
+function loadOverrides() { try { return JSON.parse(localStorage.getItem('edumark_overrides') || '{}'); } catch { return {}; } }
+function saveOverridesLS() { try { localStorage.setItem('edumark_overrides', JSON.stringify(S.overrides)); } catch {} }
+
+/* ══════════════════════════════════════════
+   SIDEBAR / MOBILE
+══════════════════════════════════════════ */
+function toggleSidebar() {
+  S.collapsed = !S.collapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', S.collapsed);
+  document.getElementById('mainContent').classList.toggle('expanded', S.collapsed);
+  document.documentElement.classList.toggle('sb-collapsed', S.collapsed);
+  try {
+    var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
+    s.sidebarCollapsed = S.collapsed;
+    localStorage.setItem('edumark_settings_v2', JSON.stringify(s));
+  } catch (e) {}
+}
+function openMobile() {
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('mobileOverlay').classList.add('show');
+}
+function closeMobile() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('mobileOverlay').classList.remove('show');
+}
+
+/* ══════════════════════════════════════════
+   THEME — read-only here. Theme is set exclusively from
+   Settings on the Dashboard, which writes 'edumark_settings_v2'.
+   This page only applies it (pre-paint, in <head>) and never
+   changes it itself, so color is 100% consistent everywhere.
+══════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+function toast(msg, isErr) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="fa-solid ${isErr?'fa-circle-exclamation':'fa-circle-check'}" style="color:var(--text-1);font-size:12px;flex-shrink:0;"></i><span>${esc(msg)}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 240); }, 2800);
+}
+
+/* ══════════════════════════════════════════
+   VIEW ROUTING (client-side, single page)
+══════════════════════════════════════════ */
+function showView(id, title) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('topbarTitle').textContent = title;
+  window.scrollTo(0,0);
+}
+function goToList() { showView('view-list', 'View Results'); }
+
+/* ══════════════════════════════════════════
+   STATUS DOT
+══════════════════════════════════════════ */
+function setStatus(s) {
+  const dot = document.getElementById('liveDot');
+  const lbl = document.getElementById('liveLabel');
+  if (s === 'live')    { dot.className='live-dot'; lbl.textContent='Live'; }
+  if (s === 'offline') { dot.className='live-dot off'; lbl.textContent='Offline'; }
+  if (s === 'loading') { dot.className='live-dot'; lbl.textContent='Loading…'; }
+}
+
+/* ══════════════════════════════════════════
+   LOAD SESSIONS — manual only (no auto-polling).
+   The reload button in the topbar is the only way sessions refresh.
+══════════════════════════════════════════ */
+async function loadSessions() {
+  const ri = document.getElementById('refreshIcon');
+  ri.style.animation = 'spin 0.7s linear infinite';
+  setStatus('loading');
+  try {
+    const res  = await fetch('/api/sessions', { credentials: 'same-origin' });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    S.sessions = Array.isArray(data) ? data : (data.sessions || []);
+    applyOverridesToSessions();
+    setStatus('live');
+    updateSummary();
+    render();
+  } catch (e) {
+    setStatus('offline');
+    renderError(e.message);
+  } finally {
+    ri.style.animation = '';
+  }
+}
+
+/* Merge any locally-stored manual overrides (until the backend endpoint
+   in app.py persists these itself) onto the freshly loaded session data. */
+function applyOverridesToSessions() {
+  S.sessions.forEach(sess => {
+    const sid = sess.id || sess.session_id;
+    (sess.students || []).forEach(st => {
+      const key = ovKey(sid, st.id || st.student_id);
+      const ov = S.overrides[key];
+      if (ov) {
+        st._ai_score = st._ai_score !== undefined ? st._ai_score : st.score;
+        st._ai_name  = st._ai_name  !== undefined ? st._ai_name  : st.name;
+        st._ai_id    = st._ai_id    !== undefined ? st._ai_id    : st.id;
+        if (ov.name  !== undefined) st.name = ov.name;
+        if (ov.id    !== undefined) { st.id = ov.id; st.student_id = ov.id; }
+        if (ov.marks !== undefined) { st.score = ov.marks; st.total_score = ov.marks; }
+        st._overridden = true;
+      }
+    });
+  });
+}
+
+function updateSummary() {
+  const total    = S.sessions.length;
+  const students = S.sessions.reduce((a,s) =>
+    a + (s.students||[]).filter(x => x.status==='marked').length, 0);
+  document.getElementById('sumSessions').textContent = total;
+  document.getElementById('sumStudents').textContent = students;
+}
+
+/* ══════════════════════════════════════════
+   SEARCH
+══════════════════════════════════════════ */
+function onSearch(val) {
+  S.query = val.toLowerCase().trim();
+  document.getElementById('searchClear').classList.toggle('show', !!val);
+  render();
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClear').classList.remove('show');
+  S.query = ''; render();
+}
+function filterSessions() {
+  if (!S.query) return S.sessions;
+  return S.sessions.filter(sess => {
+    const hay = [
+      sess.name, sess.subject, sess.class, sess.stream,
+      sess.term, sess.year, sess.exam_type,
+      ...(sess.students||[]).map(s => s.name + ' ' + s.id)
+    ].join(' ').toLowerCase();
+    return hay.includes(S.query);
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER SESSION LIST
+══════════════════════════════════════════ */
+function render() {
+  const wrap = document.getElementById('sessionsWrap');
+  const sessions = filterSessions();
+  if (!sessions.length) { wrap.innerHTML = renderEmpty(); return; }
+  wrap.innerHTML = sessions.map((sess, i) => renderSession(sess, i)).join('');
+}
+
+function renderEmpty() {
+  if (S.query) return `<div class="state-block"><div class="state-icon">🔍</div><div class="state-title">No results</div><div class="state-desc">Nothing matched "<strong>${esc(S.query)}</strong>".</div></div>`;
+  return `<div class="state-block"><div class="state-icon">📂</div><div class="state-title">No sessions yet</div><div class="state-desc">Mark your first exam session to see results here.</div><br><a href="/setup-start" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:var(--accent);border-radius:var(--radius-sm);color:var(--bg);font-size:13px;font-weight:600;text-decoration:none;"><i class='fa-solid fa-pen-to-square'></i> Mark Exams</a></div>`;
+}
+
+function renderError(msg) {
+  document.getElementById('sessionsWrap').innerHTML = `
+    <div class="state-block">
+      <div class="state-icon">📡</div>
+      <div class="state-title">Cannot reach server</div>
+      <div class="state-desc">Error ${esc(msg)}. Ensure the server is running.</div>
+      <br><button onclick="loadSessions()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:var(--accent);border-radius:var(--radius-sm);color:var(--bg);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);border:none;"><i class='fa-solid fa-rotate'></i> Retry</button>
+    </div>`;
+}
+
+function sessKey(sess) { return sess.id || sess.session_id || ''; }
+
+function renderSession(sess, idx) {
+  const sid      = (sess.id || sess.session_id || `s${idx}`).replace(/[^a-z0-9]/gi,'_');
+  const subject  = sess.subject || sess.name || 'Exam';
+  const examType = sess.exam_type || '';
+  const cls      = sess.class || sess.grade || '';
+  const stream   = sess.stream || '';
+  const term     = sess.term || '';
+  const year     = sess.year || '';
+  const students = sess.students || [];
+  const classStream = cls ? `${cls}${stream ? ' ' + stream : ''}` : (stream || '');
+  const totalMarksForPaper = sess.total_marks || sess.total_marks_possible || null;
+
+  return `
+  <div class="session-block animate-in" style="animation-delay:${idx*0.035}s" id="sb-${sid}">
+    <div class="session-head">
+      <div class="session-head-left">
+        <div class="session-meta-row">
+          ${year && term ? `<span class="meta-chip">${esc(year)} ${esc(term)}</span>` : ''}
+          ${classStream ? `<span class="meta-chip">${esc(classStream)}</span>` : ''}
+          ${totalMarksForPaper ? `<span class="meta-chip">Out of ${esc(totalMarksForPaper)}</span>` : ''}
+        </div>
+        <div class="session-subject">${esc(subject)} ${examType ? `<span class="ex-type">(${esc(examType)})</span>` : ''}</div>
+      </div>
+      <div class="session-head-actions">
+        <button class="kebab-btn" id="kb-${sid}" onclick="toggleKebab('${sid}', event)" title="More options">
+          <span class="kebab-dots"><span></span><span></span><span></span></span>
+        </button>
+        <div class="kebab-menu" id="km-${sid}">
+          <div class="kebab-item" onclick="openSpreadsheetModal('${sid}')"><i class="fa-solid fa-table"></i> Generate spreadsheet</div>
+          <div class="kebab-item" onclick="openSessionReport('${sid}')"><i class="fa-solid fa-chart-simple"></i> View session report &amp; stats</div>
+          <div class="kebab-item" onclick="addStudents('${sid}')"><i class="fa-solid fa-user-plus"></i> Add students</div>
+          <div class="kebab-item" onclick="openAllReportsModal('${sid}')"><i class="fa-solid fa-file-pdf"></i> Download all student reports (PDF)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="session-divider"></div>
+
+    <div class="students-wrap">
+      ${renderStudentsTable(students, totalMarksForPaper, sid)}
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   KEBAB MENU
+══════════════════════════════════════════ */
+function toggleKebab(sid, ev) {
+  ev && ev.stopPropagation();
+  const menu = document.getElementById('km-' + sid);
+  const btn  = document.getElementById('kb-' + sid);
+  const wasOpen = menu.classList.contains('show');
+  document.querySelectorAll('.kebab-menu').forEach(m => m.classList.remove('show'));
+  document.querySelectorAll('.kebab-btn').forEach(b => b.classList.remove('open'));
+  if (!wasOpen) { menu.classList.add('show'); btn.classList.add('open'); S.activeKebabSid = sid; }
+  else { S.activeKebabSid = null; }
+}
+document.addEventListener('click', () => {
+  document.querySelectorAll('.kebab-menu').forEach(m => m.classList.remove('show'));
+  document.querySelectorAll('.kebab-btn').forEach(b => b.classList.remove('open'));
+});
+
+function findSession(sidSanitized) {
+  return S.sessions.find((s,i) => (s.id||s.session_id||`s${i}`).replace(/[^a-z0-9]/gi,'_') === sidSanitized);
+}
+
+/* ══════════════════════════════════════════
+   STUDENTS TABLE (with report + edit actions)
+══════════════════════════════════════════ */
+function renderStudentsTable(students, totalMarksForPaper, sid) {
+  if (!students.length) return `<div style="padding:20px 20px;text-align:center;color:var(--text-3);font-size:12px;">No students in this session.</div>`;
+
+  const rows = students.map((s, i) => {
+    const uid = `${sid}_s${i}`;
+    return renderStudentRow(s, i, uid, sid);
+  }).join('');
+
+  return `
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Name (ID)</th>
+          <th>Status</th>
+          <th class="th-score">Score</th>
+          <th class="th-report">Report</th>
+          <th class="th-edit">Edit</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function scoreBand(pct) {
+  if (isNaN(pct)) return '';
+  if (pct >= 70) return 'score-high';
+  if (pct >= 50) return 'score-mid';
+  return 'score-low';
+}
+
+function renderStudentRow(s, i, uid, sid) {
+  const pct    = computePct(s);
+  const name   = s.name || 'Unknown';
+  const id     = s.id || s.student_id || '';
+  const status = s.status || 'pending';
+
+  const statusBadge = status === 'marked'
+    ? `<span class="badge-marked"><i class="fa-solid fa-check"></i> Marked</span>`
+    : `<span class="badge-pending"><i class="fa-regular fa-clock"></i> Pending</span>`;
+
+  let scoreStr = '—', scoreClass = 'none';
+  if (!isNaN(pct)) { scoreStr = pct + '%'; scoreClass = scoreBand(pct); }
+
+  let tooltip = '';
+  if (s._overridden) {
+    tooltip = `<span class="override-tooltip">AI: ${s._ai_score}% → Final: ${pct}%</span>`;
+  }
+  const overrideFlag = s._overridden ? `<span class="override-flag" title="Manually overridden"><i class="fa-solid fa-pen"></i></span>` : '';
+
+  return `
+    <tr id="row-${uid}">
+      <td>
+        <div class="name-main" data-field="name">${esc(name)}</div>
+        <div class="name-id" data-field="id">${esc(id)}</div>
+      </td>
+      <td>${statusBadge}</td>
+      <td class="th-score">
+        <span class="score-num ${scoreClass}" data-field="score">${scoreStr}${overrideFlag}${tooltip}</span>
+      </td>
+      <td style="text-align:center;">
+        <button class="view-btn" onclick="openStudentReport('${sid}','${uid}')">
+          View <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+        </button>
+      </td>
+      <td style="text-align:center;">
+        <div class="row-actions" id="actions-${uid}">
+          <button class="edit-btn" onclick="startEdit('${sid}','${uid}')" title="Edit"><i class="fa-solid fa-pencil"></i></button>
+        </div>
+      </td>
+    </tr>`;
+}
+
+/* ══════════════════════════════════════════
+   ADD STUDENTS — choose Individual or Batch
+══════════════════════════════════════════ */
+let addStudentsSid = null;
+function addStudents(sid) {
+  toggleKebab(sid);
+  const sess = findSession(sid);
+  const id = sess ? (sess.id || sess.session_id) : '';
+  addStudentsSid = id;
+
+  const indivLink = document.getElementById('addStudentsIndividualLink');
+  const batchLink = document.getElementById('addStudentsBatchLink');
+  indivLink.href = `/resume-session?session_id=${encodeURIComponent(id)}`;
+  batchLink.href = `/resume-session?session_id=${encodeURIComponent(id)}&next=batch`;
+
+  openModal('addStudentsModal');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+let ssTargetSid = null;
+function openSpreadsheetModal(sid) { ssTargetSid = sid; toggleKebab(sid); openModal('ssModal'); }
+
+async function downloadSpreadsheet() {
+  const sess = findSession(ssTargetSid);
+  if (!sess) { toast('Session not found', true); return; }
+  const btn = document.getElementById('ssDownloadBtn');
+  btn.disabled = true;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating…';
+  try {
+    const body = {
+      year: sess.year, term: sess.term, class: sess.class,
+      stream: sess.stream, subject: sess.subject, exam_type: sess.exam_type,
+      format: document.getElementById('ss_format').value,
+      columns: {
+        id: document.getElementById('ss_col_id').checked,
+        name: document.getElementById('ss_col_name').checked,
+        score: document.getElementById('ss_col_score').checked,
+        feedback: document.getElementById('ss_col_feedback').checked,
+        status: document.getElementById('ss_col_status').checked,
+      }
+    };
+    const res = await fetch('/generate-excel', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body), credentials: 'same-origin'
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({message:'Server error'})); throw new Error(e.message); }
+    const blob = await res.blob();
+    const ext = body.format === 'ods' ? 'ods' : 'xlsx';
+    const name = `${sess.subject}_${sess.class}${sess.stream}_${sess.exam_type}_${sess.year}.${ext}`.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+    URL.revokeObjectURL(url);
+    toast(`${name} downloaded`);
+    closeModal('ssModal');
+  } catch(e) {
+    toast(e.message || 'Download failed', true);
+  } finally {
+    btn.disabled = false; btn.innerHTML = orig;
+  }
+}
+
+let allReportsSid = null;
+function openAllReportsModal(sid) {
+  allReportsSid = sid; toggleKebab(sid);
+  const sess = findSession(sid);
+  const n = sess ? (sess.students||[]).length : 0;
+  document.getElementById('allReportsCount').textContent = n;
+  openModal('allReportsModal');
+}
+
+function exportAllReports() {
+  const sess = findSession(allReportsSid);
+  if (!sess) { toast('Session not found', true); return; }
+  closeModal('allReportsModal');
+  const students = sess.students || [];
+  if (!students.length) { toast('No students to export', true); return; }
+
+  const win = window.open('', '_blank');
+  const pages = students.map(st => buildStudentPaperHtml(sess, st, false)).join('<div style="page-break-after:always;"></div>');
+  win.document.write(`<!DOCTYPE html><html><head><title>Student Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>${printPaperStyles()}</style></head><body>${pages}</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 400);
+}
+
+/* ══════════════════════════════════════════
+   SESSION REPORT VIEW
+══════════════════════════════════════════ */
+async function openSessionReport(sid) {
+  toggleKebab(sid);
+  const sess = findSession(sid);
+  if (!sess) { toast('Session not found', true); return; }
+  S.currentSessionId = sid;
+  showView('view-session-report', 'Session Report');
+
+  const wrap = document.getElementById('sessionReportWrap');
+  wrap.innerHTML = `<div class="state-block"><div class="spin"></div><div class="state-title" style="font-style:normal;font-size:13px;color:var(--text-3);">Building report…</div></div>`;
+
+  const students = sess.students || [];
+  const marked = students.filter(s => s.status === 'marked');
+  const scores = marked.map(s => parseFloat(s.score||s.total_score||0)).filter(n=>!isNaN(n));
+
+  const mean = scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length) : null;
+  const mode = computeMode(scores);
+  const low  = scores.length ? Math.min(...scores) : null;
+  const high = scores.length ? Math.max(...scores) : null;
+  const failedCount = students.length - marked.length;
+
+  let aiReport = sess.report || null;
+  if (!aiReport) {
+    try {
+      const r = await fetch(`/api/sessions/${encodeURIComponent(sess.id||sess.session_id)}/report`);
+      const d = await r.json();
+      aiReport = d.report;
+    } catch {}
+  }
+
+  const bins = computeHistogramBins(scores);
+
+  wrap.innerHTML = `
+    <div class="report-doc" id="sessionReportDoc">
+      <div class="report-doc-head">
+        <div>
+          <div class="report-doc-title">${esc(sess.subject||'Session')} <span style="font-style:italic;color:var(--text-3);font-size:16px;">(${esc(sess.exam_type||'')})</span></div>
+          <div class="report-doc-sub">Total marks obtainable: ${esc(sess.total_marks || sess.total_marks_possible || '—')}</div>
+        </div>
+        <button class="dl-btn" onclick="downloadSessionReportPdf()" title="Download as PDF"><i class="fa-solid fa-download"></i></button>
+      </div>
+
+      <div class="report-section-label">AI Session Report</div>
+      <div class="report-text">${aiReport ? esc(aiReport) : '<span style="color:var(--text-3);font-style:italic;">No AI report generated for this session yet.</span>'}</div>
+
+      <div class="report-section-label">Statistics</div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="sv">${mean!==null?mean.toFixed(1)+'%':'—'}</div><div class="sl">Mean</div></div>
+        <div class="stat-box"><div class="sv">${mode!==null?mode+'%':'—'}</div><div class="sl">Mode</div></div>
+        <div class="stat-box"><div class="sv">${low!==null?low+'%':'—'}</div><div class="sl">Lowest</div></div>
+        <div class="stat-box"><div class="sv">${high!==null?high+'%':'—'}</div><div class="sl">Highest</div></div>
+        <div class="stat-box"><div class="sv">${students.length}</div><div class="sl">To Be Marked</div></div>
+        <div class="stat-box"><div class="sv">${marked.length}</div><div class="sl">Successfully Marked</div></div>
+      </div>
+      ${failedCount > 0 ? `<div style="margin-top:8px;font-size:11.5px;color:var(--text-3);">${failedCount} student(s) not yet successfully marked.</div>` : ''}
+
+      <div class="report-section-label">Performance Distribution</div>
+      <div class="hist-wrap">
+        <div class="hist-bars">
+          ${bins.map(b => `
+            <div class="hist-col">
+              <span class="hist-count">${b.count}</span>
+              <div class="hist-bar" style="height:${b.pctHeight}%;"></div>
+              <span class="hist-label">${b.label}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function computeMode(scores) {
+  if (!scores.length) return null;
+  const rounded = scores.map(s => Math.round(s));
+  const freq = {};
+  rounded.forEach(s => freq[s] = (freq[s]||0)+1);
+  let best = rounded[0], bestCount = 0;
+  Object.entries(freq).forEach(([k,v]) => { if (v > bestCount) { best = k; bestCount = v; } });
+  return best;
+}
+
+function computeHistogramBins(scores) {
+  const ranges = [[0,20],[20,40],[40,60],[60,80],[80,101]];
+  const labels = ['0–19%','20–39%','40–59%','60–79%','80–100%'];
+  const counts = ranges.map(([lo,hi]) => scores.filter(s => s>=lo && s<hi).length);
+  const max = Math.max(1, ...counts);
+  return counts.map((c,i) => ({ count: c, label: labels[i], pctHeight: Math.max(4, Math.round(c/max*100)) }));
+}
+
+function downloadSessionReportPdf() {
+  const doc = document.getElementById('sessionReportDoc');
+  if (!doc) return;
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Session Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>${printSessionReportStyles()}</style></head><body>${doc.outerHTML}</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 400);
+}
+
+function printSessionReportStyles() {
+  return `
+    * { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; color:#111; padding: 30px; }
+    .report-doc-title { font-family:'Instrument Serif', serif; font-size:24px; }
+    .report-doc-head { display:flex; justify-content:space-between; border-bottom:2px solid #111; padding-bottom:14px; margin-bottom:16px; }
+    .report-section-label { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#555; margin:18px 0 8px; }
+    .report-text { font-size:13px; line-height:1.8; border:1px solid #ddd; padding:14px; border-radius:6px; }
+    .stat-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+    .stat-box { border:1px solid #ddd; border-radius:6px; padding:10px; text-align:center; }
+    .stat-box .sv { font-family:'Instrument Serif', serif; font-size:18px; }
+    .stat-box .sl { font-size:9px; color:#666; text-transform:uppercase; }
+    .hist-bars { display:flex; gap:12px; align-items:flex-end; height:140px; border:1px solid #ddd; border-radius:6px; padding:14px; }
+    .hist-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+    .hist-bar { width:100%; background:#111; border-radius:3px 3px 0 0; }
+    .hist-count { font-size:10px; font-weight:700; }
+    .hist-label { font-size:9px; color:#666; margin-top:4px; }
+    .dl-btn { display:none; }
+  `;
+}
+
+/* ══════════════════════════════════════════
+   STUDENT REPORT VIEW ("paper" style)
+══════════════════════════════════════════ */
+function openStudentReport(sid, uid) {
+  const sess = findSession(sid);
+  if (!sess) { toast('Session not found', true); return; }
+  const idx = parseInt(uid.split('_s')[1], 10);
+  const student = (sess.students||[])[idx];
+  if (!student) { toast('Student not found', true); return; }
+
+  S.currentSessionId = sid; S.currentStudentUid = uid;
+  showView('view-student-report', 'Student Report');
+
+  const wrap = document.getElementById('studentReportWrap');
+  wrap.innerHTML = buildStudentPaperHtml(sess, student, true);
+}
+
+function buildStudentPaperHtml(sess, student, withDownloadBtn) {
+  const totalMarks = sess.total_marks || sess.total_marks_possible || 100;
+  const pct = computePct(student);
+  const rawObtained = student.raw_score !== undefined && student.raw_score !== null
+    ? student.raw_score
+    : (!isNaN(pct) ? Math.round((pct/100)*totalMarks*10)/10 : '—');
+
+  const questions = student.questions || {};
+  const stageRows = Object.keys(questions).length
+    ? Object.entries(questions).map(([k,v]) => {
+        const sc = typeof v === 'object' ? v.score : v;
+        const mx = typeof v === 'object' ? (v.max_score || '') : '';
+        return `<div class="stage-row"><span>${esc(k)}</span><span>${esc(String(sc))}${mx?` / ${esc(String(mx))}`:''}</span></div>`;
+      }).join('')
+    : `<div style="font-size:12px;color:#6b6142;">Stage-level breakdown not available for this student.</div>`;
+
+  const feedback = student.diagnostic || student.feedback || student.comment || student.overall_feedback || '';
+  const paragraphs = feedback.split(/\n\s*\n/).filter(p => p.trim());
+  const feedbackHtml = paragraphs.length
+    ? paragraphs.map(p => `<p class="paper-para">${esc(p.trim())}</p>`).join('')
+    : `<p class="paper-para">${esc(feedback || 'No AI feedback recorded for this student.')}</p>`;
+
+  const strengths = student.strengths || [];
+  const improvements = student.areas_for_improvement || [];
+  const extraNote = (strengths.length || improvements.length) ? `
+    <div class="paper-section-title">Strengths &amp; Areas for Improvement</div>
+    ${strengths.length ? `<p class="paper-para"><strong>Strengths:</strong> ${esc(strengths.join('; '))}</p>` : ''}
+    ${improvements.length ? `<p class="paper-para"><strong>Areas for improvement:</strong> ${esc(improvements.join('; '))}</p>` : ''}
+  ` : '';
+
+  const overrideNote = student._overridden
+    ? `<div style="font-size:10.5px;color:#6b6142;margin-top:4px;">AI mark: ${esc(String(student._ai_score))}% · Teacher-approved final mark shown above.</div>`
+    : '';
+
+  const dlBtn = withDownloadBtn
+    ? `<button class="paper-dl" onclick="downloadStudentReportPdf()" title="Download as PDF"><i class="fa-solid fa-download"></i></button>`
+    : '';
+
+  return `
+    <div class="paper-doc" id="studentPaperDoc">
+      ${dlBtn}
+      <div class="paper-head">
+        <div class="paper-school">EduMark AI — Examiner's Report</div>
+        <div class="paper-name">${esc(student.name || 'Unknown Student')}</div>
+        <div class="paper-meta">Student ID: ${esc(String(student.id || student.student_id || '—'))} &nbsp;·&nbsp; ${esc(sess.subject||'')} ${sess.exam_type?`(${esc(sess.exam_type)})`:''} &nbsp;·&nbsp; ${esc(sess.term||'')} ${esc(sess.year||'')}</div>
+        <div class="paper-marks-row">
+          <div class="paper-marks-box"><div class="pm-lbl">Total Obtainable</div><div class="pm-val">${esc(String(totalMarks))}</div></div>
+          <div class="paper-marks-box"><div class="pm-lbl">Marks Obtained</div><div class="pm-val">${esc(String(rawObtained))}</div></div>
+          <div class="paper-marks-box"><div class="pm-lbl">Percentage</div><div class="pm-val">${!isNaN(pct)?pct+'%':'—'}</div></div>
+        </div>
+        ${overrideNote}
+      </div>
+
+      <div class="paper-section-title">Stage Breakdown</div>
+      <div class="stage-list">${stageRows}</div>
+
+      <div class="paper-section-title">Question / Item Performance</div>
+      ${feedbackHtml}
+
+      ${extraNote}
+    </div>
+  `;
+}
+
+function downloadStudentReportPdf() {
+  const doc = document.getElementById('studentPaperDoc');
+  if (!doc) return;
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Student Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>${printPaperStyles()}</style></head><body>${doc.outerHTML}</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 400);
+}
+
+function printPaperStyles() {
+  return `
+    * { box-sizing:border-box; }
+    @page { size: A4; margin: 14mm; }
+    body { font-family:'DM Sans', sans-serif; background:#fdf9ec; color:#1c1a12; }
+    .paper-doc { background:#fdf9ec; padding:10px 6px; max-width:100%; }
+    .paper-dl { display:none; }
+    .paper-head { border-bottom:2px solid #1c1a12; padding-bottom:14px; margin-bottom:18px; }
+    .paper-school { font-family:'Instrument Serif', serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#6b6142; margin-bottom:6px; }
+    .paper-name { font-family:'Instrument Serif', serif; font-size:24px; }
+    .paper-meta { font-size:11px; color:#6b6142; margin-top:4px; }
+    .paper-marks-row { display:flex; gap:26px; margin-top:14px; }
+    .pm-lbl { font-size:9px; text-transform:uppercase; color:#6b6142; }
+    .pm-val { font-family:'Instrument Serif', serif; font-size:19px; }
+    .paper-section-title { font-family:'Instrument Serif', serif; font-size:14px; margin:18px 0 7px; border-bottom:1px solid #e4dcbd; padding-bottom:5px; }
+    .stage-row { display:flex; justify-content:space-between; font-size:11.5px; padding:4px 0; border-bottom:1px dotted #e4dcbd; }
+    .paper-para { font-size:12px; line-height:1.85; margin-bottom:14px; text-align:justify; }
+  `;
+}
+
+/* ══════════════════════════════════════════
+   MANUAL OVERRIDE — inline edit
+══════════════════════════════════════════ */
+function startEdit(sid, uid) {
+  const sess = findSession(sid);
+  const idx = parseInt(uid.split('_s')[1], 10);
+  const student = (sess.students||[])[idx];
+  if (!student) return;
+
+  const row = document.getElementById(`row-${uid}`);
+  const nameCell = row.querySelector('[data-field="name"]');
+  const idCell   = row.querySelector('[data-field="id"]');
+  const scoreCell = row.querySelector('[data-field="score"]');
+  const actions  = document.getElementById(`actions-${uid}`);
+
+  const curName = student.name || '';
+  const curId   = student.id || student.student_id || '';
+  const curPct  = computePct(student);
+
+  nameCell.dataset.orig = nameCell.innerHTML;
+  idCell.dataset.orig   = idCell.innerHTML;
+  scoreCell.dataset.orig = scoreCell.innerHTML;
+
+  nameCell.innerHTML  = `<input class="edit-input" id="ei-name-${uid}" value="${esc(curName)}" />`;
+  idCell.innerHTML    = `<input class="edit-input" id="ei-id-${uid}" value="${esc(curId)}" style="margin-top:4px;" />`;
+  scoreCell.innerHTML = `<input class="edit-input marks" id="ei-marks-${uid}" type="number" min="0" max="100" step="0.1" value="${!isNaN(curPct)?curPct:''}" /> %`;
+
+  actions.innerHTML = `
+    <div class="edit-actions">
+      <button class="save-btn" onclick="saveEdit('${sid}','${uid}')"><i class="fa-solid fa-check"></i></button>
+      <button class="cancel-btn" onclick="cancelEdit('${sid}','${uid}')"><i class="fa-solid fa-xmark"></i></button>
+    </div>`;
+}
+
+function cancelEdit(sid, uid) {
+  const row = document.getElementById(`row-${uid}`);
+  ['name','id','score'].forEach(f => {
+    const cell = row.querySelector(`[data-field="${f}"]`);
+    if (cell && cell.dataset.orig !== undefined) cell.innerHTML = cell.dataset.orig;
+  });
+  document.getElementById(`actions-${uid}`).innerHTML =
+    `<button class="edit-btn" onclick="startEdit('${sid}','${uid}')" title="Edit"><i class="fa-solid fa-pencil"></i></button>`;
+}
+
+function saveEdit(sid, uid) {
+  const sess = findSession(sid);
+  const idx = parseInt(uid.split('_s')[1], 10);
+  const student = (sess.students||[])[idx];
+  if (!student) return;
+
+  const newName  = document.getElementById(`ei-name-${uid}`).value.trim();
+  const newId    = document.getElementById(`ei-id-${uid}`).value.trim();
+  const newMarksRaw = document.getElementById(`ei-marks-${uid}`).value;
+  const totalMarks = sess.total_marks || sess.total_marks_possible || 100;
+
+  if (!newName || !newId) { toast('Name and ID cannot be empty', true); return; }
+
+  let newMarks = parseFloat(newMarksRaw);
+  if (newMarksRaw === '' || isNaN(newMarks)) { toast('Enter a valid mark', true); return; }
+  if (newMarks < 0 || newMarks > 100) { toast('Percentage must be between 0 and 100', true); return; }
+
+  const origPct = computePct(student);
+  const marksChanged = isNaN(origPct) || Math.round(origPct*10)/10 !== Math.round(newMarks*10)/10;
+
+  S.pendingOverride = { sid, uid, name: newName, id: newId, marks: newMarks, marksChanged, totalMarks };
+
+  if (marksChanged) {
+    document.getElementById('cmpOriginal').textContent = isNaN(origPct) ? '—' : origPct + '%';
+    document.getElementById('cmpNew').textContent = newMarks + '%';
+    openModal('markConfirmModal');
+  } else {
+    applyOverride(S.pendingOverride);
+  }
+}
+
+async function confirmMarkOverride() {
+  closeModal('markConfirmModal');
+  if (S.pendingOverride) applyOverride(S.pendingOverride);
+}
+
+async function applyOverride(ov) {
+  const sess = findSession(ov.sid);
+  const idx = parseInt(ov.uid.split('_s')[1], 10);
+  const student = (sess.students||[])[idx];
+  if (!student) return;
+
+  const sessionId = sess.id || sess.session_id;
+  const studentId = student.id || student.student_id;
+
+  // Preserve original AI values before first override.
+  if (student._ai_score === undefined) student._ai_score = student.score !== undefined ? student.score : student.total_score;
+  if (student._ai_name  === undefined) student._ai_name  = student.name;
+  if (student._ai_id    === undefined) student._ai_id    = studentId;
+
+  student.name = ov.name;
+  student.id = ov.id; student.student_id = ov.id;
+  student.score = ov.marks; student.total_score = ov.marks;
+  student._overridden = true;
+
+  // Try to persist to backend (endpoint to be added in app.py); fall back
+  // to local storage so the override still survives a refresh right now.
+  let persisted = false;
+  try {
+    const res = await fetch('/api/student/override', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        session_id: sessionId, student_id: studentId,
+        name: ov.name, id: ov.id, marks: ov.marks,
+      })
+    });
+    if (res.ok) persisted = true;
+  } catch {}
+
+  if (!persisted) {
+    S.overrides[ovKey(sessionId, studentId)] = { name: ov.name, id: ov.id, marks: ov.marks };
+    saveOverridesLS();
+  }
+
+  toast('Changes saved' + (persisted ? '' : ' (stored locally until sync)'));
+  render();
+}
+
+/* ══════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════ */
+function computePct(s) {
+  const score = s.score !== undefined ? s.score : s.total_score;
+  if (score === undefined || score === null || score === '') return NaN;
+  return Math.round(parseFloat(score));
+}
+function esc(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ══════════════════════════════════════════
+   INIT — sessions load once on page open; after that,
+   the teacher reloads manually via the topbar button.
+══════════════════════════════════════════ */
+document.getElementById('sessionsWrap').innerHTML =
+  `<div class="state-block"><div class="spin"></div><div class="state-title" style="font-style:normal;font-size:13px;color:var(--text-3);">Loading sessions…</div></div>`;
+
+if (S.collapsed) {
+  document.getElementById('sidebar').classList.add('collapsed');
+  document.getElementById('mainContent').classList.add('expanded');
+}
+loadSessions();
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); document.getElementById('searchInput')?.focus(); }
+  if (e.key==='Escape') { clearSearch(); }
+});
+</script>
 </body>
 </html>

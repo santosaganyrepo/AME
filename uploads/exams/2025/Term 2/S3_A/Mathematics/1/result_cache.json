@@ -1,0 +1,138 @@
+{
+  "346e42018cfa0caccae8518d99bbbbde6d4700218d6827496c5c2dfaff1c7616": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "kakooza",
+    "total_score": 60.0,
+    "raw_score": 6.0,
+    "max_score": 10.0,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 6.0,
+        "max_score": 10.0,
+        "feedback": "The student correctly",
+        "stages": [
+          {
+            "label": "Phase 1 revenue calculation",
+            "awarded": 2.0,
+            "max": 2.0
+          },
+          {
+            "label": "Phase 2 bag count & revenue calculation",
+            "awarded": 3.0,
+            "max": 3.0
+          },
+          {
+            "label": "Phase 3 bag count & revenue calculation",
+            "awarded": 1.0,
+            "max": 3.0
+          },
+          {
+            "label": "Total revenue calculation",
+            "awarded": 0.0,
+            "max": 2.0
+          }
+        ]
+      }
+    },
+    "stage_scores": [
+      {
+        "item": "Item 1",
+        "label": "Phase 1 revenue calculation",
+        "awarded": 2.0,
+        "max": 2.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Phase 2 bag count & revenue calculation",
+        "awarded": 3.0,
+        "max": 3.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Phase 3 bag count & revenue calculation",
+        "awarded": 1.0,
+        "max": 3.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Total revenue calculation",
+        "awarded": 0.0,
+        "max": 2.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 09:19:33"
+  },
+  "68f413d4f07f2f1ea88d7c978e0ec54a0d7180b07373d1b860685696f4dd748d": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "makula",
+    "total_score": 100.0,
+    "raw_score": 12.0,
+    "max_score": 12.0,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 12.0,
+        "feedback": "",
+        "stages": [
+          {
+            "label": "Phase 1 revenue calculation",
+            "awarded": 2.0,
+            "max": 2.0
+          },
+          {
+            "label": "Phase 2 bag count and revenue calculation",
+            "awarded": 3.0,
+            "max": 3.0
+          },
+          {
+            "label": "Phase 3 bag count and revenue calculation",
+            "awarded": 3.0,
+            "max": 3.0
+          },
+          {
+            "label": "Total revenue and net profit calculation",
+            "awarded": 4.0,
+            "max": 4.0
+          }
+        ]
+      }
+    },
+    "stage_scores": [
+      {
+        "item": "Item 1",
+        "label": "Phase 1 revenue calculation",
+        "awarded": 2.0,
+        "max": 2.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Phase 2 bag count and revenue calculation",
+        "awarded": 3.0,
+        "max": 3.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Phase 3 bag count and revenue calculation",
+        "awarded": 3.0,
+        "max": 3.0
+      },
+      {
+        "item": "Item 1",
+        "label": "Total revenue and net profit calculation",
+        "awarded": 4.0,
+        "max": 4.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 09:20:33"
+  }
+}

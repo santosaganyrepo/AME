@@ -1,0 +1,235 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 1",
+    "class": "S2",
+    "stream": "C",
+    "subject": "History and Political Education",
+    "exam_type": "Mid"
+  },
+  "students": [
+    {
+      "id": "121",
+      "student_id": "121",
+      "student_name": "sanyo",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 33.0,
+      "sync_time": "2026-05-27 13:33",
+      "questions": {
+        "Item 1": {
+          "score": 17.0,
+          "max_score": 20,
+          "feedback": "The student earned 17 marks for providing a clear definition of NGOs/CSOs and detailing multiple roles such as service delivery, advocacy for human rights, promotion of democracy, good governance, anti-corruption, and mobilization with relevant examples from Uganda, but a formal conclusion and discussion of challenges were missing."
+        },
+        "Item 2": {
+          "score": 16.0,
+          "max_score": 20,
+          "feedback": "The student earned 16 marks for accurately defining land fragmentation and identifying several causes including population pressure, urbanization, land policies, and land tenure, but the explanation of industrialization as a cause was incorrect and the agricultural land point was unclear."
+        }
+      },
+      "overall_feedback": "The student demonstrated a good understanding of",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Mungu",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 40.0,
+      "sync_time": "2026-05-27 13:32",
+      "questions": {
+        "Item 2": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 20 marks for correctly defining land fragmentation and accurately identifying and explaining multiple causes including population pressure, urbanization, unfavorable policies, legal reforms, and low production/poverty."
+        },
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 20 marks for providing a clear introduction and comprehensively discussing various roles of NGOs and CSOs, including service delivery, disaster relief, poverty reduction, advocacy for human rights, and promotion of democracy and good governance, supported by specific examples."
+        }
+      },
+      "overall_feedback": "Mungu demonstrated an excellent understanding of the topics, achieving full marks on both attempted items. The strongest demonstrated concept was the comprehensive",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "2212",
+      "student_id": "2212",
+      "student_name": "e223",
+      "total_pages": 2,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 16.0,
+      "sync_time": "2026-05-27 13:32",
+      "questions": {
+        "Item 2": {
+          "score": 16.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 16 marks for correctly defining land fragmentation as the division of land into smaller plots and identifying population pressure, urbanization, industrialization, and land policies/freehold tenure as causes, but specific East African examples and other causes like inheritance, low productivity, land conflicts, and poverty were missing."
+        }
+      },
+      "overall_feedback": "The student demonstrated a limited performance level by attempting only one of the two required items. Their strongest area was defining land fragmentation accurately as the division of land into smaller plots, earning full marks for this component. The most critical gap was the failure to attempt the second required item, significantly impacting their overall score, and they also missed several specific causes of land fragmentation and relevant examples. To improve, the student should ensure they attempt the full number of questions required by the exam instructions and broaden their knowledge of specific examples and a wider range of contributing factors for each topic.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "212",
+      "student_id": "212",
+      "student_name": "GEu",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 28.0,
+      "sync_time": "2026-05-27 13:32",
+      "questions": {
+        "Item 1": {
+          "score": 13.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 13 marks for providing a clear introduction, four distinct roles of NGOs/CSOs with specific examples, and good overall organization, but lost marks for not including a separate conclusion or discussing challenges."
+        },
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 15 marks for accurately defining land fragmentation and identifying population pressure, urbanization, and land policies as causes, but did not clearly articulate solutions or provide a concluding summary."
+        }
+      },
+      "overall_feedback": "The student demonstrated a fair understanding of the topics, particularly in defining concepts and listing causes or roles. Their strongest area was identifying the roles of NGOs/CSOs",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "91091",
+      "student_id": "91091",
+      "student_name": "Madol",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 24.0,
+      "sync_time": "2026-05-27 13:34",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 14 marks for clearly identifying and elaborating on multiple roles of NGOs and CSOs, including advocacy, service delivery, good governance, and community mobilization, with specific examples like FIDA and Karamoja, but lacked a formal introduction and a more structured essay format."
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 10 marks for providing a correct definition of land fragmentation and accurately identifying population pressure and industrialization/urbanization as key causes, but did not include other potential causes like inheritance or colonial policies, nor did they provide a conclusion or specific East African examples.\n\nSUMMARY"
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "82972",
+      "student_id": "82972",
+      "student_name": "Aliet",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 15.0,
+      "sync_time": "2026-05-27 13:34",
+      "questions": {
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": "The student earned marks for defining land fragmentation as the division of land due to urbanization and for identifying causes such as population pressure, land scarcity, and the need for agricultural land, but lacked specific examples and a comprehensive conclusion."
+        }
+      },
+      "overall_feedback": "The student demonstrated a fair understanding of land fragmentation and its causes, particularly linking it to urbanization and agricultural needs. Their strongest point was identifying population pressure and the need for land for various activities as drivers of fragmentation. However, a critical gap was the absence of specific East African examples and a structured conclusion, which are explicitly required by the marking scheme. To improve, the student needs to revise by incorporating concrete regional examples and practicing structuring their",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "2322",
+      "student_id": "2322",
+      "student_name": "222",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 14.0,
+      "sync_time": "2026-05-27 13:35",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 14 marks for providing a clear definition of NGOs and CSOs, detailing five distinct roles including service delivery, emergency aid, poverty reduction, human rights advocacy, and good governance, and using relevant examples from Uganda. Marks were lost due to the absence of historical context in the introduction, a lack of a concluding summary, and no discussion of challenges such as donor dependency or regulation."
+        }
+      },
+      "overall_feedback": "The student demonstrated a fair understanding of the roles of NGOs and CSOs, achieving a satisfactory performance level. Their strongest area was identifying and elaborating on various functions of these organizations, such as providing healthcare and education services and advocating for human rights with specific examples like UNICEF and Red Cross. The most critical gap in their knowledge was the lack of a comprehensive conclusion, specifically omitting a summary of their discussion and any mention of challenges faced by NGOs, such as donor dependency or regulatory issues. To improve, the student should practice structuring essays with clear introductions that include context and well-developed conclusions that summarize points and discuss broader implications or challenges.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "334",
+      "student_id": "334",
+      "student_name": "453",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 25.0,
+      "sync_time": "2026-05-27 13:35",
+      "questions": {
+        "Item 1": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": "The student earned 15 marks for defining NGOs/CSOs, identifying service delivery, poverty eradication, advocacy for human rights, good governance/democratization, and anti-corruption as roles, and providing relevant examples; however, a clear conclusion and summary of challenges were missing."
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student earned 10 marks for correctly defining land fragmentation and identifying population pressure, urbanization, agricultural needs, and land policies as causes; however, the answer failed to discuss the effects of land fragmentation or provide a concluding statement."
+        }
+      },
+      "overall_feedback": "The student demonstrated a moderate overall performance level, successfully addressing key aspects of the questions but often lacking completeness. The strongest demonstrated concept was the roles of NGOs and CSOs, with specific examples like UNICEF and Red Cross for service delivery clearly articulated. The most critical gap was the student's tendency to omit entire sections of a question, such as the effects of land fragmentation, and consistently missing concluding statements. To improve, the student needs to practice structuring answers to include all required components, such as definitions, causes, effects, and conclusions, for a complete response.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "23yyt46",
+      "student_id": "23yyt46",
+      "student_name": "2u3iu",
+      "total_pages": 1,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 14.0,
+      "sync_time": "2026-05-27 13:35",
+      "questions": {
+        "Item 1": {
+          "score": 14.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 14 marks for providing a clear introduction, identifying five distinct roles of NGOs/CSOs with specific examples, and demonstrating good organization; however, a dedicated conclusion and additional roles such as good governance, environmental conservation, conflict resolution, research, or capacity building were missing."
+        }
+      },
+      "overall_feedback": "The student demonstrated a good understanding of the roles of NGOs and CSOs, particularly in service delivery and advocacy. Their strongest point was the clear definition of NGOs and CSOs and the identification of their roles in areas like human rights and economic empowerment, exemplified by mentioning UNICEF and Red Cross. The most critical gap was the absence of a concluding statement and the omission of several",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

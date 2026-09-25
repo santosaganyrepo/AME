@@ -1,0 +1,42 @@
+{
+  "1f377de7d629938d2365a43c991861f32534fb35624977e9ffc2396c5883be2c": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "akia",
+    "total_score": 35.0,
+    "raw_score": 14.0,
+    "max_score": 40.0,
+    "status": "Marked",
+    "questions": {},
+    "stage_scores": [
+      {
+        "stage": "Item 1 Part (a) - Phase 1 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (a) - Phase 2 bag count & revenue calculation",
+        "marks": 3.0
+      },
+      {
+        "stage": "Item 1 Part (a) - Phase 3 bag count & revenue calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (a) - Total Revenue summation",
+        "marks": 1.0
+      },
+      {
+        "stage": "Item 1 Part (a) - Net Profit Calculation",
+        "marks": 2.0
+      },
+      {
+        "stage": "Item 1 Part (b) - Profit Distribution",
+        "marks": 4.0
+      }
+    ],
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-04 11:19:19"
+  }
+}

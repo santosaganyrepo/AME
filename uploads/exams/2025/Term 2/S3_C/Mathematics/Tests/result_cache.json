@@ -1,0 +1,192 @@
+{
+  "ade9c8f72176c2f9e69565fc077303c132d9de2d2bcb46791827afdca0b11c7e": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "makula",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the total revenue for each phase and the overall total revenue, earning 4 marks. The net profit calculation was correct, earning 2 marks."
+      },
+      "Item 2": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 10:49:59"
+  },
+  "bc46f7e4e3c3a3b2f5d9457ab60436d48f52bf8b284421be96a6edd621481247": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "Akia",
+    "total_score": 40.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated all revenue phases, total revenue, total costs, net income, and individual shares,"
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 10:50:13"
+  },
+  "c7bc91b28389a16f39a12bb9a0d20b56f0963127da6e03cf6e6ba5eb451fde56": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "Ochwo",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the perimeter, area, total fencing cost, and revenue from all three phases. All calculations for net profit and cooperative share were accurate and followed the"
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 10:50:31"
+  },
+  "d3f74d741f4e679145732425f8b1a20241a8f186c4a3f8492086b292fd2be324": {
+    "success": true,
+    "student_id": "004",
+    "student_name": "Namuli",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 10:50:50"
+  },
+  "8417e650fd25009aca88fb0a301ec795ff274e5472a5bf2db6f4e81881be7aaf": {
+    "success": true,
+    "student_id": "005",
+    "student_name": "kakooza",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 4": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 10:51:23"
+  }
+}

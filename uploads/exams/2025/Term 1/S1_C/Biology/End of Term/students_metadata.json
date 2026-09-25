@@ -1,0 +1,49 @@
+{
+  "exam_info": {
+    "year": "2025",
+    "term": "Term 1",
+    "class": "S1",
+    "stream": "C",
+    "subject": "Biology",
+    "exam_type": "End of Term"
+  },
+  "students": [
+    {
+      "id": "908",
+      "student_id": "908",
+      "student_name": "564",
+      "total_pages": 5,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 60.0,
+      "sync_time": "2026-05-25 12:35",
+      "questions": {
+        "Item 1": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 20 marks for correctly identifying nuclear fission as the energy source, listing valid advantages and disadvantages of nuclear energy, accurately describing nuclear waste disposal and its risks, explaining the role of control rods in chain reaction control, and suggesting solar and geothermal energy as alternatives."
+        },
+        "Item 2": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "The student was awarded 10 marks for correctly identifying nuclear fusion as the energy source in stars, describing the relationship between star color and temperature, and mentioning the role of communication satellites, but failed to provide"
+        },
+        "Item 3": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 5": {
+          "score": 20.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "AI marking complete.",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "a5f9c8726d0bef3d37ccc9c131d823de2e923f376e3b9dcabcb0982a26d18f52": {
+    "success": true,
+    "student_id": "767",
+    "student_name": "867",
+    "total_score": 27.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 17 marks for correctly defining land fragmentation as the division of land into smaller plots and identifying several causes including population pressure, urbanization, inheritance, land policies, and freehold tenure, but incorrectly listed industrialization as a direct cause and omitted other causes like land conflicts and environmental degradation."
+      },
+      "Item 1": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 10 marks for accurately describing multiple roles of NGOs/CSOs such as service delivery, economic growth, human rights advocacy, good governance, and reaching marginalized communities, but failed to provide an introduction, a definition of NGOs/CSOs in historical context, a conclusion, or a discussion of challenges."
+      }
+    },
+    "overall_feedback": "The student demonstrated a fair understanding of the topics, achieving a moderate overall performance level. Their strongest area was identifying the various roles of NGOs and CSOs, providing specific examples like UNICEF and Red Cross for service delivery and FIDA for women's rights advocacy. The most critical gap in their knowledge was the structural requirements of an essay, as they consistently missed introductions, definitions, conclusions, and discussions of challenges for both items. To improve, the student needs to revise essay structure and ensure all components of a question, including introductory and concluding elements, are addressed comprehensively.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 19:06:28"
+  },
+  "9b67328915fd3f904b8fc869adec65308bcc60213dc24b3e4504346c9fc2a806": {
+    "success": true,
+    "student_id": "675",
+    "student_name": "6755",
+    "total_score": 36.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 18 marks for providing a precise definition of land fragmentation and clearly outlining six distinct causes, demonstrating a strong understanding of the topic, with no specific concepts missing from the requested parts."
+      },
+      "Item 1": {
+        "score": 18.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 18 marks for a comprehensive discussion of the roles of NGOs and CSOs, including a clear definition, detailed explanations of multiple roles, and relevant examples, with no critical gaps in the requested discussion of roles."
+      }
+    },
+    "overall_feedback": "The student demonstrated a strong overall performance, successfully addressing the core requirements of both attempted items. Their strongest area was the detailed explanation of the roles",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 19:06:51"
+  },
+  "12baba4f9f9668ccd3dcc96b5ec489f6efc7f9152898687225c933bbea7e1364": {
+    "success": true,
+    "student_id": "7661",
+    "student_name": "sanm",
+    "total_score": 37.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 17.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 17 marks for correctly defining land fragmentation and providing numerous specific causes such as population pressure, industrialization, urbanization, inheritance policies, increased agricultural land use, and land tenure systems, but did not include a conclusion or specific East African examples."
+      },
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 20 marks for providing a clear definition of NGOs/CSOs and comprehensively discussing their roles in service delivery, advocacy for human rights, good governance, and mobilization/empowerment, supported by multiple specific examples from Uganda and mentioning organizations like UNICEF, Red Cross, and FIDA, with a clear"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 19:07:37"
+  },
+  "782d45dc7e50400373ff1968a6fa76eddcc05360a2387806720518b37ce25458": {
+    "success": true,
+    "student_id": "671",
+    "student_name": "mana",
+    "total_score": 12.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 4 marks for correctly identifying advocacy for human rights and good governance/anti-corruption as roles of NGOs, but failed to provide an introduction, conclusion, or other specific roles like service delivery or environmental conservation."
+      },
+      "Item 2": {
+        "score": 8.0,
+        "max_score": 20,
+        "feedback": "The student was awarded 8 marks for accurately defining land fragmentation and identifying population pressure, urbanization/industrialization, and legal reforms/land policy as causes, but did not discuss the effects or solutions to land fragmentation."
+      }
+    },
+    "overall_feedback": "The student demonstrated a basic understanding of the topics, achieving a low overall performance level. Their strongest area was defining and identifying causes of land fragmentation, specifically mentioning population pressure and the impact of freehold tenure systems. The most critical gap in their knowledge is the comprehensive understanding of the roles of NGOs and the full scope of land fragmentation, including its effects and potential solutions. To improve, the student should practice structuring answers to include all required components like introductions, conclusions, and a balanced discussion of causes, effects, and solutions.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-28 19:08:05"
+  }
+}

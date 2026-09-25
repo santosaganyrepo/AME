@@ -1,0 +1,162 @@
+{
+  "64eee39e6ea90a353b9b089301ca76cd9af492e321bd72f81b96cd5987502870": {
+    "success": true,
+    "student_id": "001",
+    "student_name": "Namuli",
+    "total_score": 4.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student's answer for part (a) mentions lack of proteins but does not explicitly state \"lack of proteins"
+      },
+      "Item 2": {
+        "score": 4.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 11:19:01"
+  },
+  "312a04807e2f793d154f2080fb4c0f421d9768fb747897c1f9439d95c699ebd3": {
+    "success": true,
+    "student_id": "002",
+    "student_name": "Alice",
+    "total_score": 60.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student"
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 6": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 11:19:14"
+  },
+  "d8c63fe06a5ba11160035fbff3167d221278f9912d126f50f7d98a98739a99c8": {
+    "success": true,
+    "student_id": "003",
+    "student_name": "Makula",
+    "total_score": 0.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "0/20. No marks can be awarded as the question paper and marking scheme were not provided, making it impossible to verify if any points align with an explicit rubric."
+      },
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 11:19:29"
+  },
+  "66a4acbf84500c51d7406e6b57055020838de40ffef1f071878b97fbf785ff02": {
+    "success": true,
+    "student_id": "004",
+    "student_name": "Nsereko",
+    "total_score": 28.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student scored 12/20. For part (a), the student correctly identified Kwashiorkor as a protein deficiency disease and the age range"
+      },
+      "Item 2": {
+        "score": 16.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 11:19:49"
+  },
+  "410727880f8e93b48f37f4308dd46c42688249f20468d45433d7dc29f57f819c": {
+    "success": true,
+    "student_id": "005",
+    "student_name": "akia",
+    "total_score": 0.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "This item cannot be marked as the question paper and marking scheme were not provided. No marks can be awarded without an explicit rubric."
+      },
+      "Item 4": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "This item cannot be marked as the question paper and marking scheme"
+      }
+    },
+    "overall_feedback": "AI marking complete.",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-08-02 11:20:33"
+  }
+}

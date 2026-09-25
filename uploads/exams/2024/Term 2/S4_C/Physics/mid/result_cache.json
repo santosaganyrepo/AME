@@ -1,0 +1,179 @@
+{
+  "93b26d0a6c5c20b4bc6f3b41db66455962c1d51d32e477892f5973349493c9d3": {
+    "success": true,
+    "student_id": "231",
+    "student_name": "Mugerwa",
+    "total_score": 44.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 14.0,
+        "max_score": 20,
+        "feedback": "The student correctly explained nuclear fusion in stars, how star color indicates temperature, and the purpose of the International Space Station. However, for part (d), the student misinterpreted \"A new galaxy\" as a nuclear reactor/power plant, which was not relevant to the question's context of space exploration, though the point about regular lighting for security was correct. A complete answer for part (d) required discussing the role of a facility named \"The Galaxy\" in space exploration and the importance of security lighting, not nuclear power generation."
+      },
+      "Item 3": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": "The student chose a mirror for part (a) and provided a basic diagram of reflection, but incorrectly stated that \"light is internally reflected\" for a mirror and included irrelevant information about laser"
+      },
+      "Item 5": {
+        "score": 6.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 12.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "Item 2 (Nuclear energy, space exploration, star properties): The student correctly explained nuclear fusion in stars, how star color indicates temperature, and the purpose of the International Space Station. However, for part (d), the student misinterpreted \"A new galaxy\" as a nuclear reactor/power plant, which was not relevant to the question's context of space exploration, though the point about regular lighting for security was correct. A complete answer for part (d) required discussing the role of a facility named \"The Galaxy\" in space exploration and the importance of security lighting, not nuclear power generation.\n\nItem 3 (Mirror vs. prism, laser light vs. regular light bulb): The student chose a mirror for part (a) and provided a basic diagram of reflection, but incorrectly stated that \"light is internally reflected\" for a mirror and included irrelevant information about laser",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-20 14:49:59"
+  },
+  "8f56364fbcfb26b5894139996424013a999bb98a2bde923ae757b42ebf2167d6": {
+    "success": true,
+    "student_id": "231",
+    "student_name": "Muger1a",
+    "total_score": 41.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 2.0,
+        "max_score": 20,
+        "feedback": "The student correctly identified that the color of a star indicates its temperature, linking hotter stars to blue/white and cooler stars to red/orange. However, the student failed to explain how pressure and composition specifically contribute to understanding the life cycle of stars, and completely misunderstood parts (b) and (c), providing irrelevant information about stellar evolution for (b) and satellite functions for (c). A complete answer required explaining the role of temperature, pressure, and composition in stellar evolution stages, discussing concepts like apparent vs. absolute brightness for stellar distances, and addressing the scientific purpose of studying stellar life cycles or the role of the interstellar medium."
+      },
+      "Item 2": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student provided an excellent and comprehensive explanation of how nuclear energy is produced in a controlled"
+      },
+      "Item 3": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 5": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      },
+      "Item 7": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": ""
+      }
+    },
+    "overall_feedback": "Item 1 (Understanding the life cycle of stars and space exploration): The student correctly identified that the color of a star indicates its temperature, linking hotter stars to blue/white and cooler stars to red/orange. However, the student failed to explain how pressure and composition specifically contribute to understanding the life cycle of stars, and completely misunderstood parts (b) and (c), providing irrelevant information about stellar evolution for (b) and satellite functions for (c). A complete answer required explaining the role of temperature, pressure, and composition in stellar evolution stages, discussing concepts like apparent vs. absolute brightness for stellar distances, and addressing the scientific purpose of studying stellar life cycles or the role of the interstellar medium.\n\nItem 2 (Nuclear energy and its management): The student provided an excellent and comprehensive explanation of how nuclear energy is produced in a controlled",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-20 14:51:13"
+  },
+  "5a39793aa89d3b2a4a1b3ff09292334922dedf9fe0c72080f5e51e68994fb0be": {
+    "success": true,
+    "student_id": "567",
+    "student_name": "Lukwago Renon",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 5": {
+        "score": 3.0,
+        "max_score": 20,
+        "feedback": "The student attempted to apply the principle of conservation of momentum but made a significant error by using an incorrect initial velocity for the southward car and failing to account for the vector nature of velocity (direction). Consequently,"
+      },
+      "Item 7": {
+        "score": 7.0,
+        "max_score": 20,
+        "feedback": "The student correctly calculated the energy consumed by each appliance and the total daily power usage in kWh, demonstrating good numerical skills and understanding of energy calculation. However, the choice of a DC generator was unsuitable for the given business needs, and the explanation of its operation was incorrect and lacked a diagram. The description of domestic wiring colour codes was largely incorrect, confusing yellow and green/blue wires for earth and neutral respectively, and only partially identifying the old standard for the live wire. A complete answer required a suitable generator choice with a correct explanation and labelled diagram, accurate identification of modern domestic wiring colour codes (Brown for Live, Blue for Neutral, Green/Yellow for Earth), and suggestions for energy saving."
+      }
+    },
+    "overall_feedback": "Item 7 (Daily power usage and electrical safety): The student correctly calculated the energy consumed by each appliance and the total daily power usage in kWh, demonstrating good numerical skills and understanding of energy calculation. However, the choice of a DC generator was unsuitable for the given business needs, and the explanation of its operation was incorrect and lacked a diagram. The description of domestic wiring colour codes was largely incorrect, confusing yellow and green/blue wires for earth and neutral respectively, and only partially identifying the old standard for the live wire. A complete answer required a suitable generator choice with a correct explanation and labelled diagram, accurate identification of modern domestic wiring colour codes (Brown for Live, Blue for Neutral, Green/Yellow for Earth), and suggestions for energy saving.\n\nItem 5 (Car collision and safety): The student attempted to apply the principle of conservation of momentum but made a significant error by using an incorrect initial velocity for the southward car and failing to account for the vector nature of velocity (direction). Consequently,",
+    "strengths": [],
+    "areas_for_improvement": [],
+    "cached_at": "2026-05-20 14:52:02"
+  },
+  "5b7edbae297f2d7d4647fb6e78c043e7e83c45462443e636da0cf77075d80bf0": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "Waswa Martin",
+    "total_score": 10.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 2": {
+        "score": 0.0,
+        "max_score": 20,
+        "feedback": "The student provided content related to nuclear reactors, uranium, control rods, moderators, coolants, and radioactive waste, which is the subject matter of"
+      },
+      "Item 3": {
+        "score": 10.0,
+        "max_score": 20,
+        "feedback": "The student correctly identified in part (a) that space exploration helps gain information about the universe, understand stellar structure, energy production, and the life span of stars, earning 10 marks for these relevant points. However, part (b) which asked about what is outside the visible spectrum was incorrectly answered with details about star color and brightness. Part (c) which asked why current infrared telescopes are cooled was incorrectly answered with a description of the life cycle of a star. Part (d) which asked why advanced telescopes are installed rather than regular lighting for nighttime security was incorrectly answered with benefits of satellites. A complete answer required explaining the role of space exploration, identifying electromagnetic radiation outside the visible spectrum, detailing the need for cooling infrared telescopes, and differentiating the purpose of advanced telescopes from security lighting."
+      }
+    },
+    "overall_feedback": "Item 2 (Science Literacy Campaign): The student provided content related to nuclear reactors, uranium, control rods, moderators, coolants, and radioactive waste, which is the subject matter of Item 1 (Nuclear Power and its Impact), not Item 2. Item 2 required explanations on controlling variables in experiments, variation of star brightness with distance, the purpose of the international life cycle of a star, and science club outreach activities. No marks were awarded as the content was entirely irrelevant to the question asked for Item 2. A complete answer required addressing these specific physics and science education concepts.\n\nItem 3 (Space Exploration and Telescopes): The student correctly identified in part (a) that space exploration helps gain information about the universe, understand stellar structure, energy production, and the life span of stars, earning 10 marks for these relevant points. However, part (b) which asked about what is outside the visible spectrum was incorrectly answered with details about star color and brightness. Part (c) which asked why current infrared telescopes are cooled was incorrectly answered with a description of the life cycle of a star. Part (d) which asked why advanced telescopes are installed rather than regular lighting for nighttime security was incorrectly answered with benefits of satellites. A complete answer required explaining the role of space exploration, identifying electromagnetic radiation outside the visible spectrum, detailing the need for cooling infrared telescopes, and differentiating the purpose of advanced telescopes from security lighting.",
+    "strengths": [
+      "The student demonstrated some foundational knowledge of stellar physics, specifically regarding the internal structure, energy production, and life cycle of stars, as evidenced in their response to Item 3(a). They also showed an understanding that space exploration contributes to gaining knowledge about the universe."
+    ],
+    "areas_for_improvement": [
+      "The student must urgently revise exam instructions and question comprehension, as they failed to attempt the required number of questions (only 2 out of 5) and missed compulsory items (Item 1 and all of Section B). A significant area for improvement is understanding the specific requirements of each question, as evidenced by providing content for Item 1 when attempting Item 2, and giving completely irrelevant answers for parts (b), (c), and (d) of Item 3. The student needs to broaden their physics knowledge beyond stellar physics to cover topics such as nuclear power, experimental design, the electromagnetic spectrum, and practical applications of physics."
+    ],
+    "cached_at": "2026-05-20 14:53:04"
+  },
+  "4c5506b0a57f1cf23953f6d98ef129336d8b7c83a454e9f1a8bfab912a0509f7": {
+    "success": true,
+    "student_id": "323",
+    "student_name": "Geu Alier",
+    "total_score": 13.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 13.0,
+        "max_score": 20,
+        "feedback": "The student correctly identified U-235 as fuel, the role of control rods (cadmium) in absorbing neutrons, the function of the moderator (heavy water or graphite) in slowing neutrons, the purpose of the coolant in removing heat, and the importance of the containment structure. For the risks, the student accurately listed radioactive waste, environmental contamination, health risks (cancer, birth defects), security risks (terrorism), disposal challenges, high cost of storage, and the long half-life of radioactive materials. However, the student failed to explain the complete process of electricity generation, specifically omitting the conversion of heat to steam, the driving of turbines, and the generation of electricity. Furthermore, the student completely omitted part (b) of the question, which required a discussion of the benefits of nuclear power. A complete answer required a full explanation of nuclear fission, chain reaction, and the entire energy conversion process to electricity for part (a), a discussion of benefits such as large energy output and low greenhouse gas emissions for part (b), and a more detailed explanation of how radioactive waste causes the listed risks for part (c)."
+      }
+    },
+    "overall_feedback": "Item 1 (Nuclear power generation and risks): The student correctly identified U-235 as fuel, the role of control rods (cadmium) in absorbing neutrons, the function of the moderator (heavy water or graphite) in slowing neutrons, the purpose of the coolant in removing heat, and the importance of the containment structure. For the risks, the student accurately listed radioactive waste, environmental contamination, health risks (cancer, birth defects), security risks (terrorism), disposal challenges, high cost of storage, and the long half-life of radioactive materials. However, the student failed to explain the complete process of electricity generation, specifically omitting the conversion of heat to steam, the driving of turbines, and the generation of electricity. Furthermore, the student completely omitted part (b) of the question, which required a discussion of the benefits of nuclear power. A complete answer required a full explanation of nuclear fission, chain reaction, and the entire energy conversion process to electricity for part (a), a discussion of benefits such as large energy output and low greenhouse gas emissions for part (b), and a more detailed explanation of how radioactive waste causes the listed risks for part (c).",
+    "strengths": [
+      "The student demonstrated good foundational knowledge of the components and safety mechanisms of a nuclear reactor. They also provided a comprehensive and accurate list of the long-term risks associated with radioactive waste, indicating a solid understanding of the environmental and health implications. The use of specific scientific terms like U-235, cadmium, heavy water, and graphite was appropriate."
+    ],
+    "areas_for_improvement": [
+      "The student must rigorously adhere to exam instructions, particularly regarding the number of questions to attempt from each section, as failing to attempt 4 out of 5 required questions (including 2 compulsory ones) severely impacted the overall score. The student needs to improve content coverage by ensuring all parts of a question are addressed, as part (b) of Item 1 was entirely omitted and part (a) was incomplete. Significant improvement in time management is required, as only attempting one question in a 2.5-hour examination period is unacceptable."
+    ],
+    "cached_at": "2026-05-20 14:54:31"
+  },
+  "d86899ece2182d5d7e929f20faa94eeb4fb3a7267797330df8c5358e9f7c1923": {
+    "success": true,
+    "student_id": "232",
+    "student_name": "Geu Alier",
+    "total_score": 20.0,
+    "raw_score": 0,
+    "max_score": 100,
+    "status": "Marked",
+    "questions": {
+      "Item 1": {
+        "score": 20.0,
+        "max_score": 20,
+        "feedback": "The student correctly and comprehensively explained the science behind nuclear energy production in a reactor, detailing the roles of uranium fuel, control rods, moderator, coolant, and the process of electricity generation, along with the safety measure of a concrete shield. They accurately listed multiple benefits of nuclear power such as high energy output, reduced pollution, reliability, and less dependence on fossil fuels. Furthermore, the student correctly identified the long-term risks of radioactive waste with long half-lives, the impact of radioactivity on human health (cancer, mutations), and the risk of explosion. No significant errors or omissions were found in the content provided for this specific question. A complete answer required an explanation of the science behind nuclear energy production in a controlled way, the benefits of nuclear power, the impact of radioactivity on human health, and the long-term risks posed by radioactive waste, all of which were thoroughly addressed."
+      }
+    },
+    "overall_feedback": "Item 1 (Nuclear power, benefits, risks, controlled way): The student correctly and comprehensively explained the science behind nuclear energy production in a reactor, detailing the roles of uranium fuel, control rods, moderator, coolant, and the process of electricity generation, along with the safety measure of a concrete shield. They accurately listed multiple benefits of nuclear power such as high energy output, reduced pollution, reliability, and less dependence on fossil fuels. Furthermore, the student correctly identified the long-term risks of radioactive waste with long half-lives, the impact of radioactivity on human health (cancer, mutations), and the risk of explosion. No significant errors or omissions were found in the content provided for this specific question. A complete answer required an explanation of the science behind nuclear energy production in a controlled way, the benefits of nuclear power, the impact of radioactivity on human health, and the long-term risks posed by radioactive waste, all of which were thoroughly addressed.",
+    "strengths": [
+      "The student demonstrated a strong conceptual understanding of nuclear physics, particularly regarding the operation of a nuclear reactor and the associated benefits and risks. Their ability to articulate complex scientific processes clearly and concisely, as seen in the explanation of nuclear energy production, is commendable. The answer for Item 1 was well-structured and directly addressed all parts of the question."
+    ],
+    "areas_for_improvement": [
+      "The student must urgently revise exam strategy and time management. They only attempted one out of the five required questions, failing to answer two other compulsory items in Section A and both required items from Section B. This indicates a severe lack of adherence to exam instructions and will result in a very low overall score regardless of the quality of the single attempted question. The student needs to practice attempting a full paper within the allocated time to ensure all compulsory questions and the required number of optional questions are addressed."
+    ],
+    "cached_at": "2026-05-20 14:55:08"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "exam_info": {
+    "year": "2022",
+    "term": "Term 1",
+    "class": "S3",
+    "stream": "B",
+    "subject": "History and Political Education",
+    "exam_type": "mid"
+  },
+  "students": [
+    {
+      "id": "546",
+      "student_id": "546",
+      "student_name": "Prosper Twesigye",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 58.3,
+      "sync_time": "2026-05-17 14:48",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "Awarded 18/20. Correct: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Match the depth demanded by the command word. Lost marks: Clarity and coherence."
+        },
+        "Item 2": {
+          "score": 17.0,
+          "max_score": 20,
+          "feedback": "Awarded 17/20. Correct: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Match the depth demanded by the command word. Lost marks: Clarity and coherence."
+        },
+        "Item 3": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": "Awarded 0/20. Correct: . Lost marks: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Clarity and coherence. Match the depth demanded by the command word."
+        }
+      },
+      "overall_feedback": "Item 1 (roles of NGOs and CSOs): Awarded 18/20. Correct: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Match the depth demanded by the command word. Lost marks: Clarity and coherence.\nItem 2 (causes of land fragmentation): Awarded 17/20. Correct: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Match the depth demanded by the command word. Lost marks: Clarity and coherence.\nItem 3 (influential personalities): Awarded 0/20. Correct: . Lost marks: Accurate definitions, principles, concepts. Accurate explanation of ideas. Supporting arguments by evidence/assumptions. Clear structure of answers. Appropriate language for the subject. Clarity and coherence. Match the depth demanded by the command word.",
+      "strengths": [
+        "Student demonstrated strong Accurate explanation of ideas in both Item 1 and Item 2, providing a good range of relevant points.",
+        "Student showed good ability to Match the depth demanded by the command word in both Item 1 and Item 2, addressing the core of the questions effectively"
+      ],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "212",
+      "student_id": "212",
+      "student_name": "Santos madol",
+      "total_pages": 3,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 87.5,
+      "sync_time": "2026-05-17 14:50",
+      "questions": {
+        "Item 1": {
+          "score": 18.0,
+          "max_score": 20,
+          "feedback": "Awarded 18/20. Correct: definition, concepts, principles, accurate explanation of ideas, recognition of key terms in questions, structure of answers, appropriate language, clarity, logical flow. Lost marks: comparison of alternatives, explaining insightful approaches, independent thought, grammar/spelling."
+        },
+        "Item 2": {
+          "score": 17.0,
+          "max_score": 20,
+          "feedback": "Awarded 17/20. Correct: definition, concepts, principles, recognition of key terms in questions, structure of answers, appropriate language, logical flow, explaining cause and effect. Lost marks: accurate explanation of ideas, clarity, grammar/spelling, independent thought."
+        }
+      },
+      "overall_feedback": "Item 1 (roles of NGOs and CSOs): Awarded 18/20. Correct: definition, concepts, principles, accurate explanation of ideas, recognition of key terms in questions, structure of answers, appropriate language, clarity, logical flow. Lost marks: comparison of alternatives, explaining insightful approaches, independent thought, grammar/spelling.\nItem 2 (Land fragmentation): Awarded 17/20. Correct: definition, concepts, principles, recognition of key terms in questions, structure of answers, appropriate language, logical flow, explaining cause and effect. Lost marks: accurate explanation of ideas, clarity, grammar/spelling, independent thought.",
+      "strengths": [
+        "Comprehensive knowledge of NGO/CSO roles, demonstrating accurate explanation of ideas and understanding of concepts.",
+        "Clear structure and logical flow in answers, making the content easy to follow.",
+        "Ability to define key terms accurately, as shown in the definition of land fragmentation."
+      ],
+      "areas_for_improvement": [
+        "Develop deeper analytical reasoning in discussions, particularly for Item 1 (roles of NGOs and CSOs), to include more independent thought and insightful approaches.",
+        "Improve clarity and precision in explaining complex concepts and causes, especially for Item 2 (Land fragmentation), to ensure all ideas are accurately conveyed.",
+        "Enhance grammatical accuracy and sentence structure across all items to improve overall communication and presentation."
+      ],
+      "raw_score": 0,
+      "max_score": 100
+    },
+    {
+      "id": "232",
+      "student_id": "232",
+      "student_name": "Waswa Martin",
+      "total_pages": 4,
+      "status": "Marked",
+      "marked": true,
+      "total_score": 37.0,
+      "sync_time": "2026-05-17 14:58",
+      "questions": {
+        "Item 1": {
+          "score": 10.0,
+          "max_score": 20,
+          "feedback": "Awarded 10/20. Correct: Accurate explanation of ideas, Accurate use of facts, theory, Give full marks where ideas are clear, complete and scientifically / academically correct., Give partial marks where the idea is present but incomplete, vague, or slightly inaccurate., Appropriate language for the subject, Award marks for clarity of explanation, Award marks for logical flow of ideas where appropriate., Award marks for logical development of ideas, Award independent thought, when consistent with subject knowledge., Award marks for original and creative ideas, when appropriate., Define - precise meaning required, Describe - give characteristics or features, Explain - give reasons or causes, Suggest - plausible idea based on knowledge, State - give brief answer. Lost marks: Accurate definition of terms, principles, Accurate recall of facts, Recognition of key terms in questions, Do not award marks for incorrect statements., Credit alternative correct wording or methods., Do not penalize for minor grammatical or language change., Logical steps in working, Correct application of procedures, Correct application of rules, Correct application of principles, Correct application of facts to new contexts, Practical decision-making, Safe and correct procedures, Correct manipulation and use of tools, Construction or product quality, Accurate measurement and data collection, Accurate recording of results, Accurate interpretation of results, Accurate analysis of results,"
+        },
+        "Item 2": {
+          "score": 15.0,
+          "max_score": 20,
+          "feedback": ""
+        },
+        "Item 3": {
+          "score": 0.0,
+          "max_score": 20,
+          "feedback": ""
+        }
+      },
+      "overall_feedback": "Item 1 (roles of NGOs and CSOs): Awarded 10/20. Correct: Accurate explanation of ideas, Accurate use of facts, theory, Give full marks where ideas are clear, complete and scientifically / academically correct., Give partial marks where the idea is present but incomplete, vague, or slightly inaccurate., Appropriate language for the subject, Award marks for clarity of explanation, Award marks for logical flow of ideas where appropriate., Award marks for logical development of ideas, Award independent thought, when consistent with subject knowledge., Award marks for original and creative ideas, when appropriate., Define - precise meaning required, Describe - give characteristics or features, Explain - give reasons or causes, Suggest - plausible idea based on knowledge, State - give brief answer. Lost marks: Accurate definition of terms, principles, Accurate recall of facts, Recognition of key terms in questions, Do not award marks for incorrect statements., Credit alternative correct wording or methods., Do not penalize for minor grammatical or language change., Logical steps in working, Correct application of procedures, Correct application of rules, Correct application of principles, Correct application of facts to new contexts, Practical decision-making, Safe and correct procedures, Correct manipulation and use of tools, Construction or product quality, Accurate measurement and data collection, Accurate recording of results, Accurate interpretation of results, Accurate analysis of results,",
+      "strengths": [],
+      "areas_for_improvement": [],
+      "raw_score": 0,
+      "max_score": 100
+    }
+  ]
+}
