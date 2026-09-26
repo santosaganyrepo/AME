@@ -42,9 +42,14 @@ def list_answer_pages(student_folder: Path) -> List[Path]:
     return sorted_natural(pages or files)
 
 
+DOC_EXTS = IMAGE_EXTS | {".pdf"}
+
+
 def list_session_docs(exam_path: Path, prefix: str) -> List[Path]:
-    """question_paper_1, _2, … _10 in number order (not alphabetical)."""
-    return sorted_natural(exam_path.glob(f"{prefix}_*"))
+    """question_paper_1, _2, … _10 in number order (not alphabetical).
+    Only images and PDFs — rubric_text.txt, temp files etc. are not documents."""
+    return sorted_natural(p for p in exam_path.glob(f"{prefix}_*")
+                          if p.is_file() and p.suffix.lower() in DOC_EXTS)
 
 
 # ─── PDF answer scripts (D5.1) ────────────────────────────────────────────────

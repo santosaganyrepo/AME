@@ -1,78 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduMark AI — Sign in</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in · ExamManager</title>
   <script>
     (function () {
-      try {
-        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
+      var t = null;
+      try { t = localStorage.getItem("em_theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", t);
     })();
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
   <style>
-    :root, html[data-theme="dark"] {
-      --bg: #0f172a; --bg-card: rgba(255,255,255,0.045); --bg-input: rgba(255,255,255,0.04);
-      --border: rgba(255,255,255,0.09); --border-focus: rgba(255,255,255,0.55);
-      --accent: #818cf8; --danger: #f87171; --danger-soft: rgba(248,113,113,0.15);
-      --text-1: #f2f2f3; --text-2: #b2b2b8; --text-3: #7a7a80;
-      --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
-    }
-    html[data-theme="light"] {
-      --bg: #ffffff; --bg-card: #ffffff; --bg-input: #ffffff;
-      --border: rgba(0,0,0,0.10); --border-focus: rgba(0,0,0,0.55);
-      --accent: #4f46e5; --danger: #dc2626; --danger-soft: rgba(220,38,38,0.10);
-      --text-1: #0a0a0a; --text-2: #45454a; --text-3: #8a8a90;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-body); background: var(--bg); color: var(--text-1);
-           min-height: 100vh; display: flex; align-items: center; justify-content: center;
-           padding: 24px 16px; font-size: 14px; }
-    .card { width: 100%; max-width: 380px; background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 30px 26px; }
-    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
-    .brand-ico { font-size: 26px; }
-    .brand-name { font-family: var(--font-serif); font-size: 24px; }
-    .brand-sub { font-size: 12px; color: var(--text-3); }
-    label { display: block; font-size: 12px; font-weight: 600; color: var(--text-2); margin: 14px 0 6px; }
-    input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
-            background: var(--bg-input); color: var(--text-1); font: inherit; }
-    input:focus { outline: none; border-color: var(--border-focus); }
-    button { width: 100%; margin-top: 20px; padding: 11px; border: none; border-radius: 8px;
-             background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
-    .err { margin-top: 14px; padding: 10px 12px; border-radius: 8px; font-size: 12.5px;
-           background: var(--danger-soft); color: var(--danger); }
-    .hint { margin-top: 16px; font-size: 11.5px; color: var(--text-3); line-height: 1.6; }
-    code { font-size: 11px; }
+    body { display: grid; place-items: center; min-height: 100vh; padding: var(--s4); }
+    .signin { width: 100%; max-width: 400px; }
+    .signin .brand { height: auto; padding: 0; border: 0; margin-bottom: var(--s6); justify-content: center; }
+    .signin .brand-mark { width: 36px; height: 36px; }
+    .signin .brand-name { font-size: 20px; }
+    .signin .panel-body { padding: var(--s6); }
+    .signin h1 { font-size: 20px; margin-bottom: 4px; }
+    .signin form > * + * { margin-top: var(--s4); }
+    .signin .btn { margin-top: var(--s5); }
+    .foot { text-align: center; margin-top: var(--s5); font-size: 13.5px; color: var(--ink-3); }
   </style>
 </head>
 <body>
-  <form class="card" method="post" action="{{ url_for('login') }}">
+  <main class="signin">
     <div class="brand">
-      <div class="brand-ico">🎓</div>
-      <div>
-        <div class="brand-name">EduMark AI</div>
-        <div class="brand-sub">Teacher sign in</div>
-      </div>
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="m9 13 2.2 2.2L15.5 11"/></svg>
+      </span>
+      <span class="brand-name">ExamManager</span>
     </div>
-    <input type="hidden" name="next" value="{{ next_url }}" />
-    <label for="username">Username</label>
-    <input id="username" name="username" autocomplete="username" value="{{ username }}" autofocus required />
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password" autocomplete="current-password" required />
-    <button type="submit"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Sign in</button>
-    {% if error %}<div class="err">{{ error }}</div>{% endif %}
-    {% if no_users %}
-    <div class="hint">No teacher accounts exist yet. On the computer running EduMark, run
-      <code>python manage_users.py add &lt;username&gt;</code> to create one.</div>
-    {% endif %}
-  </form>
+    <section class="panel">
+      <div class="panel-body">
+        <h1>Sign in</h1>
+        <p class="muted mb-6">Use the teacher account your school set up for you.</p>
+        <form method="post" action="{{ url_for('login') }}">
+          <input type="hidden" name="next" value="{{ next_url }}" />
+          <div class="field">
+            <label class="label" for="username">Username</label>
+            <input class="input" id="username" name="username" autocomplete="username" value="{{ username }}" {% if not username %}autofocus{% endif %} required />
+          </div>
+          <div class="field">
+            <label class="label" for="password">Password</label>
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" {% if username %}autofocus{% endif %} required />
+          </div>
+          {% if error %}
+          <div class="callout callout-bad" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>{{ error }}</span></div>
+          {% endif %}
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
+        </form>
+        {% if no_users %}
+        <div class="callout callout-info mt-6"><i class="fa-solid fa-circle-info"></i>
+          <span>No teacher accounts exist yet. On the computer running ExamManager, run <code>python manage_users.py add &lt;username&gt;</code> to create one.</span></div>
+        {% endif %}
+      </div>
+    </section>
+    <p class="foot">Forgot your password? Ask the person who manages ExamManager at your school.</p>
+  </main>
 </body>
 </html>

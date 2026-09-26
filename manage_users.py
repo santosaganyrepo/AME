@@ -1,5 +1,5 @@
 """
-Create and manage EduMark teacher accounts (standalone — does not import
+Create and manage ExamManager teacher accounts (standalone — does not import
 app.py and does not start the marking queue).
 
     python manage_users.py add <username> [--name "Display Name"]
@@ -32,7 +32,7 @@ def _ask_password() -> str:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(description="Manage EduMark teacher accounts (users.json).")
+    p = argparse.ArgumentParser(description="Manage ExamManager teacher accounts (users.json).")
     sub = p.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("add", help="create an account (or reset its password)")
     a.add_argument("username")

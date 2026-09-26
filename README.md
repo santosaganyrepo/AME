@@ -1,4 +1,4 @@
-# EduMark AI
+# ExamManager
 
 AI-assisted exam marking for schools. Teachers photograph or upload answer
 scripts; Gemini marks each script against the question paper and marking
@@ -23,7 +23,9 @@ Copy `.env.example` to `.env`, then:
 - set `SECRET_KEY` to a long random value:
   `python -c "import secrets; print(secrets.token_hex(32))"`
 - paste your Gemini keys into `GEMINI_API_KEY_1` … `GEMINI_API_KEY_5`.
-  One marking worker runs per key. Blank slots are ignored.
+  One marking worker runs per key. Blank slots are ignored. Create each key
+  in a **different Google Cloud project**: quota is counted per project, so
+  several keys from one project share one limit and add no speed.
 
 `.env` holds secrets and is git-ignored. Never commit it.
 
@@ -47,7 +49,7 @@ This starts one process (waitress, 8 threads). The console prints the
 addresses to use, for example:
 
 ```
-🌐 EduMark AI running on http://localhost:5000
+🌐 ExamManager running on http://localhost:5000
    On other devices on this network: http://192.168.1.20:5000
 ```
 
@@ -99,6 +101,20 @@ spread (SD) must not get worse.
 | Unfinished marking jobs | `pending_jobs.json` |
 | Teacher accounts | `users.json` |
 
-Settings you can change in `.env`: `GEMINI_MODEL` (change it only after
-running the benchmark), `GEMINI_MAX_OUTPUT_TOKENS`, `PAGE_EXIF_ROTATE`,
-`PAGE_MAX_EDGE` and `SERVER_THREADS`. See `.env.example`.
+Settings you can change in `.env`: `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`
+and `GEMINI_THINKING_LEVEL` (change these only after running the benchmark),
+`GEMINI_MAX_OUTPUT_TOKENS`, `PAGE_EXIF_ROTATE`, `PAGE_MAX_EDGE`,
+`MARKING_WORKERS_PER_KEY` and `SERVER_THREADS`. See `.env.example`.
+
+## Speed and reliability
+
+- If the model is overloaded, jobs retry with growing, randomised waits
+  instead of all hammering it at once.
+- If a key hits its quota, the job moves to another key. That key rests for
+  as long as Google asks, or an hour for a daily limit. If every key is out
+  for more than 15 minutes, the job fails straight away with *"Daily AI
+  limit reached"*. Use **Retry failed** later.
+- An invalid or expired key is set aside and logged. It no longer fails
+  students.
+- Paid-tier keys: set `MARKING_WORKERS_PER_KEY=2` (or more) to mark several
+  students per key at once.

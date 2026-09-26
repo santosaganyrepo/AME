@@ -37,6 +37,21 @@ def _stage_marks(student: dict) -> list:
     return out
 
 
+def _num(v, default=0.0) -> float:
+    """A stored score as a float — None / blank / junk count as `default`."""
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return default
+
+
+def _natural(v) -> list:
+    """'S2' < 'S10' and '2' < '10' — IDs sort the way a teacher reads them."""
+    import re
+    return [(0, int(t), "") if t.isdigit() else (1, 0, t.lower())
+            for t in re.split(r"(\d+)", str(v)) if t]
+
+
 def _fmt_pct(v):
     return None if v is None else round(float(v), 1)
 
@@ -96,15 +111,15 @@ class ExcelGenerator:
                 # (session stats, student report, this spreadsheet) — a
                 # manual override already lives in this field, so exporting
                 # it here automatically reflects any teacher correction.
-                'total_score': float(student.get('total_score', 0.0)),
+                'total_score': _num(student.get('total_score')),
                 'feedback': student.get('overall_feedback', 'No feedback available'),
                 'overridden': overridden,
-                'ai_score': float(student.get('ai_score')) if overridden and student.get('ai_score') is not None else None,
+                'ai_score': _num(student.get('ai_score'), None) if overridden else None,
                 'marked': bool(student.get('marked')),
                 'stages': _stage_marks(student),
             })
 
-        students_list.sort(key=lambda x: str(x['id']))
+        students_list.sort(key=lambda x: _natural(x['id']))
         return students_list
     
     # Column definitions: key -> (header label, default width). 'pages' is

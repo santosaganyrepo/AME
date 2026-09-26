@@ -1,6 +1,22 @@
 """
-AI Marking Engine — v11
+AI Marking Engine — v12
 ========================
+Changes from v11
+────────────────
+* Every document in the request is labelled ("QUESTION PAPER — part 1 of 2",
+  "MARKING SCHEME / RUBRIC — …", "STUDENT ANSWER SCRIPT — …"); before, the
+  model received one unlabelled run of images and had to guess where each
+  document began. PROMPT_VERSION is now "v12" — run tools/benchmark.py.
+* One Gemini client per API key is reused across jobs (connection reuse),
+  and the question paper / rubric bytes are read once per session instead
+  of once per student. Content sent to the model is unchanged.
+* A 503 "model overloaded" reply is retried 6 s / 15 s / 30 s apart (with
+  jitter) instead of 2 s / 5 s / 10 s, and — only if GEMINI_FALLBACK_MODEL
+  is set — handed to a fallback model. The model that actually marked is
+  stored with every result.
+* Optional GEMINI_THINKING_LEVEL in .env (blank = model default).
+* A stray "Q1: 4" entry in the SCORES line is read as 4, not 1.
+
 Changes from v10
 ────────────────
 0. RESULT CACHING REMOVED ENTIRELY: v10 kept a per-student fingerprint
@@ -123,7 +139,7 @@ except Exception:
     pass
 
 from marking_log import get_marking_logger
-from page_prep import list_answer_pages, list_session_docs, sorted_natural, prepare_page_bytes
+from page_prep import list_answer_pages, list_session_docs, sorted_natural, prepare_page_bytes, prep_settings
 from storage import write_json_atomic
 
 log = get_marking_logger()
@@ -134,10 +150,25 @@ FAILURE_SENTINEL = "MARKING_FAILED_NO_CONTENT"
 # Set GEMINI_MODEL in .env to change it — any model switch must go through
 # tools/benchmark.py first (D3.4).
 PRIMARY_MODEL = os.getenv("GEMINI_MODEL", "").strip() or "gemini-3.6-flash"
+# Optional: used ONLY when the primary model is overloaded (503 / "high
+# demand") after its own retries. Blank = never switch models. A different
+# model can mark differently, so benchmark it before setting this; every
+# result records which model actually marked it.
+FALLBACK_MODEL = os.getenv("GEMINI_FALLBACK_MODEL", "").strip()
+# Optional thinking level ("low" / "medium" / "high"). Blank = model default.
+# Less thinking is faster and cheaper — benchmark before changing.
+THINKING_LEVEL = os.getenv("GEMINI_THINKING_LEVEL", "").strip().lower()
+if THINKING_LEVEL and THINKING_LEVEL not in ("minimal", "low", "medium", "high"):
+    log.warning(f"GEMINI_THINKING_LEVEL={THINKING_LEVEL!r} is not minimal/low/medium/high — ignored")
+    THINKING_LEVEL = ""
 
 # Bumped whenever _build_report_prompt's wording changes, so every stored AI
 # run can be traced back to the exact prompt that produced it (D1.2).
-PROMPT_VERSION = "v11"
+# v12: every document in the request is preceded by a text label
+# ("QUESTION PAPER — page 1 of 2", "MARKING SCHEME …", "STUDENT ANSWER
+# SCRIPT …"), so the model no longer has to guess where the question paper
+# ends and the marking scheme / answers begin.
+PROMPT_VERSION = "v12"
 
 # ── Output budget (6.7) ────────────────────────────────────────────────────────
 # Thinking tokens count against max_output_tokens, so 8192 could run out
@@ -157,8 +188,18 @@ RETRY_OUTPUT_TOKENS = _env_int("GEMINI_RETRY_OUTPUT_TOKENS", 65536)
 # Quota/429 errors are NOT retried here — they are raised straight away so
 # the queue can cool that key down and move the job to a free key.
 NETWORK_RETRY_DELAYS = (2.0, 5.0, 10.0)
+# A 503 "model overloaded" clears on the order of tens of seconds, not two:
+# hammering it every 2 s wastes calls (which can count against quota) and,
+# with several workers retrying in lockstep, makes the overload worse.
+OVERLOAD_RETRY_DELAYS = (6.0, 15.0, 30.0)
 _sleep = time.sleep   # indirection so tests can skip the waits
 _QUOTA = ("429", "resource_exhausted", "resource exhausted", "quota")
+_OVERLOADED = ("503", "unavailable", "overloaded", "high demand")
+
+
+def _is_overloaded(msg: str) -> bool:
+    m = msg.lower()
+    return any(k in m for k in _OVERLOADED) and not any(k in m for k in _QUOTA)
 
 # ── Transient error detection (mirrors queue_manager) ──────────────────────────
 _TRANSIENT = [
@@ -193,6 +234,32 @@ _file_upload_locks: Dict[str, threading.Lock] = {}
 _MAX_FILE_HANDLE_CACHE = 500
 _FILE_HANDLE_SAFETY_SECS = 3600   # re-upload if a handle expires within the hour
 
+# ── One Gemini client per API key, shared by every job on that key ────────────
+# Creating a client per job threw away the HTTP connection pool, so every
+# student paid a fresh TLS handshake. The client is thread-safe.
+_clients: Dict[str, "genai.Client"] = {}
+_clients_lock = threading.Lock()
+
+
+def _client_for(api_key: str) -> "genai.Client":
+    with _clients_lock:
+        client = _clients.get(api_key)
+        if client is None:
+            client = _clients[api_key] = genai.Client(
+                api_key=api_key, http_options={"api_version": "v1beta"})
+        return client
+
+
+# ── Prepared question-paper / rubric parts (inline path) ──────────────────────
+# Every student in a session shares the same question paper and rubric, so
+# their bytes are read (and, with D2.5 on, re-encoded) once and reused. The
+# key includes size + mtime + the D2.5 settings: a replaced file, or a
+# changed setting, is always read fresh. The full content is still sent to
+# the model on every call — this only skips re-reading the disk.
+_doc_part_cache: Dict[str, tuple] = {}   # key -> (Part, prepared byte count)
+_doc_part_cache_lock = threading.Lock()
+_MAX_DOC_PART_CACHE = 200
+
 
 def _finish_reason(response) -> Optional[str]:
     try:
@@ -219,6 +286,17 @@ def _usage(response) -> Dict[str, int]:
     return out
 
 
+def _labelled(title: str, parts: list) -> list:
+    """Puts a short text label before each document so the model always knows
+    which image is question paper, marking scheme or student answer (v12)."""
+    n = len(parts)
+    out = []
+    for i, part in enumerate(parts, start=1):
+        out.append(types.Part.from_text(text=f"[{title} — part {i} of {n}]"))
+        out.append(part)
+    return out
+
+
 def _looks_like_rejected_file(exc: Exception) -> bool:
     msg = str(exc).lower()
     return "file" in msg and any(k in msg for k in ("403", "404", "permission", "not found", "expired", "not exist"))
@@ -238,11 +316,7 @@ class AIMarker:
         if not self.api_key:
             raise ValueError("GOOGLE_API_KEY not configured — add GEMINI_API_KEY_1… to .env")
         self._key_fp = hashlib.sha256(self.api_key.encode()).hexdigest()[:12]
-
-        self.client = genai.Client(
-            api_key=self.api_key,
-            http_options={"api_version": "v1beta"},
-        )
+        self.client = _client_for(self.api_key)
 
         self._gen_cfg = dict(
             temperature=0.0,
@@ -253,6 +327,13 @@ class AIMarker:
             max_output_tokens=MAX_OUTPUT_TOKENS,
             candidate_count=1,
         )
+        if THINKING_LEVEL:
+            self._gen_cfg["thinking_config"] = types.ThinkingConfig(thinking_level=THINKING_LEVEL)
+        self._model_used = PRIMARY_MODEL
+        self._payload_bytes = 0
+        self._network_retries = 0
+        self._file_uploads = 0
+        self._file_cache_hits = 0
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Prompt builder — the school's required marking procedure + report format
@@ -459,7 +540,7 @@ Student being marked: {student_name} (ID: {student_id})
             return "image/jpeg"
         return f"image/{ext[1:]}"
 
-    def prepare_images_for_gemini(self, image_paths: List[Path]) -> List[types.Part]:
+    def prepare_images_for_gemini(self, image_paths: List[Path], shared: bool = False) -> List[types.Part]:
         """
         Loads images AND PDFs INLINE as base64 Part objects. PDFs are sent
         with mime_type "application/pdf" — Gemini reads PDF documents
@@ -477,6 +558,9 @@ Student being marked: {student_name} (ID: {student_id})
         may be sent as an upright/downscaled in-memory copy when D2.5 is
         switched on in .env (see page_prep.prepare_page_bytes); the file on
         disk is never changed.
+
+        `shared=True` (question paper / rubric) reuses the prepared bytes of
+        an unchanged file across students — see `_doc_part_cache`.
         """
         parts: List[types.Part] = []
         for img_path in sorted_natural(image_paths):
@@ -484,19 +568,35 @@ Student being marked: {student_name} (ID: {student_id})
             if ext not in _VALID_DOC_EXTS:
                 continue
             try:
-                size = img_path.stat().st_size
+                st = img_path.stat()
+                size = st.st_size
                 if size < 100:
                     log.info(f"   ⚠  Tiny file ({size}B) skipped: {img_path.name}")
                     continue
-                with open(img_path, "rb") as f:
-                    data = f.read()
-                mime = self._mime_for(img_path)
-                data, mime, note = prepare_page_bytes(img_path, data, mime)
-                self._payload_bytes += len(data)
+                cache_key = (f"{img_path.resolve()}::{size}::{st.st_mtime_ns}::{prep_settings()}"
+                             if shared else None)
+                hit = None
+                if cache_key:
+                    with _doc_part_cache_lock:
+                        hit = _doc_part_cache.get(cache_key)
+                if hit:
+                    part, n_bytes, where = hit[0], hit[1], "inline, reused"
+                else:
+                    with open(img_path, "rb") as f:
+                        data = f.read()
+                    mime = self._mime_for(img_path)
+                    data, mime, note = prepare_page_bytes(img_path, data, mime)
+                    part, n_bytes = types.Part.from_bytes(data=data, mime_type=mime), len(data)
+                    where = "inline" + (f" → {n_bytes/1024:.1f} KB, {note}" if note else "")
+                    if cache_key:
+                        with _doc_part_cache_lock:
+                            if len(_doc_part_cache) >= _MAX_DOC_PART_CACHE:
+                                _doc_part_cache.pop(next(iter(_doc_part_cache)))
+                            _doc_part_cache[cache_key] = (part, n_bytes)
+                self._payload_bytes += n_bytes
                 kind = "PDF" if ext == ".pdf" else "image"
-                parts.append(types.Part.from_bytes(data=data, mime_type=mime))
-                extra = f" → {len(data)/1024:.1f} KB, {note}" if note else ""
-                log.info(f"   ✅ {img_path.name} ({size/1024:.1f} KB) [{kind} · inline]{extra}")
+                parts.append(part)
+                log.info(f"   ✅ {img_path.name} ({size/1024:.1f} KB) [{kind} · {where}]")
             except Exception as e:
                 log.info(f"   ⚠  Could not load {img_path.name}: {e}")
         return parts
@@ -651,8 +751,8 @@ Student being marked: {student_name} (ID: {student_id})
             return answer_parts, qp_parts, rubric_parts, True
 
         answer_parts = self.prepare_images_for_gemini(answer_pages)
-        qp_parts     = self.prepare_images_for_gemini(qp_files)
-        rubric_parts = self.prepare_images_for_gemini(rubric_files)
+        qp_parts     = self.prepare_images_for_gemini(qp_files, shared=True)
+        rubric_parts = self.prepare_images_for_gemini(rubric_files, shared=True)
         return answer_parts, qp_parts, rubric_parts, False
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -661,6 +761,8 @@ Student being marked: {student_name} (ID: {student_id})
     #     queue cools that key down and moves the job to a free key.
     #   * network / temporary service errors → up to 3 retries, 2s / 5s / 10s
     #     apart plus a little random jitter so workers don't retry in lockstep.
+    #   * 503 "model overloaded" → up to 3 retries, 6s / 15s / 30s apart (+ up
+    #     to 50% jitter): the overload needs tens of seconds to clear.
     # ═══════════════════════════════════════════════════════════════════════════
 
     def _call_with_retry(self, fn, delays=NETWORK_RETRY_DELAYS):
@@ -673,7 +775,11 @@ Student being marked: {student_name} (ID: {student_id})
                 if any(k in msg for k in _QUOTA):
                     raise
                 if any(k in msg for k in _TRANSIENT) and attempt < len(delays):
-                    delay = delays[attempt] + random.uniform(0, delays[attempt] * 0.3)
+                    if _is_overloaded(msg):
+                        base = OVERLOAD_RETRY_DELAYS[min(attempt, len(OVERLOAD_RETRY_DELAYS) - 1)]
+                        delay = base + random.uniform(0, base * 0.5)
+                    else:
+                        delay = delays[attempt] + random.uniform(0, delays[attempt] * 0.3)
                     self._network_retries += 1
                     log.info(f"   ⚠  Transient error (attempt {attempt+1}/{attempts}): "
                              f"{type(e).__name__}: {str(e)[:80]}")
@@ -698,7 +804,12 @@ Student being marked: {student_name} (ID: {student_id})
         """
         all_parts = (
             [types.Part.from_text(text=prompt)]
-            + qp_parts + rubric_parts + answer_parts
+            + _labelled("QUESTION PAPER", qp_parts)
+            + _labelled("MARKING SCHEME / RUBRIC", rubric_parts)
+            + _labelled("STUDENT ANSWER SCRIPT", answer_parts)
+            + [types.Part.from_text(text=(
+                "[END OF STUDENT ANSWER SCRIPT] Now mark this script following the "
+                "MARKING PROCEDURE above and reply in the REQUIRED RESPONSE FORMAT."))]
         )
         contents = [types.Content(role="user", parts=all_parts)]
         cfg = dict(self._gen_cfg)
@@ -706,11 +817,19 @@ Student being marked: {student_name} (ID: {student_id})
             cfg["max_output_tokens"] = max_output_tokens
         config = types.GenerateContentConfig(**cfg)
 
-        def _call():
-            return self.client.models.generate_content(
-                model=PRIMARY_MODEL, contents=contents, config=config)
+        def _call(model):
+            return lambda: self.client.models.generate_content(
+                model=model, contents=contents, config=config)
 
-        response = self._call_with_retry(_call)
+        try:
+            response = self._call_with_retry(_call(PRIMARY_MODEL))
+            self._model_used = PRIMARY_MODEL
+        except Exception as e:
+            if not (FALLBACK_MODEL and FALLBACK_MODEL != PRIMARY_MODEL and _is_overloaded(str(e))):
+                raise
+            log.info(f"   ↪  {PRIMARY_MODEL} is overloaded — using fallback model {FALLBACK_MODEL}")
+            response = self._call_with_retry(_call(FALLBACK_MODEL))
+            self._model_used = FALLBACK_MODEL
         return {
             "text":          (response.text or "").strip(),
             "finish_reason": _finish_reason(response),
@@ -738,9 +857,12 @@ Student being marked: {student_name} (ID: {student_id})
         for entry in entries:
             num_match = re.fullmatch(r"-?\d+(?:\.\d+)?", entry)
             if not num_match:
-                # Defensive fallback: pull a trailing/leading number out of
-                # an entry even if the AI slipped in stray text around it.
-                num_match = re.search(r"-?\d+(?:\.\d+)?", entry)
+                # Defensive fallback for stray text around a number. A label
+                # before a colon/equals ("Q1(a): 4") is dropped first — taking
+                # the first number there would read the question number, not
+                # the mark. "4/5" or "4 marks" still give 4.
+                tail = re.split(r"[:=]", entry)[-1]
+                num_match = re.search(r"-?\d+(?:\.\d+)?", tail)
                 if not num_match:
                     continue
             marks = float(num_match.group(0))
@@ -893,6 +1015,7 @@ Student being marked: {student_name} (ID: {student_id})
         self._network_retries = 0
         self._file_uploads = 0
         self._file_cache_hits = 0
+        self._model_used = PRIMARY_MODEL
 
         if not student_folder.exists():
             return {"success": False, "error": f"Student folder not found: {student_folder}"}
@@ -1045,7 +1168,7 @@ Student being marked: {student_name} (ID: {student_id})
                 "student_name":      student_name,
                 "exam_folder":       str(exam_path),
                 "at":                datetime.now().isoformat(timespec="seconds"),
-                "model":             PRIMARY_MODEL,
+                "model":             self._model_used,
                 "prompt_version":    PROMPT_VERSION,
                 "prompt_sha":        prompt_sha,
                 "attempt":           attempt_no,
@@ -1082,7 +1205,7 @@ Student being marked: {student_name} (ID: {student_id})
                 log.info(f"🚩  {student_id} needs review: {'; '.join(review_reasons)}")
 
         result["_run"] = {
-            "model":             PRIMARY_MODEL,
+            "model":             self._model_used,
             "prompt_version":    PROMPT_VERSION,
             "finish_reason":     call["finish_reason"],
             "usage":             usage_total,

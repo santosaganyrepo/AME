@@ -1,1388 +1,293 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduMark AI — Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script>
-    // Apply the saved theme + sidebar state before first paint, so there's
-    // no flash/jump when navigating between pages.
-    (function () {
-      try {
-        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
-        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-
-  <style>
-    /* ══════════════════════════════════════════════════════
-       DESIGN TOKENS — monochrome black & white system (light / dark)
-    ══════════════════════════════════════════════════════ */
-    :root {
-      /* structural tokens — theme independent */
-      --sidebar-w:    252px;
-      --sidebar-col:  68px;
-      --header-h:     60px;
-      --radius-xs: 7px;
-      --radius-sm: 11px;
-      --radius-md: 16px;
-      --radius-lg: 20px;
-      --radius-xl: 24px;
-      --transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-      /* --font-serif now points at the same modern sans used everywhere else —
-         nav labels, page titles, stat values, and table-adjacent headings all
-         read as one legible SaaS typeface. The decorative serif is preserved
-         only as --font-brand for the one deliberate marketing moment below. */
-      --font-serif: 'DM Sans', system-ui, sans-serif;
-      --font-body:  'DM Sans', system-ui, sans-serif;
-      --font-brand: 'Instrument Serif', Georgia, serif;
-    }
-
-    /* ══════════════════════════════════════════════════════
-       DARK MODE (default) — true near-black system, no purple tint
-    ══════════════════════════════════════════════════════ */
-    :root, html[data-theme="dark"] {
-      --bg:           #0f172a;
-      --bg-panel:     rgba(15,23,42,0.96);
-      --bg-elevated:  #1b2436;
-      --bg-card:      rgba(255,255,255,0.045);
-      --bg-card-h:    rgba(255,255,255,0.08);
-      --bg-input:     rgba(255,255,255,0.04);
-      --bg-input-h:   rgba(255,255,255,0.08);
-      --border:       rgba(255,255,255,0.09);
-      --border-h:     rgba(255,255,255,0.20);
-      --border-focus: rgba(255,255,255,0.55);
-      --accent:       #818cf8;
-      --accent-soft:  rgba(255,255,255,0.12);
-      --accent-glow:  rgba(255,255,255,0.14);
-      --grad-main:    var(--accent);
-      --grad-subtle:  var(--accent-soft);
-      --purple:       var(--accent);
-      --purple-soft:  var(--accent-soft);
-      --success:      #34d399;
-      --success-soft: rgba(52,211,153,0.15);
-      --warning:      #fbbf24;
-      --warning-soft: rgba(251,191,36,0.15);
-      --danger:       #f87171;
-      --danger-soft:  rgba(248,113,113,0.15);
-      --info:         #60c8ff;
-      --info-soft:    rgba(96,200,255,0.13);
-      --text-1:       #f2f2f3;
-      --text-2:       #b2b2b8;
-      --text-3:       #7a7a80;
-      --text-label:   #d4d4d9;
-      --shadow-sm:  0 2px 8px rgba(0,0,0,0.4);
-      --shadow-md:  0 8px 24px rgba(0,0,0,0.55);
-      --shadow-lg:  0 16px 48px rgba(0,0,0,0.65);
-      --shadow-glow: none;
-    }
-
-    /* ══════════════════════════════════════════════════════
-       LIGHT MODE — pure white & black system
-    ══════════════════════════════════════════════════════ */
-    html[data-theme="light"] {
-      --bg:           #ffffff;
-      --bg-panel:     rgba(255,255,255,0.85);
-      --bg-elevated:  #f2f2f2;
-      --bg-card:      #ffffff;
-      --bg-card-h:    #f4f4f4;
-      --bg-input:     #ffffff;
-      --bg-input-h:   #f4f4f4;
-      --border:       rgba(0,0,0,0.10);
-      --border-h:     rgba(0,0,0,0.20);
-      --border-focus: rgba(0,0,0,0.55);
-      --accent:       #4f46e5;
-      --accent-soft:  rgba(0,0,0,0.06);
-      --accent-glow:  rgba(0,0,0,0.10);
-      --grad-main:    var(--accent);
-      --grad-subtle:  var(--accent-soft);
-      --purple:       var(--accent);
-      --purple-soft:  var(--accent-soft);
-      --success:      #16a34a;
-      --success-soft: rgba(22,163,74,0.10);
-      --warning:      #d97706;
-      --warning-soft: rgba(217,119,6,0.10);
-      --danger:       #dc2626;
-      --danger-soft:  rgba(220,38,38,0.10);
-      --info:         #0284c7;
-      --info-soft:    rgba(2,132,199,0.10);
-      --text-1:       #0a0a0a;
-      --text-2:       #45454a;
-      --text-3:       #8a8a90;
-      --text-label:   #26262c;
-      --shadow-sm:  0 2px 8px rgba(0,0,0,0.06);
-      --shadow-md:  0 8px 24px rgba(0,0,0,0.08);
-      --shadow-lg:  0 16px 48px rgba(0,0,0,0.12);
-      --shadow-glow: none;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--text-1);
-      min-height: 100vh;
-      overflow-x: hidden;
-      font-size: 14px;
-      line-height: 1.6;
-      transition: background 0.25s ease, color 0.25s ease;
-    }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 99px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-2); }
-
-    /* ══════════════════════════════════════════════════════
-       APP SHELL
-    ══════════════════════════════════════════════════════ */
-    .shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
-
-    /* ══════════════════════════════════════════════════════
-       SIDEBAR
-    ══════════════════════════════════════════════════════ */
-    .sidebar {
-      width: var(--sidebar-w);
-      min-height: 100vh;
-      background: var(--bg-panel);
-border-right: 1px solid var(--border);
-      position: fixed; top: 0; left: 0; bottom: 0;
-      z-index: 100; overflow: hidden;
-      transition: var(--transition);
-      display: flex; flex-direction: column;
-    }
-    .sidebar.collapsed { width: var(--sidebar-col); }
-    html.sb-collapsed .sidebar:not(.mobile-open) { width: var(--sidebar-col); }
-
-    .sb-brand {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--border);
-      min-height: var(--header-h);
-      flex-shrink: 0;
-    }
-    .sb-toggle-btn {
-      width: 34px; height: 34px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-xs); color: var(--text-1);
-      cursor: pointer; font-size: 14px; transition: var(--transition);
-    }
-    .sb-toggle-btn:hover { background: var(--bg-card-h); border-color: var(--border-h); }
-    .sb-brand-link {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none; overflow: hidden; min-width: 0;
-    }
-    .sidebar.collapsed .sb-brand { justify-content: center; padding: 13px 0; }
-    .sidebar.collapsed .sb-brand-link { display: none; }
-    .sb-icon {
-      width: 34px; height: 34px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--purple), var(--accent));
-      border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 0 20px var(--purple-soft);
-    }
-    .sb-brand-text { overflow: hidden; transition: var(--transition); white-space: nowrap; }
-    .sb-name    { font-family: var(--font-serif); font-size: 16px; color: var(--text-1); display: block; line-height: 1.2; }
-    .sb-tagline { font-size: 10px; color: var(--text-3); letter-spacing: 0.8px; text-transform: uppercase; }
-    .sidebar.collapsed .sb-brand-text { opacity: 0; width: 0; }
-
-    .sb-nav { flex: 1; padding: 12px 10px; overflow-y: auto; overflow-x: hidden; }
-
-    .sb-section-label {
-      font-size: 9px; text-transform: uppercase; letter-spacing: 1.4px;
-      color: var(--text-3); padding: 0 8px; margin: 14px 0 5px;
-      white-space: nowrap; transition: var(--transition);
-    }
-    .sidebar.collapsed .sb-section-label { opacity: 0; }
-
-    .sb-item {
-      display: flex; align-items: center; gap: 11px;
-      padding: 10px 10px; border-radius: var(--radius-sm);
-      cursor: pointer; transition: var(--transition);
-      margin-bottom: 2px; text-decoration: none;
-      color: var(--text-2); border: 1px solid transparent;
-      white-space: nowrap; position: relative;
-    }
-    .sb-item:hover {
-      background: var(--bg-card-h);
-      color: var(--text-1);
-      border-color: var(--border);
-      transform: translateX(2px);
-    }
-    .sb-item.active {
-      background: var(--accent-soft);
-      color: var(--text-1);
-      border-color: var(--accent-soft);
-    }
-    .sb-item.active .sb-ico { color: var(--accent); }
-    .sb-ico  { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; transition: var(--transition); }
-    .sb-lbl  { font-size: 13.5px; font-weight: 500; overflow: hidden; transition: var(--transition); }
-    .sidebar.collapsed .sb-lbl { opacity: 0; width: 0; }
-
-    .sb-badge {
-      margin-left: auto; background: var(--purple);
-      color: #fff; font-size: 9px; font-weight: 700;
-      padding: 2px 7px; border-radius: 99px; flex-shrink: 0;
-      transition: var(--transition);
-    }
-    .sidebar.collapsed .sb-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
-
-    .sidebar.collapsed .sb-item::after {
-      content: attr(data-tip);
-      position: absolute; left: calc(100% + 10px); top: 50%;
-      transform: translateY(-50%);
-      background: var(--bg-elevated); border: 1px solid var(--border);
-      color: var(--text-1); font-size: 12px; font-weight: 500;
-      padding: 5px 11px; border-radius: var(--radius-xs);
-      white-space: nowrap; opacity: 0; pointer-events: none;
-      transition: opacity 0.15s; box-shadow: var(--shadow-md); z-index: 200;
-    }
-    .sidebar.collapsed .sb-item:hover::after { opacity: 1; }
-
-    .sb-footer {
-      padding: 10px;
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
-      background: var(--bg-panel);
-    }
-
-    .sb-footer-nav { margin-bottom: 6px; }
-
-    .sb-toggle {
-      width: 100%; display: flex; align-items: center; gap: 11px;
-      padding: 9px 10px; border-radius: var(--radius-sm);
-      background: var(--accent-soft);
-      border: 1px solid var(--accent-soft);
-      color: var(--text-2); cursor: pointer; transition: var(--transition);
-      font-size: 13px; font-family: var(--font-body);
-      white-space: nowrap; overflow: hidden;
-    }
-    .sb-toggle:hover {
-      background: var(--accent-soft);
-      color: var(--text-1);
-      border-color: var(--accent-soft);
-    }
-    .sb-toggle i { flex-shrink: 0; transition: transform 0.25s; color: var(--accent); }
-    .sidebar.collapsed .sb-toggle i { transform: rotate(180deg); }
-    .sb-toggle-lbl { transition: var(--transition); font-weight: 500; }
-    .sidebar.collapsed .sb-toggle-lbl { opacity: 0; width: 0; }
-
-    /* ══════════════════════════════════════════════════════
-       MAIN CONTENT
-    ══════════════════════════════════════════════════════ */
-    .main-content {
-      flex: 1;
-      margin-left: var(--sidebar-w);
-      min-height: 100vh;
-      transition: var(--transition);
-      display: flex; flex-direction: column;
-    }
-    .main-content.expanded { margin-left: var(--sidebar-col); }
-    html.sb-collapsed .main-content { margin-left: var(--sidebar-col); }
-
-    /* ══════════════════════════════════════════════════════
-       TOPBAR
-    ══════════════════════════════════════════════════════ */
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 28px; height: var(--header-h);
-      background: var(--bg-panel);
-border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 50;
-    }
-    .tb-left { display: flex; align-items: center; gap: 14px; }
-    .tb-title { font-family: var(--font-serif); font-size: 18px; color: var(--text-1); }
-    .tb-subtitle { font-size: 12px; color: var(--text-3); margin-top: 1px; }
-    .tb-right { display: flex; align-items: center; gap: 10px; }
-
-    .hamburger {
-      display: none; width: 34px; height: 34px;
-      align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-xs); cursor: pointer;
-      font-size: 14px; color: var(--text-1); transition: var(--transition);
-      flex-shrink: 0;
-    }
-    .hamburger:hover { background: var(--bg-card-h); }
-
-    .tb-btn {
-      width: 34px; height: 34px;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius-xs); color: var(--text-2);
-      cursor: pointer; transition: var(--transition); font-size: 14px;
-      text-decoration: none;
-    }
-    .tb-btn:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border-h); }
-
-    .user-pill {
-      display: flex; align-items: center; gap: 7px;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 99px; padding: 5px 12px 5px 5px;
-    }
-    .user-av { width: 24px; height: 24px; background: var(--grad-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--bg); }
-    .user-name { font-size: 12px; font-weight: 500; color: var(--text-1); }
-
-    /* ══════════════════════════════════════════════════════
-       PAGE SECTIONS (SPA tabs)
-    ══════════════════════════════════════════════════════ */
-    .page-section { display: none; flex: 1; padding: 28px; animation: fadeUp 0.3s ease both; }
-    .page-section.active { display: block; }
-
-    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-    .section-header { margin-bottom: 28px; }
-    .section-title {
-      font-family: var(--font-serif);
-      font-size: 28px; font-weight: 400;
-      color: var(--text-1); line-height: 1.2; margin-bottom: 6px;
-    }
-    .section-title em { font-style: italic; color: var(--accent); }
-    .section-desc { color: var(--text-2); font-size: 13.5px; }
-
-    /* ══════════════════════════════════════════════════════
-       CARDS
-    ══════════════════════════════════════════════════════ */
-    .glass-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      transition: var(--transition);
-    }
-    .glass-card:hover { border-color: var(--accent-soft); }
-    .glass-card.interactive:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg), var(--shadow-glow); }
-
-    /* ══════════════════════════════════════════════════════
-       BUTTONS
-    ══════════════════════════════════════════════════════ */
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 20px; border-radius: var(--radius-md);
-      font-family: var(--font-body); font-size: 13.5px; font-weight: 600;
-      cursor: pointer; transition: var(--transition); border: none;
-      text-decoration: none; white-space: nowrap;
-    }
-    .btn-primary { background: var(--grad-main); color: var(--bg); box-shadow: 0 4px 16px var(--accent-glow); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--accent-soft); }
-    .btn-ghost { background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border); }
-    .btn-ghost:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border-h); }
-    .btn-danger  { background: var(--danger-soft); color: var(--danger); border: 1px solid rgba(248,113,113,0.2); }
-    .btn-danger:hover { background: rgba(248,113,113,0.22); transform: translateY(-1px); }
-    .btn-success { background: var(--success-soft); color: var(--success); border: 1px solid rgba(52,211,153,0.2); }
-    .btn-success:hover { background: rgba(52,211,153,0.22); transform: translateY(-1px); }
-    .btn-sm { padding: 7px 14px; font-size: 12px; }
-    .btn-lg { padding: 14px 28px; font-size: 15px; border-radius: var(--radius-lg); }
-
-    /* ══════════════════════════════════════════════════════
-       FORM CONTROLS
-    ══════════════════════════════════════════════════════ */
-    .form-group { margin-bottom: 14px; }
-    .form-group:last-child { margin-bottom: 0; }
-    .form-label {
-      display: block; font-size: 11px; font-weight: 700;
-      color: var(--text-label); text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 7px;
-    }
-    .form-label .req { color: var(--danger); }
-    .form-label .opt { color: var(--text-3); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 10px; }
-
-    .form-input, .form-select {
-      width: 100%; padding: 11px 14px;
-      background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text-1);
-      font-family: var(--font-body); font-size: 13.5px;
-      transition: var(--transition); outline: none; appearance: none; -webkit-appearance: none;
-    }
-    .form-input:hover, .form-select:hover { border-color: var(--accent-soft); background: var(--bg-input-h); }
-    .form-input:focus, .form-select:focus { border-color: var(--border-focus); background: var(--bg-input-h); box-shadow: 0 0 0 3px var(--accent-soft); }
-    .form-input::placeholder { color: var(--text-3); }
-    .form-select option { background: var(--bg-elevated); color: var(--text-1); }
-    .form-select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px;
-    }
-    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-
-    /* ══════════════════════════════════════════════════════
-       DASHBOARD STATS
-    ══════════════════════════════════════════════════════ */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 26px; }
-    .stat-card { padding: 20px; }
-    .stat-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
-    .stat-value { font-family: var(--font-serif); font-size: 30px; font-weight: 400; line-height: 1; margin-bottom: 4px; }
-    .stat-label { font-size: 12px; color: var(--text-3); font-weight: 500; }
-
-    /* ══════════════════════════════════════════════════════
-       QUICK ACTIONS
-    ══════════════════════════════════════════════════════ */
-    .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin-bottom: 26px; }
-    .qa-card { padding: 18px 16px; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 9px; text-decoration: none; }
-    .qa-card:hover { transform: translateY(-3px); }
-    .qa-icon { width: 38px; height: 38px; border-radius: var(--radius-xs); background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 17px; color: var(--accent); }
-    .qa-title { font-size: 13.5px; font-weight: 600; color: var(--text-1); }
-    .qa-desc  { font-size: 11.5px; color: var(--text-3); line-height: 1.4; }
-
-    /* Primary Quick Action — unmistakably the dominant CTA (core workflow) */
-    .qa-card.qa-primary {
-      background: var(--grad-main);
-      border-color: var(--grad-main);
-      position: relative;
-      grid-column: span 1;
-    }
-    .qa-card.qa-primary .qa-icon-primary { background: rgba(255,255,255,0.18); color: #fff; }
-    .qa-card.qa-primary .qa-title,
-    .qa-card.qa-primary .qa-desc { color: #fff; }
-    .qa-card.qa-primary .qa-desc { opacity: 0.85; }
-    .qa-card.qa-primary:hover { box-shadow: 0 10px 28px var(--accent-glow); }
-    .qa-arrow {
-      position: absolute; top: 16px; right: 16px;
-      width: 26px; height: 26px; border-radius: 50%;
-      background: rgba(255,255,255,0.18); color: #fff;
-      display: flex; align-items: center; justify-content: center; font-size: 11px;
-      transition: var(--transition);
-    }
-    .qa-card.qa-primary:hover .qa-arrow { transform: translateX(3px); }
-
-    /* ══════════════════════════════════════════════════════
-       TWO-COL LAYOUT
-    ══════════════════════════════════════════════════════ */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-
-    .card-inner { padding: 22px; }
-    .card-title { font-family: var(--font-serif); font-size: 15px; font-weight: 400; color: var(--text-1); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-
-    .activity-list { display: flex; flex-direction: column; gap: 10px; }
-    .activity-item { display: flex; align-items: center; gap: 11px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-radius: var(--radius-xs); border: 1px solid var(--border); transition: var(--transition); }
-    .activity-item:hover { background: var(--bg-card-h); }
-    .activity-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .activity-text { flex: 1; font-size: 12.5px; color: var(--text-2); line-height: 1.4; }
-    .activity-text strong { color: var(--text-1); font-weight: 600; }
-    .activity-time { font-size: 10px; color: var(--text-3); }
-
-    .help-steps { display: flex; flex-direction: column; gap: 12px; }
-    .help-step { display: flex; gap: 14px; padding: 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: var(--transition); }
-    .help-step:hover { border-color: var(--border-h); }
-    .step-num { width: 28px; height: 28px; background: var(--grad-main); color: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-    .step-content .step-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 3px; }
-    .step-content .step-desc  { font-size: 12px; color: var(--text-2); line-height: 1.6; }
-
-    /* ══════════════════════════════════════════════════════
-       SPREADSHEET PAGE
-    ══════════════════════════════════════════════════════ */
-    .ss-layout { display: grid; grid-template-columns: 360px 1fr; gap: 18px; align-items: start; }
-    @media (max-width: 1000px) { .ss-layout { grid-template-columns: 1fr; } }
-
-    .ss-panel { padding: 22px; }
-    .ss-panel-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--accent-soft); }
-
-    .ss-preview-panel { padding: 22px; }
-    .ss-preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 55px 30px; border: 2px dashed var(--accent-soft); border-radius: var(--radius-lg); background: var(--accent-soft); }
-    .ss-preview-empty .pi { font-size: 44px; margin-bottom: 12px; opacity: 0.35; }
-    .ss-preview-empty p { font-size: 12.5px; color: var(--text-3); line-height: 1.6; max-width: 230px; }
-
-    .session-info-card { background: var(--accent-soft); border: 1px solid var(--accent-soft); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 14px; display: none; }
-    .session-info-card.visible { display: block; }
-    .session-info-title { font-family: var(--font-serif); font-size: 15px; font-weight: 400; color: var(--text-1); margin-bottom: 12px; }
-    .session-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-    .session-stat { text-align: center; padding: 11px; background: rgba(255,255,255,0.03); border-radius: var(--radius-xs); border: 1px solid var(--border); }
-    .session-stat-val { font-family: var(--font-serif); font-size: 20px; font-weight: 400; line-height: 1; margin-bottom: 3px; }
-    .session-stat-lbl { font-size: 10px; color: var(--text-3); }
-
-    .ss-error-card { background: var(--danger-soft); border: 1px solid rgba(248,113,113,0.25); border-radius: var(--radius-lg); padding: 16px; display: none; align-items: flex-start; gap: 10px; font-size: 12.5px; color: var(--danger); line-height: 1.5; }
-    .ss-error-card.visible { display: flex; }
-    .ss-error-card i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-
-    .preview-table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
-    .preview-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    .preview-table th { background: var(--accent-soft); color: var(--text-1); font-weight: 600; padding: 10px 13px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 0.5px; }
-    .preview-table td { padding: 9px 13px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-2); white-space: nowrap; }
-    .preview-table tr:last-child td { border-bottom: none; }
-    .preview-table tr:hover td { background: rgba(255,255,255,0.03); color: var(--text-1); }
-
-    .tag { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 600; }
-    .tag-success { background: var(--success-soft); color: var(--success); }
-    .tag-warning { background: var(--warning-soft); color: var(--warning); }
-    .tag-danger  { background: var(--danger-soft);  color: var(--danger);  }
-    .tag-info    { background: var(--info-soft);    color: var(--info);    }
-
-    .col-checklist { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-    .col-checklist label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); cursor: pointer; padding: 6px 10px; border-radius: var(--radius-xs); transition: var(--transition); border: 1px solid transparent; }
-    .col-checklist label:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border); }
-    .col-checklist input[type="checkbox"] { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
-
-    .divider { border: none; border-top: 1px solid var(--accent-soft); margin: 18px 0; }
-
-    /* ══════════════════════════════════════════════════════
-       SETTINGS
-    ══════════════════════════════════════════════════════ */
-    .settings-layout { display: grid; grid-template-columns: 210px 1fr; gap: 18px; align-items: start; }
-    @media (max-width: 800px) { .settings-layout { grid-template-columns: 1fr; } }
-
-    .settings-nav { padding: 10px; position: sticky; top: calc(var(--header-h) + 28px); }
-    .settings-nav-item { display: flex; align-items: center; gap: 9px; padding: 10px 11px; border-radius: var(--radius-xs); cursor: pointer; transition: var(--transition); font-size: 13.5px; color: var(--text-2); margin-bottom: 2px; border: 1px solid transparent; }
-    .settings-nav-item:hover { background: var(--bg-card-h); color: var(--text-1); }
-    .settings-nav-item.active { background: var(--accent-soft); color: var(--text-1); border-color: var(--accent-soft); }
-    .settings-panel { display: none; }
-    .settings-panel.active { display: block; }
-    .settings-section { padding: 22px; margin-bottom: 14px; }
-    .settings-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 18px; padding-bottom: 11px; border-bottom: 1px solid var(--accent-soft); }
-
-    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .toggle-row:last-child { border-bottom: none; }
-    .toggle-info { flex: 1; }
-    .toggle-label-text { font-size: 13.5px; font-weight: 500; color: var(--text-1); }
-    .toggle-label-desc { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
-
-    /* Toggle: OFF = clearly visible neutral track + mid-tone thumb;
-       ON = solid brand-accent track + white high-contrast thumb.
-       Not just a subtle gray shift — the two states read unambiguously
-       at a glance, matching the same component used across all pages. */
-    .toggle-switch { position: relative; width: 42px; height: 23px; flex-shrink: 0; }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--bg-elevated); border-radius: 99px; transition: var(--transition); border: 1.5px solid var(--border-h); }
-    .toggle-slider::before { content: ''; position: absolute; width: 17px; height: 17px; left: 2px; top: 2px; background: var(--text-2); border-radius: 50%; transition: var(--transition); box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
-    .toggle-switch input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
-    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(19px); background: #ffffff; }
-    .toggle-switch input:focus-visible + .toggle-slider { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-    .strictness-options { display: flex; gap: 9px; margin-top: 11px; }
-    .strictness-opt { flex: 1; padding: 11px; text-align: center; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); background: rgba(255,255,255,0.02); }
-    .strictness-opt:hover { background: var(--bg-card-h); }
-    .strictness-opt.active { border-color: var(--accent); background: var(--accent-soft); }
-    .strictness-opt i { display: block; font-size: 18px; margin-bottom: 5px; }
-    .strictness-opt .opt-name { font-size: 12.5px; font-weight: 600; color: var(--text-1); }
-    .strictness-opt .opt-desc { font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
-
-    .theme-options { display: flex; gap: 10px; flex-wrap: wrap; }
-    .theme-opt { cursor: pointer; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid var(--border); transition: var(--transition); width: 76px; }
-    .theme-opt:hover { border-color: var(--border-h); transform: scale(1.04); }
-    .theme-opt.active { border-color: var(--accent); }
-    .theme-preview { height: 44px; }
-    .theme-name { font-size: 10.5px; text-align: center; padding: 5px; background: var(--bg-elevated); color: var(--text-2); }
-
-    .lang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 9px; }
-    .lang-opt { padding: 11px; text-align: center; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); background: rgba(255,255,255,0.02); }
-    .lang-opt:hover { background: var(--bg-card-h); }
-    .lang-opt.active { border-color: var(--accent); background: var(--accent-soft); }
-    .lang-opt .flag { font-size: 22px; display: block; margin-bottom: 4px; }
-    .lang-opt .lang-name { font-size: 12.5px; font-weight: 500; color: var(--text-1); }
-    .lang-opt .lang-native { font-size: 10.5px; color: var(--text-3); }
-
-    /* ══════════════════════════════════════════════════════
-       HELP PAGE — fully self-contained, always renders
-    ══════════════════════════════════════════════════════ */
-    .help-layout { display: grid; grid-template-columns: 230px 1fr; gap: 18px; align-items: start; }
-    @media (max-width: 800px) { .help-layout { grid-template-columns: 1fr; } }
-
-    .help-nav { padding: 10px; position: sticky; top: calc(var(--header-h) + 28px); }
-    .help-nav-item { display: flex; align-items: center; gap: 9px; padding: 10px 11px; border-radius: var(--radius-xs); cursor: pointer; transition: var(--transition); font-size: 13.5px; color: var(--text-2); margin-bottom: 2px; border: 1px solid transparent; }
-    .help-nav-item:hover { background: var(--bg-card-h); color: var(--text-1); }
-    .help-nav-item.active { background: var(--accent-soft); color: var(--text-1); border-color: var(--accent-soft); }
-
-    .help-panel { display: none; }
-    .help-panel.active { display: block; animation: fadeUp .28s ease; }
-
-    .help-content { padding: 26px; }
-
-    .help-hero { display: flex; align-items: center; gap: 18px; padding: 22px; background: var(--accent-soft); border-radius: var(--radius-lg); margin-bottom: 22px; border: 1px solid var(--accent-soft); }
-    .help-hero-icon { width: 56px; height: 56px; background: var(--grad-main); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
-    .help-hero-title { font-family: var(--font-serif); font-size: 20px; font-weight: 400; margin-bottom: 4px; }
-    .help-hero-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-
-    .faq-item { border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; }
-    .faq-q { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 13.5px; font-weight: 500; transition: var(--transition); background: var(--bg-card); }
-    .faq-q:hover { background: var(--bg-card-h); }
-    .faq-q i { transition: transform .28s; color: var(--text-3); }
-    .faq-item.open .faq-q i { transform: rotate(180deg); color: var(--accent); }
-    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.38s ease, padding 0.28s; padding: 0 16px; font-size: 13px; color: var(--text-2); line-height: 1.75; background: var(--accent-soft); }
-    .faq-item.open .faq-a { max-height: 400px; padding: 13px 16px; }
-
-    .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 22px; }
-    .about-stat { padding: 18px; text-align: center; }
-    .about-stat-value { font-family: var(--font-serif); font-size: 26px; font-weight: 400; color: var(--accent); }
-    .about-stat-label { font-size: 12px; color: var(--text-3); margin-top: 3px; }
-
-    .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
-    .feature-card { padding: 16px; display: flex; gap: 12px; }
-    .feature-icon { width: 38px; height: 38px; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-    .feature-title { font-size: 13.5px; font-weight: 600; margin-bottom: 3px; }
-    .feature-desc { font-size: 11.5px; color: var(--text-3); line-height: 1.5; }
-
-    .info-banner { display: flex; align-items: flex-start; gap: 12px; padding: 13px 16px; background: var(--info-soft); border: 1px solid rgba(96,200,255,0.18); border-radius: var(--radius-sm); font-size: 12.5px; color: var(--text-2); line-height: 1.6; margin-top: 20px; }
-    .info-banner i { color: var(--info); font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-
-    .ai-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; background: var(--purple-soft); border: 1px solid var(--purple-soft); border-radius: 99px; font-size: 10.5px; font-weight: 600; color: var(--purple); letter-spacing: .5px; }
-    .version-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 11px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 99px; font-size: 11.5px; color: var(--text-2); }
-
-    /* ══════════════════════════════════════════════════════
-       SPINNER / LOADING
-    ══════════════════════════════════════════════════════ */
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid color-mix(in srgb, var(--bg) 25%, transparent); border-top-color: var(--bg); border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
-    .spinner-accent { border-color: var(--accent-soft); border-top-color: var(--accent); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ══════════════════════════════════════════════════════
-       TOAST
-    ══════════════════════════════════════════════════════ */
-    .toast-container { position: fixed; bottom: 22px; right: 22px; z-index: 999; display: flex; flex-direction: column; gap: 7px; }
-    .toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-size: 12.5px; color: var(--text-1); animation: toastIn .3s ease; min-width: 240px; max-width: 360px;}
-    .toast.out { animation: toastOut .25s ease forwards; }
-    @keyframes toastIn  { from { opacity:0; transform:translateX(32px); } to { opacity:1; transform:translateX(0); } }
-    @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateX(32px); } }
-
-    /* ══════════════════════════════════════════════════════
-       MOBILE
-    ══════════════════════════════════════════════════════ */
-    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 90;}
-    .mobile-overlay.show { display: block; }
-
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-      .page-section { padding: 16px; }
-      .topbar { padding: 0 16px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .quick-actions { grid-template-columns: 1fr 1fr; }
-      .section-title { font-size: 22px; }
-      .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .two-col { grid-template-columns: 1fr; }
-      .quick-actions { grid-template-columns: 1fr; }
-      .qa-arrow { top: 14px; right: 14px; }
-      .page-section { padding: 14px; }
-      .stat-card { padding: 15px; }
-      .card-inner { padding: 16px; }
-      .help-content { padding: 16px; }
-    }
-
-    /* ══════════════════════════════════════════════════════
-       MOBILE / TABLET COMPATIBILITY HARDENING
-    ══════════════════════════════════════════════════════ */
-    html, body { max-width: 100vw; overflow-x: hidden; }
-    * { -webkit-tap-highlight-color: transparent; }
-
-    /* iOS Safari auto-zooms into any input/select/textarea whose computed
-       font-size is under 16px, which then leaves the page stuck zoomed in
-       and other UI reading as "hidden" until the user manually zooms back
-       out. Force 16px on touch-width viewports only, so desktop sizing is
-       unaffected. */
-    @media (max-width: 900px) {
-      .form-input, .form-select, .form-textarea { font-size: 16px; }
-    }
-
-    /* Tablet portrait (iPad mini/Air/Pro all land in this band) gets the
-       same collapsible sidebar + hamburger as phones, since a 252px fixed
-       sidebar plus multi-column grids get cramped well before 1024px. */
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-      .settings-layout, .help-layout { grid-template-columns: 1fr; }
-      .ss-layout { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .toast-container { left: 12px; right: 12px; bottom: 12px; }
-      .toast { max-width: 100%; min-width: 0; }
-      .tb-title { font-size: 15px; }
-      .tb-subtitle { display: none; }
-      .user-name { display: none; }
-    }
-
-    .hidden { display: none !important; }
-    .mt-4 { margin-top: 16px; }
-    .mb-4 { margin-bottom: 16px; }
-    @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
-  body { animation: pageIn 0.05s linear; }
+{% extends "base.html" %}
+{% set active = 'overview' %}
+{% block title %}Overview{% endblock %}
+{% block topbar_title %}Overview{% endblock %}
+
+{% block head %}
+<style>
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: var(--s6); }
+  .kpi { padding: var(--s5); min-width: 0; }
+  .kpi + .kpi { border-left: 1px solid var(--line); }
+  .kpi-label { font-size: 14px; color: var(--ink-2); display: flex; align-items: center; gap: var(--s2); }
+  .kpi-value { font-size: 32px; font-weight: 700; letter-spacing: -.025em; line-height: 1.15; margin-top: var(--s2); font-variant-numeric: tabular-nums; }
+  .kpi-foot { font-size: 13.5px; color: var(--ink-3); margin-top: 2px; }
+  .kpi.attention .kpi-value { color: var(--warn); }
+  .kpi.clear .kpi-value { color: var(--ok); }
+  @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kpi:nth-child(3) { border-left: 0; } .kpi:nth-child(n+3) { border-top: 1px solid var(--line); } }
+  @media (max-width: 520px) { .kpi { padding: var(--s4); } .kpi-value { font-size: 26px; } }
+
+  .dash-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); gap: var(--s5); align-items: start; }
+  @media (max-width: 1100px) { .dash-grid { grid-template-columns: 1fr; } }
+  .side-col > .panel + .panel { margin-top: var(--s5); }
+
+  .sess-exam { font-weight: 600; color: var(--ink); }
+  .sess-meta { font-size: 13px; color: var(--ink-3); }
+  .sess-progress { min-width: 140px; }
+  .sess-progress .progress { margin-bottom: 5px; }
+  .sess-progress small { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  tr.linkrow { cursor: pointer; }
+  tr.linkrow td:last-child { color: var(--ink-3); width: 32px; }
+  @media (max-width: 720px) { .hide-sm { display: none; } }
+
+  .queue-state { display: flex; align-items: center; gap: var(--s2); font-weight: 600; }
+  .queue-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-top: var(--s4); }
+  .qc { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--s3); }
+  .qc-num { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+  .qc-lbl { font-size: 13px; color: var(--ink-3); }
+  .job-list { margin-top: var(--s4); display: flex; flex-direction: column; }
+  .job { display: flex; align-items: center; gap: var(--s3); padding: var(--s2) 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .job .spinner { color: var(--primary); width: 14px; height: 14px; }
+  .job-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .attn-item { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s5); border-top: 1px solid var(--line); color: var(--ink); }
+  .attn-item:first-child { border-top: 0; }
+  .attn-item:hover { background: var(--surface-2); text-decoration: none; }
+  .attn-text { flex: 1; min-width: 0; }
+  .attn-text .sess-exam { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s5); text-align: left; max-width: 820px; margin: var(--s6) auto 0; }
+  .step-n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); font-weight: 700; font-size: 14px; margin-bottom: var(--s2); }
+  .step h3 { font-size: 15px; margin-bottom: 4px; }
+  .step p { font-size: 14px; color: var(--ink-2); }
+  @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
-<div class="toast-container" id="toastContainer"></div>
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 class="page-title" id="greeting">Overview</h1>
+    <p class="page-sub">Where your marking stands across every exam session.</p>
+  </div>
+  <div class="page-actions">
+    <a class="btn btn-secondary" href="{{ url_for('view_students') }}"><i class="fa-solid fa-table-list"></i> Results</a>
+    <a class="btn btn-primary" href="{{ url_for('setup_start') }}"><i class="fa-solid fa-plus"></i> New marking session</a>
+  </div>
+</div>
 
-<div class="shell">
+<section class="panel kpis" aria-label="Summary">
+  <div class="kpi">
+    <div class="kpi-label">Exam sessions</div>
+    <div class="kpi-value" id="kSessions">{{ stats.total_sessions }}</div>
+    <div class="kpi-foot" id="kSessionsFoot">&nbsp;</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Scripts marked</div>
+    <div class="kpi-value" id="kMarked">{{ stats.total_marked }}</div>
+    <div class="kpi-foot" id="kMarkedFoot">of {{ stats.total_students }} uploaded</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Average score</div>
+    <div class="kpi-value" id="kAvg">—</div>
+    <div class="kpi-foot">across marked scripts</div>
+  </div>
+  <div class="kpi" id="kAttnBox">
+    <div class="kpi-label">Needs attention</div>
+    <div class="kpi-value" id="kAttn">—</div>
+    <div class="kpi-foot" id="kAttnFoot">&nbsp;</div>
+  </div>
+</section>
 
-  <!-- ════════════════════ SIDEBAR ════════════════════ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-brand">
-      <button class="sb-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-      <a class="sb-brand-link" href="/">
-        <div class="sb-icon">🎓</div>
-        <div class="sb-brand-text">
-          <span class="sb-name">EduMark AI</span>
-          <span class="sb-tagline">Smart Exam Grading</span>
-        </div>
-      </a>
+<div id="emptyState" class="panel hidden">
+  <div class="empty">
+    <div class="empty-icon"><i class="fa-solid fa-file-pen"></i></div>
+    <div class="empty-title">No exams marked yet</div>
+    <p class="empty-desc">Set up your first marking session. It takes about two minutes.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><h3>Set up the exam</h3><p>Choose the class and subject, then add the question paper and marking scheme.</p></div>
+      <div class="step"><div class="step-n">2</div><h3>Add scripts</h3><p>Photograph each student's pages, or upload a whole class as one ZIP file.</p></div>
+      <div class="step"><div class="step-n">3</div><h3>Review and export</h3><p>Check flagged results, adjust any mark, and download the class list.</p></div>
     </div>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('setup_start') }}"><i class="fa-solid fa-plus"></i> Set up a marking session</a>
+  </div>
+</div>
 
-    <nav class="sb-nav">
-      <div class="sb-section-label">Main</div>
-
-      <div class="sb-item active" data-page="dashboard" data-tip="Dashboard" onclick="switchPage('dashboard',this)">
-        <span class="sb-ico"><i class="fa-solid fa-gauge-high"></i></span>
-        <span class="sb-lbl">Dashboard</span>
+<div class="dash-grid" id="dashGrid">
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">Recent sessions</h2>
+        <p class="panel-desc">The latest exams you've worked on</p>
       </div>
-
-      <a class="sb-item" href="/setup-start" data-tip="Mark Exams">
-        <span class="sb-ico"><i class="fa-solid fa-pen-to-square"></i></span>
-        <span class="sb-lbl">Mark Exams</span>
-        <span class="sb-badge">AI</span>
-      </a>
-
-      <a class="sb-item" href="/students" data-tip="View Results">
-        <span class="sb-ico"><i class="fa-solid fa-chart-bar"></i></span>
-        <span class="sb-lbl">View Results</span>
-      </a>
-
-      <div class="sb-section-label">System</div>
-
-      <div class="sb-item" data-page="settings" data-tip="Settings" onclick="switchPage('settings',this)">
-        <span class="sb-ico"><i class="fa-solid fa-sliders"></i></span>
-        <span class="sb-lbl">Settings</span>
-      </div>
-    </nav>
-
-    <div class="sb-footer">
-      <div class="sb-footer-nav">
-        <div class="sb-item" data-page="help" data-tip="Help & About" onclick="switchPage('help',this)">
-          <span class="sb-ico"><i class="fa-solid fa-circle-question"></i></span>
-          <span class="sb-lbl">Help &amp; About</span>
-        </div>
-        <a class="sb-item" href="/logout" data-tip="Sign out">
-          <span class="sb-ico"><i class="fa-solid fa-right-from-bracket"></i></span>
-          <span class="sb-lbl">Sign out</span>
-        </a>
-      </div>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('view_students') }}">All results</a>
     </div>
-  </aside>
-
-  <!-- ════════════════════ MAIN CONTENT ════════════════════ -->
-  <div class="main-content" id="mainContent">
-
-    <div class="topbar">
-      <div class="tb-left">
-        <button class="hamburger" onclick="openMobileSidebar()" title="Menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div>
-          <div class="tb-title" id="pageTitle">Dashboard</div>
-          <div class="tb-subtitle" id="pageSubtitle">Welcome back, Teacher</div>
-        </div>
-      </div>
-      <div class="tb-right">
-        <div class="user-pill">
-          <div class="user-av">T</div>
-          <span class="user-name">Teacher</span>
-        </div>
-      </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr>
+          <th>Exam</th><th>Progress</th><th class="right hide-sm">Average</th><th class="hide-sm">Status</th><th></th>
+        </tr></thead>
+        <tbody id="recentBody">
+          {% for _ in range(4) %}
+          <tr><td><div class="skeleton" style="height:14px;width:60%"></div><div class="skeleton mt-2" style="height:11px;width:40%"></div></td>
+              <td><div class="skeleton" style="height:6px;width:120px"></div></td><td class="hide-sm"></td><td class="hide-sm"></td><td></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </section>
 
-    <!-- ════ DASHBOARD ════ -->
-    <section class="page-section active" id="page-dashboard">
-      <div class="section-header">
-        <h1 class="section-title" style="font-family:var(--font-brand);font-size:34px;">Mark smarter. <em>Teach better</em></h1>
-        <p class="section-desc">Here's an overview of your marking activity and recent sessions.</p>
+  <div class="side-col">
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">Marking queue</h2>
+        <span class="chip" id="qState"><span class="dot"></span> Checking…</span>
       </div>
-
-      <div class="stats-grid">
-        <div class="glass-card stat-card interactive">
-          <div class="stat-icon" style="background:var(--accent-soft);"><i class="fa-solid fa-pen-to-square" style="color:var(--accent);"></i></div>
-          <div class="stat-value" id="dashSessions" style="color:var(--accent);">—</div>
-          <div class="stat-label">Sessions Marked</div>
+      <div class="panel-body">
+        <div class="queue-counts">
+          <div class="qc"><div class="qc-num" id="qMarking">0</div><div class="qc-lbl">Marking</div></div>
+          <div class="qc"><div class="qc-num" id="qWaiting">0</div><div class="qc-lbl">Waiting</div></div>
+          <div class="qc"><div class="qc-num" id="qFailed">0</div><div class="qc-lbl">Failed</div></div>
         </div>
-        <div class="glass-card stat-card interactive">
-          <div class="stat-icon" style="background:var(--success-soft);"><i class="fa-solid fa-user-group" style="color:var(--success);"></i></div>
-          <div class="stat-value" id="dashStudents" style="color:var(--success);">—</div>
-          <div class="stat-label">Students Graded</div>
-        </div>
-        <div class="glass-card stat-card interactive">
-          <div class="stat-icon" style="background:var(--warning-soft);"><i class="fa-solid fa-percent" style="color:var(--warning);"></i></div>
-          <div class="stat-value" id="dashAvg" style="color:var(--warning);">—</div>
-          <div class="stat-label">Average Score</div>
-        </div>
-        <div class="glass-card stat-card interactive">
-          <div class="stat-icon" style="background:var(--info-soft);"><i class="fa-solid fa-check-double" style="color:var(--info);"></i></div>
-          <div class="stat-value" id="dashMarked" style="color:var(--info);">—</div>
-          <div class="stat-label">Scripts Marked</div>
-        </div>
-      </div>
-
-      <h2 style="font-family:var(--font-serif);font-size:16px;font-weight:400;margin-bottom:12px;color:var(--text-2);letter-spacing:.3px;">Quick Actions</h2>
-      <div class="quick-actions mb-4">
-        <a class="glass-card qa-card qa-primary" href="/setup-start">
-          <div class="qa-icon qa-icon-primary"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-          <div class="qa-title">Start Marking</div>
-          <div class="qa-desc">Upload scripts and begin AI grading</div>
-          <div class="qa-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        </a>
-        <a class="glass-card qa-card" href="/students">
-          <div class="qa-icon" style="background:var(--success-soft);"><i class="fa-solid fa-chart-line" style="color:var(--success);"></i></div>
-          <div class="qa-title">View Results</div>
-          <div class="qa-desc">Browse student scores and reports</div>
-        </a>
-      </div>
-
-      <div class="two-col">
-        <div class="glass-card card-inner">
-          <div class="card-title">
-            Recent Activity
-            <span class="tag tag-info" style="font-size:10px;">Live</span>
-          </div>
-          <div class="activity-list" id="activityList">
-            <div style="text-align:center;padding:24px 0;">
-              <div style="font-size:30px;opacity:.25;margin-bottom:8px;">📋</div>
-              <div style="font-size:12px;color:var(--text-3);">Loading activity…</div>
-            </div>
-          </div>
-        </div>
-        <div class="glass-card card-inner">
-          <div class="card-title">
-            Getting Started
-            <span class="ai-badge"><i class="fa-solid fa-sparkles"></i> AI Powered</span>
-          </div>
-          <div class="help-steps">
-            <div class="help-step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <div class="step-title">Setup a Marking Session</div>
-                <div class="step-desc">Go to <strong>Mark Exams</strong> → configure class, subject, upload question paper and rubric.</div>
-              </div>
-            </div>
-            <div class="help-step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <div class="step-title">Upload Student Scripts</div>
-                <div class="step-desc">Enter each student's ID and name, then capture or upload their answer sheet pages.</div>
-              </div>
-            </div>
-            <div class="help-step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <div class="step-title">AI Marks &amp; You Review</div>
-                <div class="step-desc">AI analyses each script and assigns scores with feedback. View all results under <strong>View Results</strong>.</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="job-list" id="qJobs"></div>
+        <p class="hint mt-4" id="qKeys"></p>
       </div>
     </section>
 
-    <!-- ════ GENERATE SPREADSHEET ════ -->
-    <!-- ════ SETTINGS ════ -->
-    <section class="page-section" id="page-settings">
-      <div class="section-header">
-        <h1 class="section-title">App <em>Settings</em></h1>
-        <p class="section-desc">Customise EduMark AI to match your workflow and preferences.</p>
-      </div>
-
-      <div class="settings-layout">
-        <div class="glass-card settings-nav">
-          <div class="settings-nav-item active" onclick="switchSettings('appearance',this)"><i class="fa-solid fa-palette" style="width:16px;text-align:center;"></i> Appearance</div>
-          <div class="settings-nav-item" onclick="switchSettings('language',this)"><i class="fa-solid fa-language" style="width:16px;text-align:center;"></i> Language</div>
-          <div class="settings-nav-item" onclick="switchSettings('export',this)"><i class="fa-solid fa-file-export" style="width:16px;text-align:center;"></i> Export</div>
-          <div class="settings-nav-item" onclick="switchSettings('automation',this)"><i class="fa-solid fa-robot" style="width:16px;text-align:center;"></i> Automation</div>
-          <div class="settings-nav-item" onclick="switchSettings('about-s',this)"><i class="fa-solid fa-circle-info" style="width:16px;text-align:center;"></i> About</div>
-        </div>
-
+    <section class="panel">
+      <div class="panel-head">
         <div>
-          <div class="settings-panel active" id="settings-appearance">
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Theme</div>
-              <div class="theme-options">
-                <div class="theme-opt" id="themeOptLight" onclick="selectTheme('light',this)"><div class="theme-preview" style="background:linear-gradient(135deg,#ffffff,#e9e9e9);"></div><div class="theme-name">Light</div></div>
-                <div class="theme-opt" id="themeOptDark" onclick="selectTheme('dark',this)"><div class="theme-preview" style="background:linear-gradient(135deg,#141414,#000000);"></div><div class="theme-name">Dark</div></div>
-              </div>
-              <p style="font-size:11.5px;color:var(--text-3);margin-top:12px;line-height:1.6;">Switch between light and dark mode any time — your choice is saved automatically.</p>
-            </div>
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Display Preferences</div>
-              <div class="toggle-row">
-                <div class="toggle-info"><div class="toggle-label-text">Compact Mode</div><div class="toggle-label-desc">Reduce padding for more content on screen</div></div>
-                <label class="toggle-switch"><input type="checkbox" id="tog_compact" onchange="saveSetting('compact',this.checked)"><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><div class="toggle-label-text">Animations</div><div class="toggle-label-desc">Smooth transitions and hover effects</div></div>
-                <label class="toggle-switch"><input type="checkbox" id="tog_anim" checked onchange="saveSetting('animations',this.checked)"><span class="toggle-slider"></span></label>
-              </div>
-              <div class="toggle-row">
-                <div class="toggle-info"><div class="toggle-label-text">Sidebar Collapsed by Default</div><div class="toggle-label-desc">Start with the minimised sidebar</div></div>
-                <label class="toggle-switch"><input type="checkbox" id="tog_sidebar" onchange="saveSetting('sidebarCollapsed',this.checked)"><span class="toggle-slider"></span></label>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-panel" id="settings-language">
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Interface Language</div>
-              <div class="lang-grid">
-                <div class="lang-opt active" onclick="selectLanguage('en',this)"><span class="flag">🇬🇧</span><div class="lang-name">English</div><div class="lang-native">English</div></div>
-                <div class="lang-opt" onclick="selectLanguage('sw',this)"><span class="flag">🇰🇪</span><div class="lang-name">Kiswahili</div><div class="lang-native">Kiswahili</div></div>
-                <div class="lang-opt" onclick="selectLanguage('fr',this)"><span class="flag">🇫🇷</span><div class="lang-name">French</div><div class="lang-native">Français</div></div>
-                <div class="lang-opt" onclick="selectLanguage('ar',this)"><span class="flag">🇸🇦</span><div class="lang-name">Arabic</div><div class="lang-native">العربية</div></div>
-                <div class="lang-opt" onclick="selectLanguage('lg',this)"><span class="flag">🇺🇬</span><div class="lang-name">Luganda</div><div class="lang-native">Luganda</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-panel" id="settings-export">
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Default Export Format</div>
-              <div style="display:flex;gap:10px;">
-                <div class="strictness-opt active" style="flex:1;" onclick="selectExportFormat('xlsx',this)"><i class="fa-solid fa-file-excel" style="color:var(--success);"></i><div class="opt-name">.xlsx</div><div class="opt-desc">Excel format</div></div>
-                <div class="strictness-opt" style="flex:1;" onclick="selectExportFormat('ods',this)"><i class="fa-solid fa-file" style="color:var(--info);"></i><div class="opt-name">.ods</div><div class="opt-desc">OpenDocument</div></div>
-              </div>
-            </div>
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Export Contents</div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Include AI Diagnostics</div><div class="toggle-label-desc">Append AI comments to spreadsheet</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('exportDiagnostics',this.checked)"><span class="toggle-slider"></span></label></div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Include Session Summary Sheet</div><div class="toggle-label-desc">Add a stats summary as a second sheet</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('exportSummary',this.checked)"><span class="toggle-slider"></span></label></div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Add School Header Row</div><div class="toggle-label-desc">Include institution name at the top</div></div><label class="toggle-switch"><input type="checkbox" onchange="saveSetting('exportHeader',this.checked)"><span class="toggle-slider"></span></label></div>
-            </div>
-          </div>
-
-          <div class="settings-panel" id="settings-automation">
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">Auto Reports &amp; Stats</div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Auto-Generate AI Report</div><div class="toggle-label-desc">Automatically create a session report after marking completes</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('autoReport',this.checked)"><span class="toggle-slider"></span></label></div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Auto-Generate Statistics</div><div class="toggle-label-desc">Compute mean, mode, histogram after each session</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('autoStats',this.checked)"><span class="toggle-slider"></span></label></div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Notify When Marking Complete</div><div class="toggle-label-desc">Show a notification when a session finishes</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('markingNotify',this.checked)"><span class="toggle-slider"></span></label></div>
-              <div class="toggle-row"><div class="toggle-info"><div class="toggle-label-text">Auto-Save Progress</div><div class="toggle-label-desc">Save marking progress every 30 seconds</div></div><label class="toggle-switch"><input type="checkbox" checked onchange="saveSetting('autoSave',this.checked)"><span class="toggle-slider"></span></label></div>
-            </div>
-          </div>
-
-          <div class="settings-panel" id="settings-about-s">
-            <div class="glass-card settings-section">
-              <div class="settings-section-title">App Information</div>
-              <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
-                <div style="width:56px;height:56px;background:var(--grad-main);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">🎓</div>
-                <div>
-                  <div style="font-family:var(--font-serif);font-size:18px;font-weight:400;">EduMark AI</div>
-                  <div style="font-size:12px;color:var(--text-3);margin-top:2px;">Version 1.0.0 · Build 2025</div>
-                  <span class="ai-badge" style="margin-top:6px;"><i class="fa-solid fa-sparkles"></i> AI-Powered</span>
-                </div>
-              </div>
-              <div class="toggle-row"><div class="toggle-label-text">Version</div><span class="version-chip"><i class="fa-solid fa-code-branch"></i> 1.0.0</span></div>
-              <div class="toggle-row"><div class="toggle-label-text">AI Engine</div><span class="version-chip">Gemini Flash</span></div>
-              <div class="toggle-row"><div class="toggle-label-text">Platform</div><span class="version-chip">Web App</span></div>
-              <div style="margin-top:18px;display:flex;gap:9px;">
-                <button class="btn btn-ghost btn-sm" onclick="showToast('info','No updates available. You are on the latest version.','fa-circle-check')"><i class="fa-solid fa-rotate"></i> Check Updates</button>
-                <button class="btn btn-danger btn-sm" onclick="confirmReset()"><i class="fa-solid fa-rotate-left"></i> Reset Settings</button>
-              </div>
-            </div>
-          </div>
+          <h2 class="panel-title">Needs attention</h2>
+          <p class="panel-desc">Results to check before sharing</p>
         </div>
       </div>
+      <div id="attnList"><div class="panel-body muted">Loading…</div></div>
     </section>
+  </div>
+</div>
+{% endblock %}
 
-    <!-- ════ HELP & ABOUT ════ -->
-    <section class="page-section" id="page-help">
-      <div class="section-header">
-        <h1 class="section-title">Help <em>&amp; About</em></h1>
-        <p class="section-desc">Everything you need to get the most out of EduMark AI.</p>
-      </div>
-
-      <div class="help-layout">
-        <div class="glass-card help-nav">
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--text-3);padding:0 9px;margin-bottom:8px;font-weight:600;">Help Topics</div>
-          <div class="help-nav-item active" id="hn-getting-started" onclick="switchHelp('getting-started',this)"><i class="fa-solid fa-rocket" style="width:16px;text-align:center;"></i> Getting Started</div>
-          <div class="help-nav-item" id="hn-how-to-mark" onclick="switchHelp('how-to-mark',this)"><i class="fa-solid fa-pen-to-square" style="width:16px;text-align:center;"></i> How to Mark Exams</div>
-          <div class="help-nav-item" id="hn-view-results-help" onclick="switchHelp('view-results-help',this)"><i class="fa-solid fa-chart-bar" style="width:16px;text-align:center;"></i> Reading Results</div>
-          <div class="help-nav-item" id="hn-spreadsheet-help" onclick="switchHelp('spreadsheet-help',this)"><i class="fa-solid fa-table" style="width:16px;text-align:center;"></i> Spreadsheets</div>
-          <div class="help-nav-item" id="hn-faq" onclick="switchHelp('faq',this)"><i class="fa-solid fa-circle-question" style="width:16px;text-align:center;"></i> FAQ</div>
-          <div class="help-nav-item" id="hn-about-app" onclick="switchHelp('about-app',this)"><i class="fa-solid fa-info-circle" style="width:16px;text-align:center;"></i> About the App</div>
-        </div>
-
-        <div>
-          <div class="help-panel active" id="help-getting-started">
-            <div class="help-content">
-              <div class="help-hero">
-                <div class="help-hero-icon">🚀</div>
-                <div><div class="help-hero-title">Welcome to EduMark AI</div><div class="help-hero-desc">An intelligent exam marking assistant built for teachers. Save hours of manual grading with AI-powered analysis.</div></div>
-              </div>
-              <h3 style="font-family:var(--font-serif);font-size:15px;font-weight:400;margin-bottom:14px;color:var(--text-2);">Quick Start Guide</h3>
-              <div class="help-steps">
-                <div class="help-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Configure Your Settings</div><div class="step-desc">Visit <strong>Settings</strong> to choose your language, marking strictness, and export format.</div></div></div>
-                <div class="help-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Setup a Marking Session</div><div class="step-desc">Go to <strong>Mark Exams</strong> — enter class, term, subject, and upload the question paper and marking scheme.</div></div></div>
-                <div class="help-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Upload Student Scripts</div><div class="step-desc">For each student, enter their ID and name, then capture or upload their answer sheet photos.</div></div></div>
-                <div class="help-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">AI Marks Automatically</div><div class="step-desc">The AI reads each script against the marking scheme and assigns scores with detailed feedback.</div></div></div>
-                <div class="help-step"><div class="step-num">5</div><div class="step-content"><div class="step-title">Review &amp; Export</div><div class="step-desc">View results in <strong>View Results</strong>, and export to Excel or ODS from there.</div></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="help-panel" id="help-how-to-mark">
-            <div class="help-content">
-              <div class="help-hero"><div class="help-hero-icon">✏️</div><div><div class="help-hero-title">How to Mark Exams</div><div class="help-hero-desc">Step-by-step breakdown of the AI marking workflow.</div></div></div>
-              <div style="display:flex;flex-direction:column;gap:12px;">
-                <div class="glass-card" style="padding:18px;"><div style="font-size:13.5px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:8px;"><span style="background:var(--grad-main);color:var(--bg);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">1</span>Setup Session</div><div style="font-size:12.5px;color:var(--text-2);line-height:1.7;">Click <strong>Mark Exams</strong> in the sidebar. Fill in year, term, class, stream, subject, and exam type. Upload your question paper and marking scheme. Lock the session.</div></div>
-                <div class="glass-card" style="padding:18px;"><div style="font-size:13.5px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:8px;"><span style="background:var(--grad-main);color:var(--bg);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">2</span>Add Students</div><div style="font-size:12.5px;color:var(--text-2);line-height:1.7;">Enter Student ID and Full Name for each student. Capture their answer sheet pages using the camera or upload photos. Click <strong>Upload &amp; Queue for Marking</strong>.</div></div>
-                <div class="glass-card" style="padding:18px;"><div style="font-size:13.5px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:8px;"><span style="background:var(--grad-main);color:var(--bg);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">3</span>AI Marks Instantly</div><div style="font-size:12.5px;color:var(--text-2);line-height:1.7;">The AI reads the script against your marking scheme and returns a score with diagnostic feedback in seconds. Results are saved automatically.</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="help-panel" id="help-view-results-help">
-            <div class="help-content">
-              <div class="help-hero"><div class="help-hero-icon">📊</div><div><div class="help-hero-title">Reading Results</div><div class="help-hero-desc">Understanding scores, diagnostics, statistics, and AI reports.</div></div></div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
-                <div class="glass-card" style="padding:16px;"><div style="font-size:20px;margin-bottom:7px;">📋</div><div style="font-size:13.5px;font-weight:600;margin-bottom:5px;">Student Row</div><div style="font-size:12px;color:var(--text-3);line-height:1.6;">Each row shows student name, ID, pages, status, total score %, and AI diagnostic summary.</div></div>
-                <div class="glass-card" style="padding:16px;"><div style="font-size:20px;margin-bottom:7px;">🤖</div><div style="font-size:13.5px;font-weight:600;margin-bottom:5px;">AI Report</div><div style="font-size:12px;color:var(--text-3);line-height:1.6;">Each session has an AI-generated report summarising strengths, weaknesses, and teaching recommendations.</div></div>
-                <div class="glass-card" style="padding:16px;"><div style="font-size:20px;margin-bottom:7px;">📈</div><div style="font-size:13.5px;font-weight:600;margin-bottom:5px;">Statistics</div><div style="font-size:12px;color:var(--text-3);line-height:1.6;">View mean, mode, highest, lowest score and a distribution histogram across score bands.</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="help-panel" id="help-spreadsheet-help">
-            <div class="help-content">
-              <div class="help-hero"><div class="help-hero-icon">📑</div><div><div class="help-hero-title">Generating Spreadsheets</div><div class="help-hero-desc">Export exam session results in Excel or ODS format from View Results.</div></div></div>
-              <div class="help-steps">
-                <div class="help-step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Open View Results</div><div class="step-desc">Click <strong>View Results</strong> in the sidebar to see your marked sessions.</div></div></div>
-                <div class="help-step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Open the Session Menu</div><div class="step-desc">Click the <strong>⋯</strong> menu on any session and choose <strong>Generate spreadsheet</strong>.</div></div></div>
-                <div class="help-step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Select Columns &amp; Format</div><div class="step-desc">Choose which columns to include and whether you want an .xlsx or .ods file.</div></div></div>
-                <div class="help-step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Download</div><div class="step-desc">Click <strong>Download Sheet</strong> — the file downloads instantly.</div></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="help-panel" id="help-faq">
-            <div class="help-content">
-              <div class="help-hero"><div class="help-hero-icon">❓</div><div><div class="help-hero-title">Frequently Asked Questions</div><div class="help-hero-desc">Quick answers to the most common questions.</div></div></div>
-              <div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How accurate is the AI marking? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">EduMark AI uses Gemini Flash. Accuracy depends on your marking scheme clarity. With a well-defined scheme the AI achieves high consistency. Balanced mode is recommended for most exams.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What file formats can I upload? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">Supported: JPEG, PNG, and PDF. Ensure scans are clear and well-lit. You can also use the live camera to capture pages directly.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I edit or override the AI's scores? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">Currently scores are assigned by AI. Override capability is planned in a future update. The AI diagnostic notes help you understand each score.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I export results? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">Go to View Results, open the ⋯ menu on the session you want, choose "Generate spreadsheet", select your columns and format, then download.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if a session is not found in the spreadsheet tool? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">Ensure all fields match exactly what was entered during setup — including stream (e.g. "A" not "a"), subject name, and exam type. All fields are case-sensitive.</div></div>
-                <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Does column selection actually filter the downloaded file? <i class="fa-solid fa-chevron-down"></i></div><div class="faq-a">Yes — the column selection filters the preview immediately. The selection is also sent to the backend when you download. To fully apply it server-side, the excel_generator.py needs a minor update (the columns parameter is already passed).</div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="help-panel" id="help-about-app">
-            <div class="help-content">
-              <div class="help-hero"><div class="help-hero-icon">🎓</div><div><div class="help-hero-title">EduMark AI</div><div class="help-hero-desc">Intelligent exam marking for modern educators. Built to save time, improve consistency, and empower teachers.</div></div></div>
-              <div class="about-grid">
-                <div class="glass-card about-stat"><div class="about-stat-value">AI</div><div class="about-stat-label">Powered Marking</div></div>
-                <div class="glass-card about-stat"><div class="about-stat-value">5+</div><div class="about-stat-label">Languages</div></div>
-                <div class="glass-card about-stat"><div class="about-stat-value">v1.0</div><div class="about-stat-label">Current Version</div></div>
-                <div class="glass-card about-stat"><div class="about-stat-value">∞</div><div class="about-stat-label">Scripts Supported</div></div>
-              </div>
-              <div class="feature-list">
-                <div class="glass-card feature-card"><div class="feature-icon" style="background:var(--accent-soft);"><i class="fa-solid fa-brain" style="color:var(--accent);"></i></div><div><div class="feature-title">AI-Powered Grading</div><div class="feature-desc">Gemini Flash reads and evaluates handwritten exam scripts with high accuracy.</div></div></div>
-                <div class="glass-card feature-card"><div class="feature-icon" style="background:var(--success-soft);"><i class="fa-solid fa-chart-bar" style="color:var(--success);"></i></div><div><div class="feature-title">Instant Statistics</div><div class="feature-desc">Auto-generates mean, mode, highest/lowest score, and performance distribution.</div></div></div>
-                <div class="glass-card feature-card"><div class="feature-icon" style="background:var(--warning-soft);"><i class="fa-solid fa-file-excel" style="color:var(--warning);"></i></div><div><div class="feature-title">Excel Export</div><div class="feature-desc">Download formatted spreadsheets in .xlsx or .ods with one click.</div></div></div>
-                <div class="glass-card feature-card"><div class="feature-icon" style="background:var(--info-soft);"><i class="fa-solid fa-camera" style="color:var(--info);"></i></div><div><div class="feature-title">Live Camera Capture</div><div class="feature-desc">Capture answer sheets directly using your device camera — no scanner needed.</div></div></div>
-              </div>
-              <div class="info-banner">
-                <i class="fa-solid fa-heart" style="color:#fb7185;"></i>
-                <div>Built with care for teachers across East Africa and beyond. <strong style="color:var(--text-1);">EduMark AI</strong> is designed to reduce the marking burden so you can focus on teaching.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /main-content -->
-</div><!-- /shell -->
-
+{% block scripts %}
 <script>
-/* ══════════════════════════════════════════════════
-   PERSISTENCE KEYS & HELPERS
-   All state is written to localStorage so it survives
-   full page reloads, navigation away and back, etc.
-══════════════════════════════════════════════════ */
-const LS_STATE    = 'edumark_state_v2';
-const LS_SETTINGS = 'edumark_settings_v2';
+(function () {
+  var esc = EM.esc;
+  var firstName = {{ ((session.get('user') or {}).get('display_name') or '')|tojson }}.split(' ')[0];
 
-function loadLS(key, def = {}) {
-  try { return JSON.parse(localStorage.getItem(key) || 'null') || def; } catch { return def; }
-}
-function saveLS(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
-}
-function patchLS(key, patch) {
-  saveLS(key, { ...loadLS(key), ...patch });
-}
+  var h = new Date().getHours();
+  var part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = firstName ? part + ', ' + firstName : part;
 
-/* ── Shorthand ── */
-const getState    = () => loadLS(LS_STATE,    { page: 'dashboard', sidebarCollapsed: false, helpPanel: 'getting-started', settingsPanel: 'appearance' });
-const patchState  = p  => patchLS(LS_STATE,  p);
-const getSettings = () => loadLS(LS_SETTINGS, {});
-
-/* ══════════════════════════════════════════════════
-   PAGE TITLES
-══════════════════════════════════════════════════ */
-const PAGE_TITLES = {
-  dashboard:   ['Dashboard',            'Welcome back, Teacher'],
-  settings:    ['Settings',             'Customise your experience'],
-  help:        ['Help & About',         'Guides, FAQ, and app info'],
-};
-
-/* ══════════════════════════════════════════════════
-   SPA NAVIGATION — persists active page
-══════════════════════════════════════════════════ */
-function switchPage(page, el) {
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.sb-item[data-page]').forEach(n => n.classList.remove('active'));
-
-  const section = document.getElementById('page-' + page);
-  if (section) section.classList.add('active');
-  if (el && el.classList) el.classList.add('active');
-
-  const [title, subtitle] = PAGE_TITLES[page] || [page, ''];
-  document.getElementById('pageTitle').textContent    = title;
-  document.getElementById('pageSubtitle').textContent = subtitle;
-
-  patchState({ page });
-  closeMobileSidebar();
-
-  if (page === 'dashboard') loadDashboardStats();
-
-  // Restore sub-panel state when switching to settings/help
-  if (page === 'settings') {
-    const st = getState();
-    const panel = st.settingsPanel || 'appearance';
-    const navEl = document.querySelector(`.settings-nav-item[onclick*="${panel}"]`);
-    switchSettings(panel, navEl);
+  function pct(n) { return Math.round(n * 10) / 10; }
+  function band(p) { return p >= 70 ? 'score-high' : p >= 50 ? 'score-mid' : 'score-low'; }
+  function meta(s) {
+    return [((s['class'] || '') + ' ' + (s.stream || '')).trim(), ((s.term || '') + ' ' + (s.year || '')).trim()]
+      .filter(Boolean).join(', ');
   }
-  if (page === 'help') {
-    const st = getState();
-    const panel = st.helpPanel || 'getting-started';
-    const navEl = document.getElementById('hn-' + panel);
-    switchHelp(panel, navEl);
+  function resultsLink(sess) { return '/students?session=' + encodeURIComponent(sess.session_id || sess.id); }
+
+  function statusChip(s) {
+    if (s.failed_count) return '<span class="chip chip-bad"><i class="fa-solid fa-circle-exclamation"></i> ' + s.failed_count + ' failed</span>';
+    if (s.review_count) return '<span class="chip chip-warn"><i class="fa-solid fa-flag"></i> ' + s.review_count + ' to review</span>';
+    if (s.total_students && s.marked_count === s.total_students) return '<span class="chip chip-ok"><i class="fa-solid fa-check"></i> Complete</span>';
+    if (!s.total_students) return '<span class="chip">No scripts yet</span>';
+    return '<span class="chip chip-info">In progress</span>';
   }
-}
 
-/* ══════════════════════════════════════════════════
-   SIDEBAR — persists collapsed state
-══════════════════════════════════════════════════ */
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const mc = document.getElementById('mainContent');
-  const collapsed = !sb.classList.contains('collapsed');
-  sb.classList.toggle('collapsed', collapsed);
-  mc.classList.toggle('expanded', collapsed);
-  document.documentElement.classList.toggle('sb-collapsed', collapsed);
-  patchState({ sidebarCollapsed: collapsed });
-  patchLS(LS_SETTINGS, { sidebarCollapsed: collapsed }); // persisted silently — no toast
-}
-
-function openMobileSidebar() {
-  document.getElementById('sidebar').classList.add('mobile-open');
-  document.getElementById('mobileOverlay').classList.add('show');
-}
-function closeMobileSidebar() {
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.getElementById('mobileOverlay').classList.remove('show');
-}
-
-/* ══════════════════════════════════════════════════
-   SETTINGS SUB-PANELS — persists active sub-panel
-══════════════════════════════════════════════════ */
-function switchSettings(panel, el) {
-  document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
-  const t = document.getElementById('settings-' + panel);
-  if (t) t.classList.add('active');
-  if (el) el.classList.add('active');
-  patchState({ settingsPanel: panel });
-}
-
-/* ══════════════════════════════════════════════════
-   HELP SUB-PANELS — persists active help panel
-══════════════════════════════════════════════════ */
-function switchHelp(panel, el) {
-  document.querySelectorAll('.help-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.help-nav-item').forEach(i => i.classList.remove('active'));
-  const t = document.getElementById('help-' + panel);
-  if (t) t.classList.add('active');
-  if (el) el.classList.add('active');
-  patchState({ helpPanel: panel });
-}
-
-function toggleFaq(el) {
-  const item = el.parentElement;
-  const wasOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-  if (!wasOpen) item.classList.add('open');
-}
-
-/* ══════════════════════════════════════════════════
-   SETTINGS CONTROLS
-══════════════════════════════════════════════════ */
-function saveSetting(key, value) {
-  patchLS(LS_SETTINGS, { [key]: value });
-  showToast('success', 'Setting saved', 'fa-circle-check');
-}
-
-function selectTheme(theme, el) {
-  const t = theme === 'light' ? 'light' : 'dark';
-  saveSetting('theme', t);
-  applyTheme(t);
-}
-
-function applyTheme(theme) {
-  const t = theme === 'light' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', t);
-  document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('active'));
-  const optEl = document.getElementById(t === 'light' ? 'themeOptLight' : 'themeOptDark');
-  if (optEl) optEl.classList.add('active');
-}
-
-function selectLanguage(lang, el) {
-  document.querySelectorAll('.lang-opt').forEach(o => o.classList.remove('active'));
-  el.classList.add('active'); saveSetting('language', lang);
-}
-
-function selectExportFormat(fmt, el) {
-  el.closest('.settings-panel').querySelectorAll('.strictness-opt').forEach(o => o.classList.remove('active'));
-  el.classList.add('active'); saveSetting('exportFormat', fmt);
-}
-
-function confirmReset() {
-  if (confirm('Reset all settings to defaults? This cannot be undone.')) {
-    localStorage.removeItem(LS_SETTINGS);
-    localStorage.removeItem(LS_STATE);
-    showToast('warning', 'Settings reset to defaults', 'fa-rotate-left');
-    setTimeout(() => location.reload(), 1200);
-  }
-}
-
-/* ══════════════════════════════════════════════════
-   DASHBOARD STATS
-══════════════════════════════════════════════════ */
-// Cached session data for spreadsheet preview
-let _allSessions = [];
-
-async function loadDashboardStats() {
-  try {
-    const res     = await fetch('/api/sessions', { credentials: 'same-origin' });
+  async function loadSessions() {
+    var res;
+    try { res = await fetch('/api/sessions', { credentials: 'same-origin' }); } catch (e) { return; }
+    if (res.status === 401) { location.href = '/login?next=/'; return; }
     if (!res.ok) return;
-    const data    = await res.json();
-    _allSessions  = Array.isArray(data) ? data : (data.sessions || []);
+    var data = await res.json();
+    var sessions = (data.sessions || []);
 
-    let totalStudents = 0, totalMarked = 0;
-    const allScores = [];
-
-    _allSessions.forEach(sess => {
-      (sess.students || []).forEach(s => {
-        totalStudents++;
-        if (s.status === 'marked') {
-          totalMarked++;
-          const sc = s.score !== undefined ? s.score : s.total_score;
-          if (!isNaN(parseFloat(sc))) allScores.push(parseFloat(sc));
-        }
+    var withStudents = sessions.filter(function (s) { return (s.total_students || 0) > 0; });
+    var uploaded = 0, marked = 0, scores = [], review = 0, failed = 0;
+    sessions.forEach(function (s) {
+      uploaded += s.total_students || 0;
+      marked += s.marked_count || 0;
+      review += s.review_count || 0;
+      failed += s.failed_count || 0;
+      (s.students || []).forEach(function (st) {
+        if (st.status === 'marked') { var v = parseFloat(st.total_score); if (!isNaN(v)) scores.push(v); }
       });
     });
 
-    const avg = allScores.length
-      ? (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1) + '%'
-      : '—';
+    document.getElementById('kSessions').textContent = withStudents.length;
+    document.getElementById('kSessionsFoot').textContent = sessions.length > withStudents.length
+      ? (sessions.length - withStudents.length) + ' set up, awaiting scripts' : ' ';
+    document.getElementById('kMarked').textContent = marked;
+    document.getElementById('kMarkedFoot').textContent = 'of ' + uploaded + ' uploaded';
+    var avg = scores.length ? pct(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length) : null;
+    var kAvg = document.getElementById('kAvg');
+    kAvg.textContent = avg === null ? '—' : avg + '%';
+    var attn = review + failed;
+    document.getElementById('kAttn').textContent = attn;
+    document.getElementById('kAttnBox').classList.toggle('attention', attn > 0);
+    document.getElementById('kAttnBox').classList.toggle('clear', attn === 0 && marked > 0);
+    document.getElementById('kAttnFoot').textContent = attn
+      ? [review ? review + ' to review' : '', failed ? failed + ' failed' : ''].filter(Boolean).join(', ')
+      : (marked ? 'All results are clear' : ' ');
 
-    document.getElementById('dashSessions').textContent = _allSessions.length;
-    document.getElementById('dashStudents').textContent = totalStudents;
-    document.getElementById('dashAvg').textContent      = avg;
-    document.getElementById('dashMarked').textContent   = totalMarked;
-
-    const act = document.getElementById('activityList');
-    if (!_allSessions.length) {
-      act.innerHTML = `<div style="text-align:center;padding:24px 0;"><div style="font-size:30px;opacity:.25;margin-bottom:8px;">📋</div><div style="font-size:12px;color:var(--text-3);">No activity yet. Start by marking your first exam.</div></div>`;
-    } else {
-      act.innerHTML = _allSessions.slice(0, 5).map(sess => {
-        const mc  = sess.marked_count || 0;
-        const tc  = sess.total_students || 0;
-        const col = mc === tc && tc > 0 ? 'var(--success)' : mc > 0 ? 'var(--warning)' : 'var(--text-3)';
-        return `<div class="activity-item">
-          <div class="activity-dot" style="background:${col};"></div>
-          <div class="activity-text"><strong>${sess.name || sess.subject || 'Session'}</strong><br>${mc}/${tc} students marked</div>
-          <div class="activity-time">${sess.class || ''}</div>
-        </div>`;
-      }).join('');
+    if (!sessions.length) {
+      document.getElementById('emptyState').classList.remove('hidden');
+      document.getElementById('dashGrid').classList.add('hidden');
+      return;
     }
 
-  } catch(e) { console.warn('Dashboard stats error:', e); }
-}
+    var named = sessions.filter(function (s) { return s.subject; });
+    document.getElementById('recentBody').innerHTML = named.slice(0, 8).map(function (s) {
+      var tot = s.total_students || 0, mk = s.marked_count || 0;
+      var sc = (s.students || []).filter(function (x) { return x.status === 'marked'; })
+        .map(function (x) { return parseFloat(x.total_score); }).filter(function (v) { return !isNaN(v); });
+      var a = sc.length ? pct(sc.reduce(function (p, c) { return p + c; }, 0) / sc.length) : null;
+      var w = tot ? Math.round(mk / tot * 100) : 0;
+      return '<tr class="linkrow" data-href="' + esc(resultsLink(s)) + '">' +
+        '<td><div class="sess-exam">' + esc(s.subject || 'Exam') + (s.exam_type ? ' (' + esc(s.exam_type) + ')' : '') + '</div>' +
+        '<div class="sess-meta">' + esc(meta(s)) + '</div></td>' +
+        '<td class="sess-progress"><div class="progress' + (tot && mk === tot ? ' ok' : '') + '"><span style="width:' + w + '%"></span></div>' +
+        '<small>' + mk + ' of ' + tot + ' marked</small></td>' +
+        '<td class="right hide-sm">' + (a === null ? '<span class="score score-none">—</span>' : '<span class="score ' + band(a) + '">' + a + '%</span>') + '</td>' +
+        '<td class="hide-sm">' + statusChip(s) + '</td>' +
+        '<td><i class="fa-solid fa-chevron-right"></i></td></tr>';
+    }).join('');
 
-
-/* ══════════════════════════════════════════════════
-   TOAST
-══════════════════════════════════════════════════ */
-const TOAST_COLORS = { success:'var(--success)', danger:'var(--danger)', warning:'var(--warning)', info:'var(--info)' };
-
-function showToast(type, msg, icon = 'fa-circle-check') {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.innerHTML = `<i class="fa-solid ${icon}" style="color:${TOAST_COLORS[type]||'var(--accent)'};font-size:16px;flex-shrink:0;"></i><span style="flex:1;line-height:1.4;">${msg}</span>`;
-  c.appendChild(t);
-  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 280); }, 3200);
-}
-
-/* ══════════════════════════════════════════════════
-   HTML ESCAPE
-══════════════════════════════════════════════════ */
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ══════════════════════════════════════════════════
-   INIT — restore full persisted state on every load
-══════════════════════════════════════════════════ */
-function init() {
-  const st   = getState();
-  const sets = getSettings();
-
-  /* ── 1. Sidebar collapse ── */
-  const shouldCollapse = st.sidebarCollapsed ?? sets.sidebarCollapsed ?? false;
-  if (shouldCollapse) {
-    document.getElementById('sidebar').classList.add('collapsed');
-    document.getElementById('mainContent').classList.add('expanded');
+    var needs = sessions.filter(function (s) { return s.review_count || s.failed_count; }).slice(0, 6);
+    document.getElementById('attnList').innerHTML = needs.length ? needs.map(function (s) {
+      return '<a class="attn-item" href="' + esc(resultsLink(s)) + '">' +
+        '<div class="attn-text"><span class="sess-exam">' + esc(s.subject) + ' (' + esc(s.exam_type) + ')' + '</span>' +
+        '<span class="sess-meta">' + esc((s['class'] || '') + ' ' + (s.stream || '')) + '</span></div>' + statusChip(s) + '</a>';
+    }).join('') : '<div class="empty" style="padding:28px 20px"><div class="empty-icon"><i class="fa-solid fa-check"></i></div><div class="empty-title">Nothing to check</div><p class="empty-desc">Flagged and failed results will appear here.</p></div>';
   }
 
-  /* ── 2. Apply saved theme (defaults to dark) ── */
-  applyTheme(sets.theme || 'dark');
+  document.getElementById('recentBody').addEventListener('click', function (e) {
+    var tr = e.target.closest('tr[data-href]'); if (tr) location.href = tr.getAttribute('data-href');
+  });
 
-  /* ── 3. Restore active page (hash > persisted > default) ── */
-  const hash = window.location.hash.replace('#','');
-  const page = (hash && PAGE_TITLES[hash]) ? hash : (st.page || 'dashboard');
+  var qTimer = null;
+  async function loadQueue() {
+    var busy = false;
+    try {
+      var res = await fetch('/api/queue/status', { credentials: 'same-origin' });
+      if (res.ok) {
+        var q = await res.json();
+        var cur = q.current_jobs || [], wait = (q.queue || []).length, failed = (q.failed || []).length;
+        busy = cur.length > 0 || wait > 0;
+        document.getElementById('qMarking').textContent = cur.length;
+        document.getElementById('qWaiting').textContent = wait;
+        document.getElementById('qFailed').textContent = failed;
+        var chip = document.getElementById('qState');
+        var map = { processing: ['chip-info', 'dot-info', 'Marking'], retrying: ['chip-warn', 'dot-warn', 'Retrying'],
+                    paused: ['chip-warn', 'dot-warn', 'Paused'], waiting: ['chip-info', 'dot-info', 'Starting'], idle: ['', '', 'Idle'] };
+        var m = map[q.status] || map.idle;
+        chip.className = 'chip ' + m[0];
+        chip.innerHTML = '<span class="dot ' + m[1] + '"></span> ' + m[2];
+        document.getElementById('qJobs').innerHTML = cur.slice(0, 5).map(function (j) {
+          return '<div class="job"><span class="spinner"></span><span class="job-name">' + esc(j.student_name || j.student_id) + '</span>' +
+            (j.retry_count ? '<span class="chip chip-warn">retry ' + j.retry_count + '</span>' : '') + '</div>';
+        }).join('');
+        var k = q.key_pool || {};
+        document.getElementById('qKeys').textContent = k.total_keys
+          ? q.worker_count + ' scripts can be marked at once' + (k.keys_cooling_down ? ' — ' + k.keys_cooling_down + ' of ' + k.total_keys + ' AI keys resting' : '')
+          : 'AI marking is not set up yet. Add a Gemini key to the .env file.';
+      }
+    } catch (e) {}
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function () { loadQueue(); if (busy) loadSessions(); }, busy ? 5000 : 20000);
+  }
 
-  // Activate sidebar item
-  const navEl = document.querySelector(`[data-page="${page}"]`);
-  switchPage(page, navEl);
-
-  // Clear hash from URL cleanly
-  if (hash) history.replaceState(null, '', window.location.pathname);
-
-  /* ── 4. Restore settings/help sub-panels (already done in switchPage) ── */
-}
-
-window.addEventListener('DOMContentLoaded', init);
-
-// Persist page on unload (belt-and-suspenders; patchState is called in switchPage already)
-window.addEventListener('beforeunload', () => patchState({ page: getState().page }));
+  loadSessions();
+  loadQueue();
+})();
 </script>
-</body>
-</html>
+{% endblock %}

@@ -1,4 +1,4 @@
-# EduMark AI — runtime dependencies.
+# ExamManager — runtime dependencies.
 # Python 3.11 – 3.14 (minimum 3.11). Every pin below installs from a
 # pre-built wheel on Windows, macOS and Linux for 3.11 through 3.14
 # (odfpy is pure Python). Install with:  pip install -r requirements.txt

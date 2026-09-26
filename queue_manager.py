@@ -23,11 +23,28 @@ v5 changes over v4:
   review_reason when the marker flags a result (D3.1/D3.2), and a failed
   student keeps a plain failure_reason a teacher understands (D6.2).
 
-Everything else — N parallel workers sharing one key_rotator, permanent-vs-
-transient errors, job cancel/retry, the status API shape — is unchanged.
+v6 changes over v5 (speed + no needless failures):
+- Transient errors back off exponentially with jitter (10 s, 20 s, 40 s …
+  capped at 2 min) so workers stop retrying an overloaded model in lockstep.
+- A quota hit no longer uses up the job's attempt budget: it has its own,
+  larger cap. The key rests for as long as Google's reply says (retryDelay),
+  or an hour for a per-day quota. If every key is out for more than 15 min
+  the job fails straight away with a clear "daily limit" reason instead of
+  hogging a worker.
+- An invalid / expired key is parked and the job moves to another key —
+  before, one bad key in .env failed every student that landed on it.
+- MARKING_WORKERS_PER_KEY (default 1) runs more than one job per key for
+  paid-tier keys with high rate limits.
+- Re-uploading a student who is still WAITING in the queue updates that
+  job instead of adding a second one, so a student is never marked twice.
+
+Everything else — permanent-vs-transient errors, job cancel/retry, the
+status API shape — is unchanged.
 """
 
 import json
+import os
+import random
 import threading
 import uuid
 import time
@@ -58,8 +75,21 @@ TRANSIENT_KEYWORDS = [
     "remote end closed", "incomplete read",
 ]
 
-RETRY_DELAY_SECS  = 10          # seconds between retries on transient errors
-MAX_JOB_ATTEMPTS  = 8           # hard cap per job (waiting for a cooled key doesn't count)
+RETRY_DELAY_SECS  = 10          # first back-off on a transient error (doubles each time)
+MAX_RETRY_DELAY_SECS = 120      # back-off ceiling
+MAX_JOB_ATTEMPTS  = 8           # hard cap per job (quota hits / waiting for a key don't count)
+MIN_QUOTA_HITS    = 12          # quota hits allowed per job (at least 3 per key)
+MAX_KEY_WAIT_SECS = 15 * 60     # all keys out longer than this → fail now, retry later
+ALL_KEYS_EXHAUSTED = "all_keys_exhausted"
+
+
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, "") or default)
+    except ValueError:
+        return default
+
+
 PERMANENT_ERRORS = [
     "google_api_key not configured",
     "marking_failed_no_content",    # AI returned sentinel — blank pages
@@ -91,6 +121,8 @@ def friendly_failure(error_str: str) -> str:
     el = _strip_ai_text(error_str or "").lower()
     if "not configured" in el or "no gemini api keys" in el:
         return "AI service not set up — contact your administrator"
+    if ALL_KEYS_EXHAUSTED in el:
+        return "Daily AI limit reached on every key — retry later (or add more keys)"
     if "answer content" in el or "marking_failed_no_content" in el:
         return "Pages unreadable or blank — re-capture and upload again"
     if "no answer sheets" in el or "no valid answer images" in el or "student folder not found" in el:
@@ -174,7 +206,7 @@ class MarkingJob:
 class QueueManager:
     MAX_LOG_ENTRIES = 120
     MAX_COMPLETED   = 300
-    MAX_WORKERS     = 7   # ceiling regardless of how many keys are configured
+    MAX_WORKERS     = 16  # ceiling regardless of how many keys are configured
 
     def __init__(self, pending_file: Path = None):
         self._lock         = threading.Lock()
@@ -191,7 +223,8 @@ class QueueManager:
         # Shared with app.py — one source of truth for key cooldown state.
         self._key_pool = key_rotator
         num_keys        = len(self._key_pool) or 1
-        self._worker_count = max(1, min(self.MAX_WORKERS, num_keys))
+        per_key         = max(1, _env_int("MARKING_WORKERS_PER_KEY", 1))
+        self._worker_count = max(1, min(self.MAX_WORKERS, num_keys * per_key))
 
         self._workers: List[threading.Thread] = [
             threading.Thread(
@@ -219,9 +252,21 @@ class QueueManager:
 
     def enqueue(self, student_id, student_name, exam_folder, exam_info, page_count,
                 folder: str = None) -> "MarkingJob":
-        job = MarkingJob(student_id, student_name, str(exam_folder), exam_info, page_count, folder=folder)
-        self._persist_add(job)
+        folder = folder or f"student_{student_id}"
         with self._condition:
+            # Still waiting (not started)? Its pages were just replaced on disk,
+            # so the waiting job will mark the new ones — don't add a second.
+            for waiting in self._pending:
+                if waiting.exam_folder == str(exam_folder) and waiting.folder == folder:
+                    waiting.student_name = student_name
+                    waiting.page_count   = page_count
+                    waiting.exam_info    = exam_info
+                    self._log_event(f"📥 Already queued: {student_name} — will mark the new pages")
+                    self._persist_add(waiting)
+                    return waiting
+            job = MarkingJob(student_id, student_name, str(exam_folder), exam_info, page_count, folder=folder)
+            # Recorded before a worker can see it (pending_jobs.json has its own lock).
+            self._persist_add(job)
             self._pending.append(job)
             self._log_event(
                 f"📥 Queued: {student_name} (ID: {student_id}, {page_count} page{'s' if page_count!=1 else ''})")
@@ -402,10 +447,20 @@ class QueueManager:
             except Exception as exc:   # never let one bad job kill a worker thread
                 log.error(f"[Queue W{worker_id}] Worker error on {job.student_id}: {exc}")
                 traceback.print_exc()
-                self._fail_job(job, "An unexpected error occurred. Try re-queuing this student.", str(exc))
-                with self._lock:
-                    self._current_jobs.pop(worker_id, None)
-                    self._completed.append(job)
+                try:
+                    self._fail_job(job, "An unexpected error occurred. Try re-queuing this student.", str(exc))
+                    self._persist_remove(job)
+                finally:
+                    self._finish(job, worker_id)
+
+    def _finish(self, job: MarkingJob, worker_id: int):
+        """Moves a job off this worker into the completed list."""
+        with self._lock:
+            if self._current_jobs.get(worker_id) is job:
+                self._current_jobs.pop(worker_id, None)
+            self._completed.append(job)
+            if len(self._completed) > self.MAX_COMPLETED:
+                self._completed = self._completed[-self.MAX_COMPLETED:]
 
     def _pick_next_job(self, worker_id: int) -> Optional[MarkingJob]:
         with self._condition:
@@ -420,12 +475,18 @@ class QueueManager:
             return job
 
     def _acquire_key(self, job: MarkingJob, worker_id: int) -> Optional[str]:
-        """A key that is not cooling down; waits for the earliest one if all are (D2.2)."""
+        """
+        A key that is not cooling down; waits for the earliest one if all are
+        (D2.2). Returns ALL_KEYS_EXHAUSTED instead of waiting when every key
+        is out for longer than MAX_KEY_WAIT_SECS (e.g. daily quota used up).
+        """
         announced = False
         while not self._stop_evt.is_set():
             key, wait = self._key_pool.acquire()
             if key:
                 return key
+            if wait > MAX_KEY_WAIT_SECS:
+                return ALL_KEYS_EXHAUSTED
             if not announced:
                 self._log_event(f"⏳ [W{worker_id}] All API keys cooling down — "
                                 f"{job.student_name} continues in {wait:.0f}s")
@@ -447,7 +508,9 @@ class QueueManager:
         run_info: dict = {}
         key_slots: List[int] = []
         final_error    = None
-        attempts       = 0
+        attempts       = 0      # real attempts: transient errors count, quota hits don't
+        quota_hits     = 0
+        max_quota_hits = max(MIN_QUOTA_HITS, 3 * len(self._key_pool))
 
         while True:  # ← retry loop
             api_key = None
@@ -459,7 +522,7 @@ class QueueManager:
                     break
 
                 attempts += 1
-                if attempts > MAX_JOB_ATTEMPTS:
+                if attempts > MAX_JOB_ATTEMPTS or quota_hits > max_quota_hits:
                     self._fail_job(job, "AI service busy — please retry this student.",
                                    final_error or "busy: attempt limit reached")
                     break
@@ -471,7 +534,15 @@ class QueueManager:
 
                 api_key = self._acquire_key(job, worker_id)
                 if api_key is None:     # shutting down — job stays in pending_jobs.json
+                    with self._lock:
+                        if self._current_jobs.get(worker_id) is job:
+                            self._current_jobs.pop(worker_id, None)
                     return
+                if api_key == ALL_KEYS_EXHAUSTED:
+                    api_key = None
+                    self._fail_job(job, "Every API key has reached its limit — retry later.",
+                                   f"{ALL_KEYS_EXHAUSTED}: {final_error or ''}")
+                    break
                 key_slots.append(self._key_pool.slot_of(api_key))
 
                 from ai_marker_gemini_improved import AIMarker
@@ -508,11 +579,13 @@ class QueueManager:
                     err = result.get("error", "Marking returned no result")
                     final_error = err
                     if self._key_pool.is_quota_error(_strip_ai_text(err)):
-                        self._key_pool.report_quota_error(api_key, reason=err[:150])
+                        quota_hits += 1
+                        attempts -= 1
+                        self._key_pool.report_quota_error(api_key, reason=_strip_ai_text(err))
                         self._note_retry(job, worker_id, "Key hit quota — moving to another key")
                         continue
                     if _is_transient(err):
-                        self._schedule_retry(job, worker_id, "AI temporarily unavailable — will retry automatically")
+                        self._schedule_retry(job, worker_id, attempts, "AI temporarily unavailable — will retry automatically")
                         continue
                     else:
                         self._fail_job(job, "Could not mark this student's script. Please check the uploaded pages.", err)
@@ -521,12 +594,20 @@ class QueueManager:
             except Exception as exc:
                 err_str = f"{type(exc).__name__}: {str(exc)}"
                 final_error = err_str
+                if api_key and self._key_pool.is_bad_key_error(err_str):
+                    quota_hits += 1
+                    attempts -= 1
+                    self._key_pool.report_bad_key(api_key, reason=err_str)
+                    self._note_retry(job, worker_id, f"Key slot {key_slots[-1]} was rejected — moving to another key")
+                    continue
                 if self._key_pool.is_quota_error(err_str) and api_key:
-                    self._key_pool.report_quota_error(api_key, reason=err_str[:150])
+                    quota_hits += 1
+                    attempts -= 1
+                    self._key_pool.report_quota_error(api_key, reason=err_str)
                     self._note_retry(job, worker_id, "Key hit quota — moving to another key")
                     continue
                 if _is_transient(err_str):
-                    self._schedule_retry(job, worker_id, "Network or service issue — retrying automatically")
+                    self._schedule_retry(job, worker_id, attempts, "Network or service issue — retrying automatically")
                     continue
                 else:
                     log.error(f"[Queue W{worker_id}] Permanent error for {job.student_id}: {err_str}")
@@ -538,13 +619,7 @@ class QueueManager:
 
         self._log_metrics(job, worker_id, queue_wait, time.time() - t_start, key_slots, run_info)
         self._persist_remove(job)
-
-        # Always clean up this worker's current job pointer
-        with self._lock:
-            self._current_jobs.pop(worker_id, None)
-            self._completed.append(job)
-            if len(self._completed) > self.MAX_COMPLETED:
-                self._completed = self._completed[-self.MAX_COMPLETED:]
+        self._finish(job, worker_id)
 
     def _log_metrics(self, job, worker_id, queue_wait, processing, key_slots, run):
         """One machine-readable line per job in logs/marking.log (D1.1)."""
@@ -590,20 +665,28 @@ class QueueManager:
 
     def _note_retry(self, job: MarkingJob, worker_id: int, user_message: str):
         """Quota rotation — no sleep, the next attempt takes a different key."""
-        job.retry_count += 1
-        self._log_event(f"🔁 [W{worker_id}] Retry #{job.retry_count} for {job.student_name} — {user_message}")
-
-    def _schedule_retry(self, job: MarkingJob, worker_id: int, user_message: str):
-        """Sleep RETRY_DELAY_SECS then the while-loop will retry the AI call."""
-        job.retry_count += 1
         with self._lock:
+            job.retry_count += 1
+            self._log_event(f"🔁 [W{worker_id}] Retry #{job.retry_count} for {job.student_name} — {user_message}")
+
+    def _schedule_retry(self, job: MarkingJob, worker_id: int, attempt: int, user_message: str):
+        """
+        Exponential back-off with jitter (10 s, 20 s, 40 s … ≤ 2 min), then the
+        while-loop retries. Jitter keeps workers from hitting an overloaded
+        model at the same instant.
+        """
+        with self._lock:
+            job.retry_count += 1
             job.status = JobStatus.RETRYING
             job.error  = f"Retrying (attempt #{job.retry_count})…"
+            n = job.retry_count
+        delay = min(RETRY_DELAY_SECS * (2 ** max(0, attempt - 1)), MAX_RETRY_DELAY_SECS)
+        delay = delay * random.uniform(0.8, 1.3)
         self._log_event(
-            f"⏳ [W{worker_id}] Retry #{job.retry_count} for {job.student_name} "
-            f"in {RETRY_DELAY_SECS}s — {user_message}"
+            f"⏳ [W{worker_id}] Retry #{n} for {job.student_name} "
+            f"in {delay:.0f}s — {user_message}"
         )
-        self._stop_evt.wait(RETRY_DELAY_SECS)
+        self._stop_evt.wait(delay)
         with self._lock:
             job.status = JobStatus.PROCESSING
             job.error  = None

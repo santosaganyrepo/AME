@@ -1,6 +1,6 @@
 """
 Backup (D4.3) — zips uploads/, users.json, settings and the pending-job list
-into backups/edumark-backup-YYYYMMDD-HHMMSS.zip and keeps the newest 7.
+into backups/exammanager-backup-YYYYMMDD-HHMMSS.zip and keeps the newest 7.
 
 Run by hand or from a scheduled task (it never runs inside the app):
 
@@ -22,7 +22,8 @@ ROOT = Path(__file__).resolve().parent.parent
 BACKUP_DIR = ROOT / "backups"
 EXTRA_FILES = ["users.json", "settings.json", "deletion_log.json", "pending_jobs.json"]
 STORED_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".pdf", ".zip", ".gz"}
-PREFIX = "edumark-backup-"
+PREFIX = "exammanager-backup-"
+OLD_PREFIXES = ("edumark-backup-",)   # backups made before the rename still count toward --keep
 
 
 def make_backup(keep: int = 7) -> Path:
@@ -46,7 +47,8 @@ def make_backup(keep: int = 7) -> Path:
                 files += 1
     partial.replace(target)   # only a finished zip ever gets the .zip name
 
-    backups = sorted(BACKUP_DIR.glob(f"{PREFIX}*.zip"))
+    backups = [p for pre in (PREFIX, *OLD_PREFIXES) for p in BACKUP_DIR.glob(f"{pre}*.zip")]
+    backups.sort(key=lambda p: p.name.split("-backup-", 1)[1])   # by timestamp, whatever the prefix
     for old in backups[:-keep] if keep > 0 else []:
         old.unlink()
     size_mb = target.stat().st_size / 1024 / 1024
@@ -55,7 +57,7 @@ def make_backup(keep: int = 7) -> Path:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(description="Back up EduMark data (uploads, accounts, settings).")
+    p = argparse.ArgumentParser(description="Back up ExamManager data (uploads, accounts, settings).")
     p.add_argument("--keep", type=int, default=7, help="how many backups to keep (default 7)")
     args = p.parse_args(argv)
     try:

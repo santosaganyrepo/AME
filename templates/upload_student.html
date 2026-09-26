@@ -1,1644 +1,508 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>EduMark AI — Mark Student</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+{% extends "base.html" %}
+{% set active = 'mark' %}
+{% block title %}Add scripts{% endblock %}
+{% block topbar_title %}{{ exam_data.subject }} ({{ exam_data.exam_type }}){% endblock %}
+{% block topbar_context %}{{ exam_data.class }} {{ exam_data.stream }}, {{ exam_data.term }} {{ exam_data.year }}{% endblock %}
+{% block topbar_actions %}
+<a class="btn btn-ghost btn-sm" href="{{ url_for('batch_upload_page') }}"><i class="fa-solid fa-file-zipper"></i> <span class="hide-sm">Upload a ZIP instead</span></a>
+{% endblock %}
 
-  <script>
-    // Apply the saved theme + sidebar state before first paint — same key
-    // every other page reads/writes, so nothing shifts/jumps on arrival.
-    (function () {
-      try {
-        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
-        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
+{% block head %}
+<style>
+  .capture-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: var(--s6); align-items: start; }
+  @media (max-width: 1120px) { .capture-layout { grid-template-columns: 1fr; } .queue-col { position: static !important; } }
+  @media (max-width: 640px) { .hide-sm { display: none; } }
+  .capture-col .panel + .panel { margin-top: var(--s5); }
 
-  <style>
-    :root, html[data-theme="dark"] {
-      --bg-base:        #0f172a;
-      --bg-surface:     #131c2e;
-      --bg-elevated:    #1b2436;
-      --bg-card:        rgba(255,255,255,0.045);
-      --bg-card-hover:  rgba(255,255,255,0.08);
-      --glass-border:   rgba(255,255,255,0.10);
-      --glass-border-h: rgba(255,255,255,0.20);
-      --grad-main:      #ffffff;
-      --grad-subtle:    rgba(255,255,255,0.10);
-      --accent:         #818cf8;
-      --accent-rgb:     129,140,248;
-      --accent-soft:    rgba(255,255,255,0.12);
-      --success:        #34d399;
-      --success-soft:   rgba(52,211,153,0.15);
-      --warning:        #fbbf24;
-      --warning-soft:   rgba(251,191,36,0.15);
-      --danger:         #f87171;
-      --danger-soft:    rgba(248,113,113,0.15);
-      --text-primary:   #f2f2f3;
-      --text-secondary: #b2b2b8;
-      --text-muted:     #6c6c72;
-      --radius-sm:  10px; --radius-md:  16px;
-      --radius-lg:  20px; --radius-xl:  24px;
-      --shadow-md:  0 8px 24px rgba(0,0,0,0.4);
-      --shadow-lg:  0 16px 48px rgba(0,0,0,0.5);
-      --shadow-glow: none;
-      --sidebar-w:     260px; --sidebar-w-col: 72px;
-      --header-h:      60px;
-      --transition:    all 0.1s cubic-bezier(0.4,0,0.2,1);
-      --font-display:  'Space Grotesk', sans-serif;
-      --font-body:     'DM Sans', sans-serif;
-    }
-    html[data-theme="light"] {
-      --bg-base:        #ffffff;
-      --bg-surface:     #fafafa;
-      --bg-elevated:    #f2f2f2;
-      --bg-card:        #ffffff;
-      --bg-card-hover:  #f4f4f4;
-      --glass-border:   rgba(0,0,0,0.10);
-      --glass-border-h: rgba(0,0,0,0.20);
-      --grad-main:      #0a0a0a;
-      --grad-subtle:    rgba(0,0,0,0.06);
-      --accent:         #4f46e5;
-      --accent-rgb:     79,70,229;
-      --accent-soft:    rgba(0,0,0,0.06);
-      --success:        #16a34a;
-      --success-soft:   rgba(22,163,74,0.10);
-      --warning:        #d97706;
-      --warning-soft:   rgba(217,119,6,0.10);
-      --danger:         #dc2626;
-      --danger-soft:    rgba(220,38,38,0.10);
-      --text-primary:   #0a0a0a;
-      --text-secondary: #45454a;
-      --text-muted:     #8a8a90;
-      --shadow-md:  0 8px 24px rgba(0,0,0,0.08);
-      --shadow-lg:  0 16px 48px rgba(0,0,0,0.12);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-body);
-      background: var(--bg-base); color: var(--text-primary);
-      min-height: 100vh; overflow-x: hidden;
-    }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 99px; }
+  .mode-row { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s4); }
+  .camera-wrap, .upload-wrap { display: none; }
+  .camera-wrap.show, .upload-wrap.show { display: block; }
+  .camera-view { position: relative; aspect-ratio: 3 / 4; max-height: 62vh; margin: 0 auto; background: #000; border-radius: var(--r-lg); overflow: hidden; transition: opacity var(--t-fast); }
+  @media (min-width: 900px) { .camera-view { aspect-ratio: 4 / 3; } }
+  .camera-view video { width: 100%; height: 100%; object-fit: contain; }
+  .cam-status-badge { position: absolute; top: var(--s3); left: var(--s3); display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(0,0,0,.6); color: #fff; font-size: 12.5px; font-weight: 600; }
+  .cam-status-badge.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3CC27A; }
+  .cam-controls-row { display: flex; justify-content: center; margin-top: var(--s4); }
+  .shutter-btn { width: 68px; height: 68px; border-radius: 50%; border: 4px solid var(--surface); outline: 2px solid var(--primary); background: var(--primary); color: #fff; font-size: 22px; cursor: pointer; }
+  .shutter-btn:hover { background: var(--primary-hover); }
+  .shutter-btn:focus-visible { box-shadow: var(--focus); }
+  #canvas { display: none; }
 
-    /* ── Shell ───────────────── */
-    .app-shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: var(--s3); }
+  .thumb { position: relative; aspect-ratio: 3 / 4; border-radius: var(--r-sm); overflow: hidden; border: 1.5px solid var(--line); background: var(--sunken); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb.flagged { border-color: var(--bad); }
+  .thumb-num { position: absolute; left: 6px; top: 6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; background: rgba(0,0,0,.65); color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .thumb-del { position: absolute; right: 4px; top: 4px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(0,0,0,.65); color: #fff; cursor: pointer; display: grid; place-items: center; }
+  .thumb-del:hover { background: var(--bad); }
+  .thumb-checking, .thumb-quality-badge { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 6px; font-size: 11.5px; font-weight: 600; text-align: center; }
+  .thumb-checking { background: rgba(0,0,0,.6); color: #fff; }
+  .thumb-quality-badge { background: var(--bad); color: #fff; }
+  .thumb-pdf { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink-2); font-size: 13px; font-weight: 600; }
+  .thumb-pdf i { font-size: 26px; color: var(--bad); }
 
-    /* ── Sidebar ─────────────── */
-    .sidebar {
-      width: var(--sidebar-w); min-height: 100vh;
-      background: var(--bg-surface);border-right: 1px solid var(--glass-border);
-      display: flex; flex-direction: column;
-      position: fixed; top: 0; left: 0; bottom: 0;
-      z-index: 100; transition: var(--transition); overflow: hidden;
-    }
-    .sidebar.collapsed { width: var(--sidebar-w-col); }
-    html.sb-collapsed .sidebar:not(.mobile-open) { width: var(--sidebar-w-col); }
-    .sb-toggle-btn {
-      width: 34px; height: 34px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); color: var(--text-primary);
-      cursor: pointer; font-size: 14px; transition: var(--transition);
-    }
-    .sb-toggle-btn:hover { background: var(--bg-card-hover); border-color: var(--glass-border-h); }
-    .sidebar.collapsed .sidebar-brand { justify-content: center; padding: 18px 0; gap: 0; }
-    .sidebar-brand {
-      display: flex; align-items: center; gap: 12px;
-      padding: 18px 20px; border-bottom: 1px solid var(--glass-border);
-      min-height: var(--header-h); text-decoration: none;
-    }
-    .brand-icon {
-      width: 34px; height: 34px; background: var(--grad-main);
-      border-radius: 9px; display: flex; align-items: center; justify-content: center;
-      font-size: 16px; flex-shrink: 0; box-shadow: var(--shadow-glow);
-    }
-    .brand-text { overflow: hidden; transition: var(--transition); }
-    .brand-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
-    .brand-tag  { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .sidebar.collapsed .brand-text { opacity: 0; width: 0; }
-    .sidebar.collapsed .brand-link-text { display: none; }
-    .sidebar-nav { flex: 1; padding: 14px 10px; overflow-y: auto; overflow-x: hidden; }
-    .nav-section-label {
-      font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px;
-      color: var(--text-muted); padding: 0 10px; margin: 10px 0 5px;
-      white-space: nowrap; transition: var(--transition);
-    }
-    .sidebar.collapsed .nav-section-label { opacity: 0; }
-    .nav-item {
-      display: flex; align-items: center; gap: 11px;
-      padding: 10px 12px; border-radius: var(--radius-md);
-      cursor: pointer; transition: var(--transition); margin-bottom: 2px;
-      text-decoration: none; color: var(--text-secondary); white-space: nowrap;
-      border: 1px solid transparent; position: relative;
-    }
-    .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--glass-border); transform: translateX(2px); }
-    .nav-item.active { background: var(--accent-soft); color: var(--text-primary); border-color: rgba(var(--accent-rgb),0.25); }
-    .nav-item.active .nav-icon { background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-icon { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; }
-    .nav-label { font-size: 13px; font-weight: 500; overflow: hidden; transition: var(--transition); }
-    .sidebar.collapsed .nav-label { opacity: 0; width: 0; }
-    .nav-badge { margin-left: auto; background: var(--grad-main); color: var(--bg-base); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 99px; flex-shrink: 0; transition: var(--transition); }
-    .sidebar.collapsed .nav-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
-    .sidebar.collapsed .nav-item::after {
-      content: attr(data-tooltip);
-      position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%);
-      background: var(--bg-elevated); border: 1px solid var(--glass-border);
-      color: var(--text-primary); font-size: 12px; font-weight: 500;
-      padding: 5px 10px; border-radius: var(--radius-sm);
-      white-space: nowrap; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s; box-shadow: var(--shadow-md); z-index: 200;
-    }
-    .sidebar.collapsed .nav-item:hover::after { opacity: 1; }
-    .sidebar-footer { padding: 10px; border-top: 1px solid var(--glass-border); }
-    .sidebar-toggle {
-      width: 100%; display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px; border-radius: var(--radius-md);
-      background: none; border: 1px solid var(--glass-border);
-      color: var(--text-secondary); cursor: pointer; transition: var(--transition);
-      font-size: 12px; font-family: var(--font-body); white-space: nowrap; overflow: hidden;
-    }
-    .sidebar-toggle:hover { background: var(--bg-card-hover); color: var(--text-primary); }
-    .sidebar-toggle i { flex-shrink: 0; transition: var(--transition); }
-    .sidebar.collapsed .sidebar-toggle i { transform: rotate(180deg); }
-    .toggle-label { transition: var(--transition); }
-    .sidebar.collapsed .toggle-label { opacity: 0; width: 0; }
+  .submit-bar { position: sticky; bottom: 0; z-index: 5; margin-top: var(--s5); padding: var(--s3) 0 var(--s4); background: linear-gradient(to top, var(--canvas) 70%, transparent); }
+  .submit-bar .btn { width: 100%; }
+  .sync-badge { font-weight: 500; opacity: .85; }
 
-    /* ── Main ───────────────── */
-    .main-content {
-      flex: 1; margin-left: var(--sidebar-w); min-height: 100vh;
-      transition: var(--transition); display: flex; flex-direction: column;
-    }
-    .main-content.expanded { margin-left: var(--sidebar-w-col); }
-    html.sb-collapsed .main-content { margin-left: var(--sidebar-w-col); }
+  .queue-col { position: sticky; top: calc(var(--topbar-h) + var(--s5)); }
+  .qp-progress-head { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+  .qp-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-top: var(--s3); }
+  .qp-stat { padding: var(--s2) var(--s3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-sm); font-size: 13px; color: var(--ink-3); }
+  .qp-stat strong { display: block; font-size: 18px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .qp-network-banner { display: none; margin-bottom: var(--s3); }
+  .qp-network-banner.show { display: flex; }
+  .qp-list { max-height: 420px; overflow-y: auto; margin: 0 calc(var(--s5) * -1); }
+  .qp-job-item { display: flex; align-items: center; gap: var(--s3); padding: 10px var(--s5); border-top: 1px solid var(--line); }
+  .qp-job-info { flex: 1; min-width: 0; }
+  .qp-job-title { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .qp-job-sub { font-size: 12.5px; color: var(--ink-3); }
+  .qp-job-sub.bad { color: var(--bad); } .qp-job-sub.warn { color: var(--warn); }
+  .qp-job-right { display: flex; align-items: center; gap: var(--s2); }
+  .qp-job-status-icon.processing, .qp-job-status-icon.retrying { color: var(--primary); }
+  .qp-job-status-icon.pending { color: var(--ink-3); }
+  .qp-job-status-icon.completed { color: var(--ok); }
+  .qp-job-status-icon.failed { color: var(--bad); }
+  .qp-job-status-icon.cancelled { color: var(--ink-3); }
+  .qp-empty { padding: var(--s5); text-align: center; font-size: 14px; color: var(--ink-3); }
+</style>
+{% endblock %}
 
-    /* ── Topbar ─────────────── */
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px; height: var(--header-h);
-      background: var(--bg-surface);border-bottom: 1px solid var(--glass-border);
-      position: sticky; top: 0; z-index: 50;
-    }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .hamburger {
-      display: none; width: 34px; height: 34px;
-      align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); cursor: pointer;
-      font-size: 15px; color: var(--text-primary); transition: var(--transition);
-    }
-    .hamburger:hover { background: var(--bg-card-hover); }
-    .session-pill {
-      display: flex; align-items: center; gap: 7px;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: 99px; padding: 5px 12px;
-      font-size: 12px; color: var(--text-secondary);
-      max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .session-pill i { color: var(--accent); font-size: 10px; flex-shrink: 0; }
-    .topbar-right { display: flex; align-items: center; gap: 8px; }
-    .end-session-btn {
-      display: flex; align-items: center; gap: 5px; padding: 6px 12px;
-      background: var(--danger-soft); border: 1px solid rgba(239,68,68,0.2);
-      border-radius: var(--radius-sm); color: var(--danger);
-      font-size: 12px; font-weight: 600; text-decoration: none; transition: var(--transition);
-    }
-    .end-session-btn:hover { background: rgba(239,68,68,0.25); transform: translateY(-1px); }
+{% block content %}
+<div class="capture-layout">
+  <div class="capture-col">
+    <section class="panel">
+      <div class="panel-head"><h2 class="panel-title">Student</h2></div>
+      <div class="panel-body">
+        <div class="grid-2">
+          <div class="field">
+            <label class="label" for="student_id">Student ID <span class="req">*</span></label>
+            <input class="input" type="text" id="student_id" placeholder="For example 2024001" autocomplete="off" autocapitalize="characters" />
+          </div>
+          <div class="field">
+            <label class="label" for="student_name">Full name <span class="req">*</span></label>
+            <input class="input" type="text" id="student_name" placeholder="As it appears on the class list" autocomplete="off" />
+          </div>
+        </div>
+      </div>
+    </section>
 
-    /* ── Page Content ────────── */
-    .page-content { flex: 1; padding: 20px 20px 100px; max-width: 520px; }
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2 class="panel-title">Answer pages</h2><p class="panel-desc" id="counterHint">Add every page, in order.</p></div>
+        <span class="chip" id="pageChip"><span id="pageCount">0</span> pages</span>
+      </div>
+      <div class="panel-body">
+        <div class="mode-row">
+          <div class="segmented" role="group" aria-label="How to add pages">
+            <button type="button" class="active" id="modeCameraBtn" onclick="switchMode('camera')"><i class="fa-solid fa-camera"></i> Camera</button>
+            <button type="button" id="modeUploadBtn" onclick="switchMode('upload')"><i class="fa-solid fa-upload"></i> Upload files</button>
+          </div>
+          <div id="camSelectorWrap" style="display:none">
+            <label class="sr-only" for="cameraSelect">Camera</label>
+            <select class="select" id="cameraSelect" style="min-height:38px"></select>
+          </div>
+        </div>
 
-    /* ── Session strip ─────── */
-    .session-strip {
-      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-      margin-bottom: 14px; padding: 8px 12px;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm);
-    }
-    .session-strip span { font-size: 12px; color: var(--text-muted); }
-    .session-strip .sep { color: var(--text-muted); font-size: 10px; }
-    .session-strip i { color: var(--accent); font-size: 11px; }
+        <div class="camera-wrap show" id="cameraWrap">
+          <div class="camera-view">
+            <video id="video" autoplay playsinline muted></video>
+            <div class="cam-status-badge" id="camStatus"><i class="fa-solid fa-video-slash"></i> Camera off</div>
+          </div>
+          <div class="cam-controls-row">
+            <button class="shutter-btn" onclick="takePhoto()" aria-label="Take photo of this page"><i class="fa-solid fa-camera"></i></button>
+          </div>
+          <canvas id="canvas"></canvas>
+        </div>
 
-    /* ── Counter Card ────────── */
-    .counter-card {
-      background: var(--grad-subtle); border: 1px solid rgba(var(--accent-rgb),0.2);
-      border-radius: var(--radius-lg); padding: 16px 18px;
-      display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
-    }
-    .counter-ring {
-      width: 58px; height: 58px; border-radius: 50%;
-      background: var(--grad-main); display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      box-shadow: var(--shadow-glow); flex-shrink: 0;
-    }
-    .counter-num  { font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1; color: var(--bg-base); }
-    .counter-unit { font-size: 9px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; color: var(--bg-base); }
-    .counter-info h3 { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-    .counter-info p  { font-size: 12px; color: var(--text-secondary); }
+        <div class="upload-wrap" id="uploadWrap">
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,application/pdf,.pdf" multiple class="hidden" />
+          <div class="dropzone" id="dropZone" role="button" tabindex="0" onclick="document.getElementById('fileInput').click()"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}">
+            <div class="dropzone-icon"><i class="fa-solid fa-images"></i></div>
+            <div class="dropzone-title">Choose photos or a PDF</div>
+            <div class="dropzone-hint">JPG, PNG, WEBP or PDF. Select several at once, in page order.</div>
+          </div>
+        </div>
 
-    /* ── Glass Card ─────────── */
-    .glass-card {
-      background: var(--bg-card);border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
-      transition: var(--transition); margin-bottom: 12px;
-    }
-    .glass-card:hover { border-color: var(--glass-border-h); }
-    .card-header { padding: 14px 16px 0; display: flex; align-items: center; gap: 7px; }
-    .card-header i {
-      width: 26px; height: 26px; background: var(--accent-soft); border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: var(--accent);
-    }
-    .card-title { font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; }
-    .card-body { padding: 12px 16px 16px; }
+        <div class="mt-6" id="galleryWrap" style="display:none">
+          <div class="section-head"><h3 class="section-title">Pages to upload <span class="muted" id="galleryCount">0</span></h3></div>
+          <div class="gallery-grid" id="gallery"></div>
+        </div>
+      </div>
+    </section>
 
-    /* ── Form ───────────────── */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-    .form-group { margin-bottom: 9px; }
-    .form-label { display: block; font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
-    .form-input {
-      width: 100%; padding: 10px 12px;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); color: var(--text-primary);
-      font-family: var(--font-body); font-size: 13px;
-      transition: var(--transition); outline: none;
-    }
-    .form-input:focus { border-color: var(--accent); background: rgba(var(--accent-rgb),0.06); box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12); }
-    .form-input::placeholder { color: var(--text-muted); }
-
-    /* ── Mode Toggle ────────── */
-    .mode-toggle {
-      display: flex; gap: 5px;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); padding: 3px; margin-bottom: 12px;
-      position: relative; z-index: 10;
-    }
-    .mode-btn {
-      flex: 1; padding: 8px 10px; border: none; border-radius: 7px;
-      background: transparent; color: var(--text-secondary);
-      font-family: var(--font-body); font-size: 12px; font-weight: 500;
-      cursor: pointer; transition: var(--transition);
-      display: flex; align-items: center; justify-content: center; gap: 5px;
-      position: relative; z-index: 10; pointer-events: all;
-    }
-    .mode-btn.active { background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--glass-border); box-shadow: var(--shadow-md); }
-
-    /* ── Camera ─────────────── */
-    .camera-wrap { display: none; flex-direction: column; gap: 9px; }
-    .camera-wrap.show { display: flex; }
-    .camera-view {
-      position: relative; width: 100%;
-      border-radius: var(--radius-md); overflow: hidden;
-      background: #000; border: 1px solid var(--glass-border); aspect-ratio: 4/3;
-    }
-    #video { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .cam-status-badge {
-      position: absolute; top: 8px; left: 8px;
-      background: rgba(0,0,0,0.7); color: var(--text-secondary);
-      padding: 4px 8px; border-radius: 5px; font-size: 10px; font-weight: 500;
-border: 1px solid rgba(255,255,255,0.1);
-      display: flex; align-items: center; gap: 4px; transition: var(--transition);
-    }
-    .cam-status-badge.live { background: rgba(34,197,94,0.85); color: white; border-color: rgba(34,197,94,0.3); }
-    .cam-status-badge.live::before {
-      content: ''; width: 5px; height: 5px; background: white; border-radius: 50%;
-      animation: blink 1.2s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-    .cam-controls-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 8px; }
-    .cam-select-wrap { flex: 1; }
-    .cam-select {
-      width: 100%; padding: 8px 10px;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); color: var(--text-primary);
-      font-family: var(--font-body); font-size: 12px; outline: none; cursor: pointer;
-    }
-    .cam-select option { background: var(--bg-elevated); }
-    .shutter-btn {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: var(--grad-main); border: 3px solid rgba(255,255,255,0.2);
-      color: var(--bg-base); font-size: 16px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: var(--shadow-glow);
-      transition: var(--transition); flex-shrink: 0;
-    }
-    .shutter-btn:hover { transform: scale(1.08); }
-    .shutter-btn:active { transform: scale(0.94); }
-    canvas#canvas { display: none; }
-
-    /* ── Upload ─────────────── */
-    .upload-wrap { display: none; }
-    .upload-wrap.show { display: block; }
-    .drop-zone {
-      border: 2px dashed rgba(var(--accent-rgb),0.3); border-radius: var(--radius-md);
-      padding: 24px 16px; text-align: center; cursor: pointer;
-      transition: var(--transition); position: relative;
-      background: rgba(var(--accent-rgb),0.03);
-    }
-    .drop-zone:hover { border-color: rgba(var(--accent-rgb),0.6); background: rgba(var(--accent-rgb),0.07); }
-    .drop-zone input[type="file"] { display: none; }
-    .drop-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.5; }
-    .drop-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 3px; }
-    .drop-hint  { font-size: 11px; color: var(--text-muted); }
-
-    /* ── Gallery ─────────────── */
-    .gallery-wrap { margin-top: 12px; }
-    .gallery-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .gallery-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
-    .gallery-count { font-size: 10px; padding: 2px 7px; background: var(--accent-soft); color: var(--accent); border-radius: 99px; font-weight: 600; border: 1px solid rgba(var(--accent-rgb),0.2); }
-    .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-    .thumb { position: relative; aspect-ratio: 1; border-radius: 7px; overflow: visible; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 7px; border: 1px solid var(--glass-border); display: block; }
-    .thumb-del {
-      position: absolute; top: -4px; right: -4px;
-      width: 18px; height: 18px; background: var(--danger);
-      border: 2px solid var(--bg-base); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 8px; font-weight: 700; color: white;
-      cursor: pointer; z-index: 10; transition: var(--transition);
-    }
-    .thumb-del:hover { transform: scale(1.2); }
-    .thumb.flagged img { border-color: var(--danger); box-shadow: 0 0 0 2px rgba(248,113,113,0.45); }
-    .thumb-quality-badge {
-      position: absolute; bottom: 3px; left: 3px; right: 3px;
-      background: rgba(239,68,68,0.92); color: #fff;
-      font-size: 8.5px; font-weight: 700; line-height: 1.3;
-      padding: 2px 5px; border-radius: 5px; text-align: center;
-      pointer-events: none;
-    }
-    .thumb-checking { position: absolute; bottom: 3px; left: 3px; right: 3px; background: rgba(0,0,0,0.6); color: var(--text-secondary); font-size: 8.5px; padding: 2px 5px; border-radius: 5px; text-align: center; pointer-events: none; }
-
-    /* ── Sync Button ─────────── */
-    .sync-btn {
-      width: 100%; padding: 15px;
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      border: none; border-radius: var(--radius-md);
-      color: white; font-family: var(--font-display);
-      font-size: 14px; font-weight: 700; cursor: pointer;
-      transition: var(--transition);
-      display: none; align-items: center; justify-content: center; gap: 9px;
-      margin-top: 4px; box-shadow: 0 4px 18px rgba(34,197,94,0.3);
-    }
-    .sync-btn.show { display: flex; }
-    .sync-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(34,197,94,0.4); }
-    .sync-btn:active { transform: translateY(0); }
-    .sync-btn:disabled { background: linear-gradient(135deg,#334155,#1e293b); box-shadow: none; cursor: not-allowed; transform: none; }
-    .sync-badge { background: rgba(255,255,255,0.2); padding: 2px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-
-    /* ── Queue Panel ─────────── */
-    .queue-panel {
-      position: fixed; right: -400px; top: var(--header-h);
-      width: 360px; max-height: calc(100vh - var(--header-h));
-      background: rgba(20,29,46,0.97);border-left: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
-      z-index: 150; display: flex; flex-direction: column;
-      transition: right 0.4s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: -8px 0 32px rgba(0,0,0,0.4); overflow: hidden;
-    }
-    .queue-panel.visible { right: 0; }
-    .queue-panel.minimized .qp-body { display: none; }
-
-    .qp-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; border-bottom: 1px solid var(--glass-border);
-      background: rgba(var(--accent-rgb),0.07); flex-shrink: 0;
-    }
-    .qp-title { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 700; }
-    .qp-status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--text-muted); flex-shrink: 0; transition: var(--transition);
-    }
-    .qp-status-dot.processing { background: var(--accent); animation: glow-pulse 1.5s ease infinite; }
-    .qp-status-dot.retrying   { background: var(--warning); animation: glow-pulse 1s ease infinite; }
-    .qp-status-dot.done       { background: var(--success); }
-    .qp-status-dot.paused     { background: var(--warning); }
-    .qp-status-dot.failed     { background: var(--danger); }
-    @keyframes glow-pulse {
-      0%,100%{ box-shadow: 0 0 0 0 rgba(var(--accent-rgb),0); }
-      50%    { box-shadow: 0 0 0 5px rgba(var(--accent-rgb),0.35); }
-    }
-    .qp-header-actions { display: flex; gap: 5px; }
-    .qp-icon-btn {
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: 7px; color: var(--text-secondary); cursor: pointer;
-      font-size: 11px; transition: var(--transition);
-    }
-    .qp-icon-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--glass-border-h); }
-
-    .qp-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-
-    /* Progress */
-    .qp-progress { padding: 14px 16px; border-bottom: 1px solid var(--glass-border); flex-shrink: 0; }
-    .qp-progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-    .qp-progress-label { font-size: 11px; color: var(--text-muted); }
-    .qp-progress-pct { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text-primary); }
-    .qp-bar-bg { height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; margin-bottom: 8px; }
-    .qp-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#22c55e,#16a34a); border-radius: 99px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-    .qp-stats-row { display: flex; gap: 12px; }
-    .qp-stat { font-size: 11px; color: var(--text-muted); }
-    .qp-stat strong { font-weight: 700; }
-    .qp-stat.done    strong { color: var(--success); }
-    .qp-stat.remain  strong { color: var(--accent); }
-    .qp-stat.failed  strong { color: var(--danger); }
-
-    /* Network banner */
-    .qp-network-banner {
-      display: none; padding: 8px 16px;
-      background: rgba(245,158,11,0.12); border-bottom: 1px solid rgba(245,158,11,0.2);
-      font-size: 11px; color: var(--warning);
-      align-items: center; gap: 7px; flex-shrink: 0;
-    }
-    .qp-network-banner.show { display: flex; }
-    .qp-network-banner i { flex-shrink: 0; }
-
-    /* Current job */
-    .qp-current { padding: 10px 16px; border-bottom: 1px solid var(--glass-border); background: rgba(var(--accent-rgb),0.06); display: none; flex-shrink: 0; }
-    .qp-current.show { display: block; }
-    .qp-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 7px; }
-    .qp-current-job {
-      display: flex; align-items: center; gap: 10px; padding: 8px 10px;
-      background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2);
-      border-radius: var(--radius-sm);
-    }
-    .qp-current-job.retrying { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
-    .qp-job-spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(var(--accent-rgb),0.3); border-top-color: var(--accent); animation: spin 0.8s linear infinite; flex-shrink: 0; }
-    .qp-job-spinner.retrying { border-color: rgba(245,158,11,0.3); border-top-color: var(--warning); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .qp-job-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-    .qp-job-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-
-    /* Job list */
-    .qp-list { flex: 1; padding: 10px 16px; overflow-y: auto; min-height: 0; }
-    .qp-list-inner { display: flex; flex-direction: column; gap: 5px; }
-    .qp-job-item {
-      display: flex; align-items: center; gap: 9px;
-      padding: 8px 10px; border-radius: var(--radius-sm);
-      border: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.02); transition: var(--transition);
-      animation: itemIn 0.25s ease;
-    }
-    @keyframes itemIn { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:none} }
-    .qp-job-item.processing { background: rgba(var(--accent-rgb),0.07); border-color: rgba(var(--accent-rgb),0.2); }
-    .qp-job-item.retrying   { background: rgba(245,158,11,0.07);  border-color: rgba(245,158,11,0.2); }
-    .qp-job-item.completed  { background: rgba(34,197,94,0.06);   border-color: rgba(34,197,94,0.15); }
-    .qp-job-item.failed     { background: rgba(239,68,68,0.06);   border-color: rgba(239,68,68,0.15); }
-    .qp-job-item.cancelled  { opacity: 0.5; }
-    .qp-job-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--grad-main); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--bg-base); }
-    .qp-job-info { flex: 1; min-width: 0; }
-    .qp-job-title { font-size: 12px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .qp-job-sub   { font-size: 10px; color: var(--text-muted); }
-    .qp-job-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-    .qp-job-score { font-family: var(--font-display); font-size: 13px; font-weight: 700; }
-    .qp-job-score.high { color: var(--success); }
-    .qp-job-score.mid  { color: var(--warning); }
-    .qp-job-score.low  { color: var(--danger); }
-    .qp-job-status-icon { font-size: 12px; }
-    .qp-job-status-icon.pending    { color: var(--text-muted); }
-    .qp-job-status-icon.processing { color: var(--accent); }
-    .qp-job-status-icon.retrying   { color: var(--warning); }
-    .qp-job-status-icon.completed  { color: var(--success); }
-    .qp-job-status-icon.failed     { color: var(--danger); }
-    .qp-job-status-icon.cancelled  { color: var(--text-muted); }
-    .qp-job-action {
-      width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-      background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-      border-radius: 5px; cursor: pointer; font-size: 9px; color: var(--text-muted);
-      transition: var(--transition);
-    }
-    .qp-job-action:hover { background: var(--danger-soft); border-color: rgba(239,68,68,0.2); color: var(--danger); }
-    .qp-job-action.retry:hover { background: var(--success-soft); border-color: rgba(34,197,94,0.2); color: var(--success); }
-
-    /* Activity log */
-    .qp-log { padding: 10px 16px; border-top: 1px solid var(--glass-border); flex-shrink: 0; }
-    .qp-log-entries { height: 80px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
-    .qp-log-entry { display: flex; gap: 6px; align-items: flex-start; }
-    .qp-log-time { font-size: 9px; color: var(--text-muted); flex-shrink: 0; margin-top: 1px; font-family: monospace; }
-    .qp-log-msg  { font-size: 11px; color: var(--text-secondary); line-height: 1.3; }
-
-    /* Bottom actions */
-    .qp-actions { padding: 10px 16px 14px; display: flex; flex-direction: column; gap: 7px; flex-shrink: 0; }
-    .qp-view-btn {
-      display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px;
-      background: var(--grad-main); border: none; border-radius: var(--radius-sm);
-      color: var(--bg-base); font-family: var(--font-display); font-size: 13px; font-weight: 700;
-      text-decoration: none; cursor: pointer; transition: var(--transition);
-    }
-    .qp-view-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
-    .qp-pause-btn {
-      display: flex; align-items: center; justify-content: center; gap: 7px; padding: 8px;
-      background: var(--bg-card); border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm); color: var(--text-secondary);
-      font-family: var(--font-body); font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: var(--transition);
-    }
-    .qp-pause-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
-    .qp-pause-btn.paused { background: var(--warning-soft); border-color: rgba(245,158,11,0.2); color: var(--warning); }
-
-    /* Queue FAB */
-    .queue-fab {
-      position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px; border-radius: 50%;
-      background: var(--grad-main); border: none; color: var(--bg-base); font-size: 18px; cursor: pointer;
-      box-shadow: var(--shadow-glow);
-      display: none; align-items: center; justify-content: center;
-      z-index: 160; transition: var(--transition);
-    }
-    .queue-fab.visible { display: flex; }
-    .queue-fab:hover { transform: scale(1.08); }
-    .queue-fab .fab-badge {
-      position: absolute; top: -3px; right: -3px; width: 18px; height: 18px;
-      background: var(--success); border-radius: 50%; border: 2px solid var(--bg-base);
-      font-size: 9px; font-weight: 700; color: white;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── Overlays ────────────── */
-    /* Upload waiting overlay — shown briefly while files upload, hides on response */
-    .waiting-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(5,8,18,0.92);z-index: 1800; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-    }
-    .waiting-overlay.show { display: flex; }
-    .spinner-wrap { position: relative; width: 72px; height: 72px; }
-    .spinner-outer { position: absolute; inset: 0; border-radius: 50%; border: 5px solid rgba(255,255,255,0.06); border-top-color: #22c55e; animation: spinO 1s linear infinite; }
-    .spinner-inner { position: absolute; inset: 11px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.05); border-bottom-color: var(--accent); animation: spinI 0.75s linear infinite reverse; }
-    @keyframes spinO { to { transform: rotate(360deg); } }
-    @keyframes spinI { to { transform: rotate(360deg); } }
-    .wait-icon  { font-size: 1.8em; }
-    .wait-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
-    .wait-sub   { font-size: 12px; color: var(--text-secondary); text-align: center; max-width: 220px; }
-    .dots span { display: inline-block; animation: pulse 1.2s ease-in-out infinite; font-size: 1.4em; color: var(--accent); }
-    .dots span:nth-child(2) { animation-delay: .2s; }
-    .dots span:nth-child(3) { animation-delay: .4s; }
-    @keyframes pulse { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
-
-    /* Success toast */
-    .queue-toast {
-      display: none; position: fixed; bottom: 88px; left: 50%; transform: translateX(-50%);
-      background: rgba(34,197,94,0.95);color: white; padding: 12px 20px; border-radius: var(--radius-md);
-      font-size: 13px; font-weight: 600; z-index: 3000; box-shadow: var(--shadow-lg);
-      max-width: 90%; text-align: center; align-items: center; gap: 8px;
-    }
-    .queue-toast.show { display: flex; animation: toastSlideUp 0.3s ease; }
-    @keyframes toastSlideUp { from{opacity:0;transform:translateX(-50%) translateY(20px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
-
-    /* Fail toast */
-    .fail-toast {
-      display: none; position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-      background: var(--bg-elevated); border: 1px solid rgba(239,68,68,0.3);
-      color: var(--text-primary); padding: 11px 18px; border-radius: var(--radius-md);
-      font-size: 12px; font-weight: 500; z-index: 3000; box-shadow: var(--shadow-lg);
-      max-width: 90%; text-align: center;}
-    .fail-toast.show { display: flex; align-items: center; gap: 7px; }
-    .fail-toast i { color: var(--danger); }
-
-    /* Mobile overlay */
-    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90;}
-    .mobile-overlay.visible { display: block; }
-
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-      .session-pill { display: none; }
-      .queue-panel { width: 100%; right: -100%; }
-      .queue-panel.visible { right: 0; }
-    }
-    @media (min-width: 520px) { .page-content { padding: 24px 24px 100px; } }
-
-    /* ══════════════════════════════════════════════════════
-       MOBILE / TABLET COMPATIBILITY HARDENING
-    ══════════════════════════════════════════════════════ */
-    html, body { max-width: 100vw; overflow-x: hidden; }
-
-    /* iPad-portrait widths also get the hamburger sidebar — a 260px fixed
-       sidebar plus the capture/gallery cards get cramped before 1024px. */
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-      .queue-panel { width: 380px; }
-    }
-
-    /* iOS Safari auto-zooms into inputs under 16px font-size, which then
-       leaves the page stuck zoomed with the sync button/gallery reading
-       as "missing" until manually corrected. */
-    @media (max-width: 900px) {
-      .form-input, .cam-select { font-size: 16px; }
-    }
-
-    @media (max-width: 480px) {
-      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
-      .queue-fab { bottom: 18px; right: 18px; }
-      .queue-toast, .fail-toast { left: 12px; right: 12px; transform: none; max-width: none; }
-      .queue-toast.show { transform: none; }
-      .waiting-overlay .wait-sub { max-width: 260px; }
-    }
-
-    @media (max-width: 360px) {
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .form-row { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-
-<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
-
-<!-- Upload waiting overlay -->
-<div class="waiting-overlay" id="waitingOverlay">
-  <div class="spinner-wrap">
-    <div class="spinner-outer"></div>
-    <div class="spinner-inner"></div>
+    <div class="submit-bar">
+      <button class="btn btn-primary btn-lg" id="syncBtn" onclick="uploadData()" disabled>
+        <i class="fa-solid fa-cloud-arrow-up"></i> Upload and mark <span class="sync-badge" id="syncCount">(0 pages)</span>
+      </button>
+    </div>
   </div>
-  <div class="wait-icon">📤</div>
-  <div class="wait-title">Saving pages…</div>
-  <div class="wait-sub">This takes just a moment</div>
-  <div class="dots"><span>●</span><span>●</span><span>●</span></div>
-</div>
 
-<!-- Toasts -->
-<div class="queue-toast" id="queueToast">
-  <i class="fa-solid fa-circle-check"></i>
-  <span id="queueToastMsg">Student queued for marking</span>
-</div>
-<div class="fail-toast" id="failToast">
-  <i class="fa-solid fa-circle-exclamation"></i>
-  <span id="failMsg">Error</span>
-</div>
-
-<!-- App Shell -->
-<div class="app-shell">
-
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <button class="sb-toggle-btn" onclick="toggleSidebar()" title="Toggle sidebar">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-      <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;overflow:hidden;min-width:0;" class="brand-link-text">
-        <div class="brand-icon">🎓</div>
-        <div class="brand-text">
-          <div class="brand-name">EduMark AI</div>
-          <div class="brand-tag">Smart Exam Grading</div>
-        </div>
-      </a>
-    </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
-      <a class="nav-item" href="/" data-tooltip="Dashboard">
-        <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span>
-        <span class="nav-label">Dashboard</span>
-      </a>
-      <a class="nav-item active" href="/setup-start" data-tooltip="Mark Exams">
-        <span class="nav-icon"><i class="fa-solid fa-pen-to-square"></i></span>
-        <span class="nav-label">Mark Exams</span>
-        <span class="nav-badge">AI</span>
-      </a>
-      <a class="nav-item" href="/students" data-tooltip="View Results">
-        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
-        <span class="nav-label">View Results</span>
-      </a>
-      <div class="nav-section-label">System</div>
-      <a class="nav-item" href="/settings" data-tooltip="Settings">
-        <span class="nav-icon"><i class="fa-solid fa-sliders"></i></span>
-        <span class="nav-label">Settings</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main Content -->
-  <div class="main-content" id="mainContent">
-
-    <!-- Topbar -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="hamburger" onclick="openMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <div class="session-pill">
-          <i class="fa-solid fa-lock"></i>
-          <span>{{ exam_data.class }} {{ exam_data.stream }} · {{ exam_data.subject }} · {{ exam_data.exam_type }}</span>
-        </div>
+  <aside class="queue-col">
+    <section class="panel" id="queuePanel">
+      <div class="panel-head">
+        <div><h2 class="panel-title">Marking queue</h2><p class="panel-desc">Students in this exam</p></div>
+        <span class="chip" id="qpStatusChip"><span class="dot" id="qpStatusDot"></span> <span id="qpStatusLabel">Idle</span></span>
       </div>
-      <div class="topbar-right">
-        <a class="end-session-btn" href="/end-session"
-           onclick="return confirm('End this marking session?')">
-          <i class="fa-solid fa-xmark"></i> End Session
-        </a>
-      </div>
-    </div>
-
-    <!-- Page Content -->
-    <div class="page-content">
-
-      <!-- Session strip -->
-      <div class="session-strip">
-        <i class="fa-solid fa-graduation-cap"></i>
-        <span>{{ exam_data.class }} {{ exam_data.stream }}</span>
-        <span class="sep">·</span>
-        <span>{{ exam_data.subject }}</span>
-        <span class="sep">·</span>
-        <span>{{ exam_data.exam_type }}</span>
-        <span class="sep">·</span>
-        <span>{{ exam_data.term }} {{ exam_data.year }}</span>
-      </div>
-
-      <!-- Counter -->
-      <div class="counter-card" id="counterCard">
-        <div class="counter-ring">
-          <span class="counter-num" id="pageCount">0</span>
-          <span class="counter-unit">pages</span>
-        </div>
-        <div class="counter-info">
-          <h3>Pages Captured</h3>
-          <p id="counterHint">Add pages using camera or file upload below</p>
-        </div>
-      </div>
-
-      <!-- Student Info -->
-      <div class="glass-card">
-        <div class="card-header">
-          <i class="fa-solid fa-user"></i>
-          <span class="card-title">Student Details</span>
-        </div>
-        <div class="card-body">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Student ID *</label>
-              <input class="form-input" type="text" id="student_id" placeholder="e.g. 2024001" autocomplete="off" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Full Name *</label>
-              <input class="form-input" type="text" id="student_name" placeholder="Full name" autocomplete="off" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Capture Card -->
-      <div class="glass-card">
-        <div class="card-header">
-          <i class="fa-solid fa-camera"></i>
-          <span class="card-title">Capture Pages</span>
-        </div>
-        <div class="card-body">
-          <div class="mode-toggle">
-            <button class="mode-btn active" id="modeCameraBtn" onclick="switchMode('camera')">
-              <i class="fa-solid fa-camera"></i> Camera
-            </button>
-            <button class="mode-btn" id="modeUploadBtn" onclick="switchMode('upload')">
-              <i class="fa-solid fa-folder-open"></i> Upload Files
-            </button>
-          </div>
-
-          <!-- Camera Mode -->
-          <div class="camera-wrap show" id="cameraWrap">
-            <div id="camSelectorWrap" style="margin-bottom:8px;display:none;">
-              <label class="form-label">Select Camera</label>
-              <select class="cam-select" id="cameraSelect"></select>
-            </div>
-            <div class="camera-view">
-              <video id="video" autoplay playsinline></video>
-              <div class="cam-status-badge" id="camStatus">
-                <i class="fa-solid fa-circle-dot"></i> Camera Off
-              </div>
-            </div>
-            <div class="cam-controls-row">
-              <button class="shutter-btn" onclick="takePhoto()" title="Capture photo">
-                <i class="fa-solid fa-camera"></i>
-              </button>
-            </div>
-            <canvas id="canvas"></canvas>
-          </div>
-
-          <!-- Upload Mode -->
-          <div class="upload-wrap" id="uploadWrap">
-            <input type="file" id="fileInput" accept="image/*,application/pdf,.pdf" multiple style="display:none;" />
-            <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
-              <div class="drop-icon">📄</div>
-              <div class="drop-title">Tap to select images</div>
-              <div class="drop-hint">Choose multiple exam pages from your device</div>
-            </div>
-          </div>
-
-          <!-- Gallery -->
-          <div class="gallery-wrap" id="galleryWrap" style="display:none;">
-            <div class="gallery-header">
-              <span class="gallery-label">Captured Pages</span>
-              <span class="gallery-count" id="galleryCount">0</span>
-            </div>
-            <div class="gallery-grid" id="gallery"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sync Button -->
-      <button class="sync-btn" id="syncBtn" onclick="uploadData()">
-        <i class="fa-solid fa-cloud-arrow-up"></i>
-        Upload &amp; Queue for Marking
-        <span class="sync-badge" id="syncCount">0 pages</span>
-      </button>
-
-    </div><!-- /page-content -->
-  </div><!-- /main-content -->
-
-  <!-- Queue Panel -->
-  <div class="queue-panel" id="queuePanel">
-    <div class="qp-header">
-      <div class="qp-title">
-        <div class="qp-status-dot" id="qpStatusDot"></div>
-        AI Marking Queue
-      </div>
-      <div class="qp-header-actions">
-        <button class="qp-icon-btn" onclick="togglePause()" title="Pause / Resume">
-          <i class="fa-solid fa-pause" id="qpPauseHeaderIcon"></i>
-        </button>
-        <button class="qp-icon-btn" onclick="toggleQueueMinimize()" title="Minimize">
-          <i class="fa-solid fa-chevron-right" id="qpMinIcon"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="qp-body" id="qpBody">
-
-      <!-- Network banner — shown when offline -->
-      <div class="qp-network-banner" id="qpNetworkBanner">
-        <i class="fa-solid fa-wifi-slash"></i>
-        <span>Network unavailable — will retry automatically when connection returns.</span>
-      </div>
-
-      <!-- Progress -->
-      <div class="qp-progress">
-        <div class="qp-progress-header">
-          <span class="qp-progress-label">Overall Progress</span>
-          <span class="qp-progress-pct" id="qpPct">0%</span>
-        </div>
-        <div class="qp-bar-bg"><div class="qp-bar-fill" id="qpBarFill"></div></div>
+      <div class="panel-body">
+        <div class="callout callout-warn qp-network-banner" id="qpNetworkBanner"><i class="fa-solid fa-wifi"></i><span>Connection lost. Marking continues on the server; this list updates when you're back online.</span></div>
+        <div class="qp-progress-head"><span>Progress</span><strong class="num" id="qpPct">0%</strong></div>
+        <div class="progress"><span id="qpBarFill" style="width:0%"></span></div>
         <div class="qp-stats-row">
-          <div class="qp-stat done">   <strong id="qpMarked">0</strong> marked</div>
-          <div class="qp-stat remain"> <strong id="qpRemaining">0</strong> remaining</div>
-          <div class="qp-stat failed"> <strong id="qpFailed">0</strong> failed</div>
+          <div class="qp-stat"><strong id="qpMarked">0</strong>marked</div>
+          <div class="qp-stat"><strong id="qpRemaining">0</strong>to go</div>
+          <div class="qp-stat"><strong id="qpFailed">0</strong>failed</div>
         </div>
+        <div class="qp-list mt-4" id="qpJobList"><div class="qp-empty">Students you upload appear here while they're marked.</div></div>
       </div>
-
-      <!-- Currently Marking -->
-      <div class="qp-current" id="qpCurrentSection">
-        <div class="qp-section-label">Currently Marking</div>
-        <div class="qp-current-job" id="qpCurrentJobBox">
-          <div class="qp-job-spinner" id="qpCurrentSpinner"></div>
-          <div class="qp-job-info">
-            <div class="qp-job-name" id="qpCurName">Loading…</div>
-            <div class="qp-job-meta" id="qpCurMeta"></div>
-          </div>
-        </div>
+      <div class="panel-foot" style="justify-content:space-between">
+        <button class="btn btn-ghost btn-sm" id="qpPauseBtn" onclick="togglePause()"><i class="fa-solid fa-pause" id="qpPauseIcon"></i> <span id="qpPauseLabel">Pause marking</span></button>
+        <a class="btn btn-secondary btn-sm" href="{{ url_for('view_students') }}">See results</a>
       </div>
+    </section>
+    <p class="hint mt-4">You can close this page. Marking carries on, and results appear under Results.</p>
+    <a class="btn btn-ghost btn-sm mt-2" href="{{ url_for('end_session') }}" onclick="return confirm('Finish adding scripts to this exam? Marking continues in the background.')"><i class="fa-solid fa-flag-checkered"></i> Finish this exam</a>
+  </aside>
+</div>
+{% endblock %}
 
-      <!-- Job List -->
-      <div class="qp-list">
-        <div class="qp-section-label" style="margin-bottom:7px;">All Students</div>
-        <div class="qp-list-inner" id="qpJobList">
-          <div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:12px;">No students queued yet</div>
-        </div>
-      </div>
-
-      <!-- Activity Log -->
-      <div class="qp-log">
-        <div class="qp-section-label" style="margin-bottom:7px;">Activity Log</div>
-        <div class="qp-log-entries" id="qpLog"></div>
-      </div>
-
-      <!-- Bottom Actions -->
-      <div class="qp-actions">
-        <a href="/students" class="qp-view-btn">
-          <i class="fa-solid fa-chart-bar"></i> View All Results
-        </a>
-        <button class="qp-pause-btn" id="qpPauseBtn" onclick="togglePause()">
-          <i class="fa-solid fa-pause" id="qpPauseIcon"></i>
-          <span id="qpPauseLabel">Pause Queue</span>
-        </button>
-      </div>
-
-    </div><!-- /qp-body -->
-  </div><!-- /queue-panel -->
-
-</div><!-- /app-shell -->
-
-<!-- Queue FAB -->
-<button class="queue-fab" id="queueFab" onclick="openQueue()" title="View marking queue">
-  <i class="fa-solid fa-list-check"></i>
-  <span class="fab-badge" id="queueFabBadge">0</span>
-</button>
-
+{% block scripts %}
 <script>
-/* ════════════════════════════════════════════════════════
-   STATE
-════════════════════════════════════════════════════════ */
-const captured       = [];
-const captureQuality = [];   // parallel array — null = checking, {ok,reason} once done
-let currentMode   = 'camera';
-let cameraStream  = null;
-let cameraDevices = [];
-let selectedCamId = null;
-let failTimer     = null;
-let pollTimer     = null;
-let queueVisible  = false;
-let queueMinimized = false;
-let isPaused      = false;
-let hasQueued     = false;
-let isOnline      = navigator.onLine;
-
-const video  = document.getElementById('video');
+const EXAM_FOLDER = {{ exam_data.exam_folder|tojson }};
+const captured = [];
+const captureQuality = [];   // null = checking, {ok, reason} when done
+const previewUrls = new Map();
+let currentMode = 'camera';
+let cameraStream = null, cameraDevices = [], selectedCamId = null;
+let pollTimer = null, isPaused = false;
+const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
+const esc = EM.esc;
+const fail = (msg, ms) => EM.toast(msg, 'bad', ms || 5000);
 
-/* ════════════════════════════════════════════════════════
-   SIDEBAR
-════════════════════════════════════════════════════════ */
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const mc = document.getElementById('mainContent');
-  sb.classList.toggle('collapsed');
-  mc.classList.toggle('expanded');
-  const collapsed = sb.classList.contains('collapsed');
-  document.documentElement.classList.toggle('sb-collapsed', collapsed);
-  try {
-    var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-    s.sidebarCollapsed = collapsed;
-    localStorage.setItem('edumark_settings_v2', JSON.stringify(s));
-  } catch (e) {}
-}
-function openMobileSidebar() {
-  document.getElementById('sidebar').classList.add('mobile-open');
-  document.getElementById('mobileOverlay').classList.add('visible');
-}
-function closeMobileSidebar() {
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.getElementById('mobileOverlay').classList.remove('visible');
-}
+/* ── Camera ── */
+function cameraSupported() { return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia); }
 
-/* ════════════════════════════════════════════════════════
-   TOASTS
-════════════════════════════════════════════════════════ */
-function showFailToast(msg, dur = 4500) {
-  const t = document.getElementById('failToast');
-  document.getElementById('failMsg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(failTimer);
-  failTimer = setTimeout(() => t.classList.remove('show'), dur);
-}
-
-function showQueuedToast(msg, dur = 3000) {
-  const t = document.getElementById('queueToast');
-  document.getElementById('queueToastMsg').textContent = msg;
-  t.classList.remove('show');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), dur);
-}
-
-/* ════════════════════════════════════════════════════════
-   WAITING OVERLAY — with safety timeout so it never freezes
-════════════════════════════════════════════════════════ */
-let waitingTimeout = null;
-
-function showWaiting() {
-  document.getElementById('waitingOverlay').classList.add('show');
-  // Safety net: always hide after 30 s even if something goes wrong
-  clearTimeout(waitingTimeout);
-  waitingTimeout = setTimeout(() => {
-    hideWaiting();
-    showFailToast('Upload is taking too long. Please try again.');
-  }, 30000);
-}
-
-function hideWaiting() {
-  clearTimeout(waitingTimeout);
-  document.getElementById('waitingOverlay').classList.remove('show');
-}
-
-/* ════════════════════════════════════════════════════════
-   CAMERA
-════════════════════════════════════════════════════════ */
 async function loadCameras() {
-  try {
-    const tmp = await navigator.mediaDevices.getUserMedia({ video: true });
-    tmp.getTracks().forEach(t => t.stop());
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    cameraDevices = devices.filter(d => d.kind === 'videoinput');
-
-    const sel  = document.getElementById('cameraSelect');
-    const wrap = document.getElementById('camSelectorWrap');
-    sel.innerHTML = '';
-    cameraDevices.forEach((c, i) => {
-      const o = document.createElement('option');
-      o.value = c.deviceId;
-      o.text  = c.label || `Camera ${i + 1}`;
-      sel.appendChild(o);
-    });
-
-    selectedCamId = cameraDevices.length > 1
-      ? cameraDevices[cameraDevices.length - 1].deviceId
-      : cameraDevices[0]?.deviceId || null;
-    if (selectedCamId) sel.value = selectedCamId;
-    if (cameraDevices.length > 1) wrap.style.display = 'block';
-
-    sel.addEventListener('change', () => {
-      selectedCamId = sel.value;
-      if (cameraStream && currentMode === 'camera') { stopCamera(); startCamera(); }
-    });
-  } catch (e) {
-    showFailToast('Camera access denied.');
-  }
+  const tmp = await navigator.mediaDevices.getUserMedia({ video: true });
+  tmp.getTracks().forEach(t => t.stop());
+  cameraDevices = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+  const sel = document.getElementById('cameraSelect');
+  sel.innerHTML = '';
+  cameraDevices.forEach((c, i) => {
+    const o = document.createElement('option'); o.value = c.deviceId; o.text = c.label || `Camera ${i + 1}`; sel.appendChild(o);
+  });
+  selectedCamId = cameraDevices.length > 1 ? cameraDevices[cameraDevices.length - 1].deviceId : (cameraDevices[0] ? cameraDevices[0].deviceId : null);
+  if (selectedCamId) sel.value = selectedCamId;
+  document.getElementById('camSelectorWrap').style.display = cameraDevices.length > 1 ? 'block' : 'none';
+  sel.onchange = () => { selectedCamId = sel.value; if (cameraStream && currentMode === 'camera') { stopCamera(); startCamera(); } };
 }
 
 async function startCamera() {
   const statusEl = document.getElementById('camStatus');
   statusEl.className = 'cam-status-badge';
-  statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Starting…';
+  statusEl.innerHTML = '<span class="spinner" style="width:12px;height:12px"></span> Starting camera';
   try {
+    if (!cameraDevices.length) await loadCameras();
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        deviceId: selectedCamId ? { exact: selectedCamId } : undefined,
-        width: { ideal: 1920 }, height: { ideal: 1080 },
-      }
+      video: { deviceId: selectedCamId ? { exact: selectedCamId } : undefined, width: { ideal: 1920 }, height: { ideal: 1080 } }
     });
-    cameraStream    = stream;
-    video.srcObject = stream;
+    cameraStream = stream; video.srcObject = stream;
     const cam = cameraDevices.find(c => c.deviceId === selectedCamId);
-    statusEl.className   = 'cam-status-badge live';
-    statusEl.textContent = cam ? cam.label.split('(')[0].trim() : 'Live';
+    statusEl.className = 'cam-status-badge live';
+    statusEl.textContent = cam && cam.label ? cam.label.split('(')[0].trim() : 'Live';
+    return true;
   } catch (e) {
-    statusEl.innerHTML = '<i class="fa-solid fa-xmark"></i> Error';
-    showFailToast('Camera could not start: ' + e.message);
+    statusEl.innerHTML = '<i class="fa-solid fa-video-slash"></i> Camera unavailable';
+    return false;
   }
 }
-
 function stopCamera() {
   if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
   const statusEl = document.getElementById('camStatus');
   statusEl.className = 'cam-status-badge';
-  statusEl.innerHTML = '<i class="fa-solid fa-circle-dot"></i> Camera Off';
+  statusEl.innerHTML = '<i class="fa-solid fa-video-slash"></i> Camera off';
 }
-
 function takePhoto() {
-  if (!video.videoWidth) { showFailToast('Camera not ready yet.'); return; }
-  canvas.width  = video.videoWidth;
-  canvas.height = video.videoHeight;
+  if (!video.videoWidth) { fail('The camera is not ready yet.'); return; }
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
   canvas.toBlob(b => {
     addCapturedFile(new File([b], `page_${captured.length + 1}.jpg`, { type: 'image/jpeg' }));
-    const camView = document.querySelector('.camera-view');
-    camView.style.opacity = '0.3';
-    setTimeout(() => camView.style.opacity = '1', 150);
+    const v = document.querySelector('.camera-view');
+    v.style.opacity = '0.3'; setTimeout(() => v.style.opacity = '1', 150);
   }, 'image/jpeg', 0.90);
 }
 
-/* ════════════════════════════════════════════════════════
-   IMAGE QUALITY CHECK — runs entirely client-side (Laplacian-
-   variance blur estimate + brightness check) so a blurry photo
-   never reaches the AI marker and silently under-scores a student.
-════════════════════════════════════════════════════════ */
-const BLUR_VARIANCE_THRESHOLD = 60;
-const DARK_BRIGHTNESS_THRESHOLD = 25;
-const BRIGHT_BRIGHTNESS_THRESHOLD = 245;
-
+/* ── Image quality check (in the browser, before upload) ── */
+const BLUR_VARIANCE_THRESHOLD = 60, DARK_BRIGHTNESS_THRESHOLD = 25, BRIGHT_BRIGHTNESS_THRESHOLD = 245;
 function computeImageMetrics(file) {
   return new Promise(resolve => {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const maxDim = 500;
-      const scale  = Math.min(1, maxDim / Math.max(img.width, img.height));
-      const w = Math.max(2, Math.round(img.width * scale));
-      const h = Math.max(2, Math.round(img.height * scale));
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      const ctx = c.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
+      const scale = Math.min(1, 500 / Math.max(img.width, img.height));
+      const w = Math.max(2, Math.round(img.width * scale)), h = Math.max(2, Math.round(img.height * scale));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
-
       let data;
-      try { data = ctx.getImageData(0, 0, w, h).data; }
-      catch (e) { resolve({ variance: 9999, brightness: 128 }); return; }
-
-      const gray = new Float32Array(w * h);
-      let bSum = 0;
-      for (let i = 0, p = 0; i < data.length; i += 4, p++) {
-        const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        gray[p] = g;
-        bSum += g;
-      }
-
+      try { data = ctx.getImageData(0, 0, w, h).data; } catch (e) { resolve({ variance: 9999, brightness: 128 }); return; }
+      const gray = new Float32Array(w * h); let bSum = 0;
+      for (let i = 0, p = 0; i < data.length; i += 4, p++) { const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]; gray[p] = g; bSum += g; }
       let sum = 0, sumSq = 0, n = 0;
-      for (let y = 1; y < h - 1; y++) {
-        for (let x = 1; x < w - 1; x++) {
-          const idx = y * w + x;
-          const lap = gray[idx - 1] + gray[idx + 1] + gray[idx - w] + gray[idx + w] - 4 * gray[idx];
-          sum += lap; sumSq += lap * lap; n++;
-        }
+      for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+        const idx = y * w + x, lap = gray[idx - 1] + gray[idx + 1] + gray[idx - w] + gray[idx + w] - 4 * gray[idx];
+        sum += lap; sumSq += lap * lap; n++;
       }
-      const mean     = n ? sum / n : 0;
-      const variance = n ? (sumSq / n) - (mean * mean) : 9999;
-      resolve({ variance, brightness: bSum / gray.length });
+      const mean = n ? sum / n : 0;
+      resolve({ variance: n ? (sumSq / n) - mean * mean : 9999, brightness: bSum / gray.length });
     };
-    img.onerror = () => resolve({ variance: 9999, brightness: 128 }); // fail open — never block on a decode error
+    img.onerror = () => { URL.revokeObjectURL(url); resolve({ variance: 9999, brightness: 128 }); };
     img.src = url;
   });
 }
-
-function qualityVerdict(metrics) {
-  if (metrics.brightness < DARK_BRIGHTNESS_THRESHOLD) return { ok: false, reason: 'Too dark to read' };
-  if (metrics.brightness > BRIGHT_BRIGHTNESS_THRESHOLD) return { ok: false, reason: 'Overexposed / washed out' };
-  if (metrics.variance < BLUR_VARIANCE_THRESHOLD) return { ok: false, reason: 'Too blurry — retake this page' };
+function qualityVerdict(m) {
+  if (m.brightness < DARK_BRIGHTNESS_THRESHOLD) return { ok: false, reason: 'Too dark' };
+  if (m.brightness > BRIGHT_BRIGHTNESS_THRESHOLD) return { ok: false, reason: 'Too bright' };
+  if (m.variance < BLUR_VARIANCE_THRESHOLD) return { ok: false, reason: 'Blurry — retake' };
   return { ok: true, reason: '' };
 }
-
 function addCapturedFile(file) {
-  const idx = captured.length;
   captured.push(file);
-  if (file.type === 'application/pdf') {
-    // PDFs aren't photos — no blur check here; the server converts each page.
-    captureQuality.push({ ok: true, reason: '' });
-    updateDisplay();
-    return;
-  }
+  if (file.type === 'application/pdf') { captureQuality.push({ ok: true, reason: '' }); updateDisplay(); return; }
   captureQuality.push(null);
   updateDisplay();
-  computeImageMetrics(file).then(metrics => {
-    captureQuality[idx] = qualityVerdict(metrics);
-    updateDisplay();
+  computeImageMetrics(file).then(m => {
+    const i = captured.indexOf(file);
+    if (i >= 0) { captureQuality[i] = qualityVerdict(m); updateDisplay(); }
   });
 }
 
-/* ════════════════════════════════════════════════════════
-   MODE SWITCH
-════════════════════════════════════════════════════════ */
-function switchMode(mode) {
+/* ── Mode ── */
+async function switchMode(mode) {
   currentMode = mode;
   document.getElementById('modeCameraBtn').classList.toggle('active', mode === 'camera');
   document.getElementById('modeUploadBtn').classList.toggle('active', mode === 'upload');
   document.getElementById('cameraWrap').classList.toggle('show', mode === 'camera');
   document.getElementById('uploadWrap').classList.toggle('show', mode === 'upload');
-  if (mode === 'camera') { if (!cameraStream) startCamera(); }
-  else stopCamera();
+  if (mode === 'camera') {
+    if (!cameraStream && !(await startCamera())) {
+      EM.toast('No camera could be used on this device. Upload photos or a PDF instead.', 'warn', 5000);
+      switchMode('upload');
+    }
+  } else stopCamera();
 }
 
-/* ════════════════════════════════════════════════════════
-   FILE UPLOAD
-════════════════════════════════════════════════════════ */
-document.getElementById('fileInput').addEventListener('change', function(e) {
-  Array.from(e.target.files).forEach(f => {
-    // A PDF answer script keeps its .pdf name — the server turns it into page images.
+/* ── Files ── */
+function addFiles(files) {
+  Array.from(files).forEach(f => {
     const isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
-    addCapturedFile(new File([f], `page_${captured.length + 1}.${isPdf ? 'pdf' : 'jpg'}`, { type: f.type || (isPdf ? 'application/pdf' : '') }));
+    const ext = isPdf ? 'pdf' : (f.type === 'image/png' || /\.png$/i.test(f.name)) ? 'png'
+              : (f.type === 'image/webp' || /\.webp$/i.test(f.name)) ? 'webp' : 'jpg';
+    addCapturedFile(new File([f], `page_${captured.length + 1}.${ext}`, { type: f.type || (isPdf ? 'application/pdf' : 'image/jpeg') }));
   });
-  this.value = '';
-});
-
-/* ════════════════════════════════════════════════════════
-   GALLERY
-════════════════════════════════════════════════════════ */
-function updateDisplay() {
-  const n   = captured.length;
-  const gal = document.getElementById('gallery');
-  const gw  = document.getElementById('galleryWrap');
-
-  document.getElementById('pageCount').textContent    = n;
-  document.getElementById('galleryCount').textContent = n;
-  document.getElementById('syncCount').textContent    = `${n} page${n !== 1 ? 's' : ''}`;
-  document.getElementById('counterHint').textContent  =
-    n === 0 ? 'Add pages using camera or file upload below'
-            : `${n} page${n !== 1 ? 's' : ''} ready to upload`;
-
-  gal.innerHTML = '';
-  if (n === 0) {
-    gw.style.display = 'none';
-  } else {
-    gw.style.display = 'block';
-    captured.forEach((f, i) => {
-      const url = URL.createObjectURL(f);
-      const q = captureQuality[i];
-      const flagged = q && q.ok === false;
-      const div = document.createElement('div');
-      div.className = 'thumb' + (flagged ? ' flagged' : '');
-      let badge = '';
-      if (q === null) badge = `<div class="thumb-checking">Checking…</div>`;
-      else if (flagged) badge = `<div class="thumb-quality-badge">${q.reason}</div>`;
-      const preview = f.type === 'application/pdf'
-        ? `<div class="thumb-checking" style="position:static;height:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;border-radius:7px;"><i class="fa-solid fa-file-pdf"></i> PDF</div>`
-        : `<img src="${url}" alt="Page ${i+1}" />`;
-      div.innerHTML = `${preview}${badge}<div class="thumb-del" onclick="removeImage(${i})" title="Remove">✕</div>`;
-      gal.appendChild(div);
-    });
-  }
-
-  const btn = document.getElementById('syncBtn');
-  n > 0 ? btn.classList.add('show') : btn.classList.remove('show');
 }
+document.getElementById('fileInput').addEventListener('change', function (e) { addFiles(e.target.files); this.value = ''; });
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
 
+/* ── Gallery ── */
+function previewUrl(f) { if (!previewUrls.has(f)) previewUrls.set(f, URL.createObjectURL(f)); return previewUrls.get(f); }
+function updateDisplay() {
+  const n = captured.length;
+  const gal = document.getElementById('gallery');
+  document.getElementById('pageCount').textContent = n;
+  document.getElementById('galleryCount').textContent = n;
+  document.getElementById('syncCount').textContent = `(${n} page${n !== 1 ? 's' : ''})`;
+  const bad = captureQuality.filter(q => q && q.ok === false).length;
+  document.getElementById('counterHint').textContent = n === 0 ? 'Add every page, in order.'
+    : bad ? `${bad} page${bad === 1 ? ' needs' : 's need'} to be retaken.` : `${n} page${n !== 1 ? 's' : ''} ready.`;
+  document.getElementById('pageChip').className = 'chip' + (bad ? ' chip-bad' : n ? ' chip-ok' : '');
+  document.getElementById('galleryWrap').style.display = n ? 'block' : 'none';
+  gal.innerHTML = captured.map((f, i) => {
+    const q = captureQuality[i], flagged = q && q.ok === false;
+    const preview = f.type === 'application/pdf'
+      ? `<div class="thumb-pdf"><i class="fa-solid fa-file-pdf"></i>PDF</div>`
+      : `<img src="${previewUrl(f)}" alt="Page ${i + 1}" />`;
+    const badge = q === null ? `<div class="thumb-checking">Checking…</div>` : flagged ? `<div class="thumb-quality-badge">${esc(q.reason)}</div>` : '';
+    return `<div class="thumb${flagged ? ' flagged' : ''}">${preview}<span class="thumb-num">${i + 1}</span>${badge}
+      <button class="thumb-del" onclick="removeImage(${i})" aria-label="Remove page ${i + 1}"><i class="fa-solid fa-xmark"></i></button></div>`;
+  }).join('');
+  document.getElementById('syncBtn').disabled = n === 0;
+}
 function removeImage(i) {
-  captured.splice(i, 1);
-  captureQuality.splice(i, 1);
+  const f = captured[i];
+  if (previewUrls.has(f)) { URL.revokeObjectURL(previewUrls.get(f)); previewUrls.delete(f); }
+  captured.splice(i, 1); captureQuality.splice(i, 1);
   updateDisplay();
 }
-
-/* ════════════════════════════════════════════════════════
-   RESET FORM — called after successful upload
-════════════════════════════════════════════════════════ */
 function resetForm() {
-  captured.length = 0;
-  captureQuality.length = 0;
-  document.getElementById('student_id').value   = '';
+  previewUrls.forEach(u => URL.revokeObjectURL(u)); previewUrls.clear();
+  captured.length = 0; captureQuality.length = 0;
+  document.getElementById('student_id').value = '';
   document.getElementById('student_name').value = '';
   updateDisplay();
-  // Re-focus immediately so teacher can enter next student
-  setTimeout(() => document.getElementById('student_id').focus(), 150);
+  setTimeout(() => document.getElementById('student_id').focus(), 100);
 }
 
-/* ════════════════════════════════════════════════════════
-   UPLOAD & ENQUEUE
-════════════════════════════════════════════════════════ */
+/* ── Upload ── */
 async function uploadData() {
-  const sid   = document.getElementById('student_id').value.trim();
+  const sid = document.getElementById('student_id').value.trim();
   const sname = document.getElementById('student_name').value.trim();
-
-  if (!sid || !sname)   { showFailToast('Please enter Student ID and Name first.'); return; }
-  if (!captured.length) { showFailToast('Please capture at least one page first.'); return; }
-
-  if (captureQuality.some(q => q === null)) {
-    showFailToast('Still checking image quality — try again in a moment.');
-    return;
-  }
-  const badIdx = captureQuality
-    .map((q, i) => (q && q.ok === false) ? i + 1 : null)
-    .filter(v => v !== null);
+  if (!sid) { fail("Enter the student's ID."); document.getElementById('student_id').focus(); return; }
+  if (!sname) { fail("Enter the student's name."); document.getElementById('student_name').focus(); return; }
+  if (!captured.length) { fail('Add at least one page.'); return; }
+  if (captureQuality.some(q => q === null)) { fail('Still checking the photos — try again in a moment.'); return; }
+  const badIdx = captureQuality.map((q, i) => (q && q.ok === false) ? i + 1 : null).filter(v => v !== null);
   if (badIdx.length) {
     document.getElementById('galleryWrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    showFailToast(
-      badIdx.length === 1
-        ? `Page ${badIdx[0]} is too blurry/poor quality to mark accurately. Retake it (flagged in red below).`
-        : `Pages ${badIdx.join(', ')} are too blurry/poor quality to mark accurately. Retake them (flagged in red below).`,
-      6000
-    );
+    fail(badIdx.length === 1 ? `Page ${badIdx[0]} is too unclear to mark. Retake it.` : `Pages ${badIdx.join(', ')} are too unclear to mark. Retake them.`, 6000);
     return;
   }
 
   const btn = document.getElementById('syncBtn');
+  const orig = btn.innerHTML;
   btn.disabled = true;
-
-  // Show overlay — it will always be dismissed on success OR error
-  showWaiting();
-
+  btn.innerHTML = '<span class="spinner"></span> Uploading…';
   const fd = new FormData();
-  fd.append('student_id',   sid);
-  fd.append('student_name', sname);
+  fd.append('student_id', sid); fd.append('student_name', sname);
   captured.forEach(f => fd.append('files[]', f));
 
   let data = null;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 120000);
   try {
-    const res = await fetch('/upload-batch', { method: 'POST', body: fd });
+    const res = await fetch('/upload-batch', { method: 'POST', body: fd, signal: ctrl.signal });
+    if (res.status === 401) { location.href = '/login?next=' + encodeURIComponent(location.pathname); return; }
     data = await res.json();
   } catch (e) {
-    // Network error during upload
-    hideWaiting();
-    btn.disabled = false;
-    showFailToast('Connection lost during upload. Please check your internet and try again.');
-    return;
+    fail('The upload did not finish. Check the connection and try again — your pages are still here.');
+  } finally {
+    clearTimeout(timer);
+    btn.innerHTML = orig; btn.disabled = captured.length === 0;
   }
+  if (!data) return;
 
-  // Always dismiss overlay immediately on receiving any response
-  hideWaiting();
-  btn.disabled = false;
-
-  if (data && data.success) {
-    // ── Instant form reset — no freeze ──────────────────────────────────
+  if (data.success) {
     resetForm();
-
-    const pages = data.total_saved || captured.length;
-    showQueuedToast(
-      data.queued === false
-        ? `🔒 ${data.message}`
-        : `✅ ${data.student_name || sid} queued for AI marking (${pages} pages)`, data.queued === false ? 5000 : 3500);
-
-    // Open queue panel on first student
-    if (!hasQueued) {
-      hasQueued = true;
-      openQueue();
-    }
+    EM.toast(data.queued === false ? data.message : `${data.student_name || sid} uploaded (${data.total_saved} page${data.total_saved === 1 ? '' : 's'}). Marking has started.`,
+             data.queued === false ? 'warn' : 'ok', data.queued === false ? 6000 : 3500);
     startQueuePolling();
-
   } else {
-    // Server-side quality gate caught something the client check missed —
-    // apply the same red-flag treatment to the exact pages it named.
-    if (data && Array.isArray(data.bad_pages) && data.bad_pages.length) {
-      data.bad_pages.forEach(p => {
-        if (captureQuality[p.index] !== undefined) {
-          captureQuality[p.index] = { ok: false, reason: p.reason || 'Flagged by server' };
-        }
-      });
+    if (Array.isArray(data.bad_pages) && data.bad_pages.length) {
+      data.bad_pages.forEach(p => { if (captureQuality[p.index] !== undefined) captureQuality[p.index] = { ok: false, reason: p.reason || 'Unclear' }; });
       updateDisplay();
       document.getElementById('galleryWrap').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-    // Show friendly error — never raw server error
-    const friendlyMsg = (data && data.message)
-      ? data.message
-      : 'Upload failed. Please check your connection and try again.';
-    showFailToast(friendlyMsg);
+    fail(data.message || 'Upload failed. Try again.', 6000);
   }
 }
 
-/* ════════════════════════════════════════════════════════
-   QUEUE PANEL
-════════════════════════════════════════════════════════ */
-function openQueue() {
-  queueVisible   = true;
-  queueMinimized = false;
-  document.getElementById('queuePanel').classList.add('visible');
-  document.getElementById('queuePanel').classList.remove('minimized');
-  document.getElementById('qpMinIcon').className = 'fa-solid fa-chevron-right';
-  document.getElementById('queueFab').classList.remove('visible');
-}
-
-function toggleQueueMinimize() {
-  const panel = document.getElementById('queuePanel');
-  queueMinimized = !queueMinimized;
-  panel.classList.toggle('minimized', queueMinimized);
-  if (queueMinimized) {
-    document.getElementById('qpMinIcon').className = 'fa-solid fa-chevron-left';
-    document.getElementById('queueFab').classList.add('visible');
-  } else {
-    document.getElementById('qpMinIcon').className = 'fa-solid fa-chevron-right';
-    document.getElementById('queueFab').classList.remove('visible');
-  }
-}
-
-/* ════════════════════════════════════════════════════════
-   QUEUE POLLING — resilient to network drops
-════════════════════════════════════════════════════════ */
-// Every 2 s while students are waiting or being marked; every 12 s when the
-// queue is idle (a new upload or queue action polls immediately anyway).
-const POLL_ACTIVE_MS = 2000;
-const POLL_IDLE_MS   = 12000;
-let pollDelay = POLL_ACTIVE_MS;
-
-let pollGen = 0;   // restarting polling bumps this, so only one loop ever runs
-
-function startQueuePolling() {
-  pollDelay = POLL_ACTIVE_MS;
-  if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
-  pollLoop(++pollGen);
-}
-
-async function pollLoop(gen) {
-  await pollQueueStatus();
-  if (gen !== pollGen) return;
-  pollTimer = setTimeout(() => pollLoop(gen), pollDelay);
-}
+/* ── Queue (this exam only) ── */
+const POLL_ACTIVE_MS = 2500, POLL_IDLE_MS = 12000;
+let pollDelay = POLL_ACTIVE_MS, pollGen = 0;
+function startQueuePolling() { pollDelay = POLL_ACTIVE_MS; clearTimeout(pollTimer); pollLoop(++pollGen); }
+async function pollLoop(gen) { await pollQueueStatus(); if (gen !== pollGen) return; pollTimer = setTimeout(() => pollLoop(gen), pollDelay); }
 
 async function pollQueueStatus() {
   try {
-    const res  = await fetch('/api/queue/status', { signal: AbortSignal.timeout(5000) });
+    const res = await fetch('/api/queue/status', { signal: AbortSignal.timeout(6000) });
     if (res.status === 401) { location.href = '/login?next=' + encodeURIComponent(location.pathname); return; }
     const data = await res.json();
-    isOnline   = true;
     document.getElementById('qpNetworkBanner').classList.remove('show');
-    const busy = data && (data.remaining > 0 || ['processing', 'retrying', 'waiting'].includes(data.status));
-    pollDelay = busy ? POLL_ACTIVE_MS : POLL_IDLE_MS;
     renderQueuePanel(data);
   } catch (e) {
-    // Network lost — show banner in queue panel; worker retries automatically
-    isOnline = false;
     document.getElementById('qpNetworkBanner').classList.add('show');
-    // Don't crash — just try again on next interval
   }
 }
 
 function renderQueuePanel(data) {
   if (!data) return;
+  const mine = j => j.exam_folder === EXAM_FOLDER;
+  const current = (data.current_jobs || []).filter(mine);
+  const waiting = (data.queue || []).filter(mine);
+  const done = (data.completed || []).filter(mine);
+  const failed = (data.failed || []).filter(mine);
+  const cancelled = (data.cancelled || []).filter(mine);
+  const total = current.length + waiting.length + done.length + failed.length + cancelled.length;
+  const pct = total ? Math.round(done.length / total * 100) : 0;
+  const busy = current.length + waiting.length > 0;
+  pollDelay = busy ? POLL_ACTIVE_MS : POLL_IDLE_MS;
 
-  const { status, paused, current_job, queue, completed, failed,
-          total, marked, remaining, percentage, log } = data;
+  document.getElementById('qpPct').textContent = pct + '%';
+  document.getElementById('qpBarFill').style.width = pct + '%';
+  document.getElementById('qpMarked').textContent = done.length;
+  document.getElementById('qpRemaining').textContent = current.length + waiting.length;
+  document.getElementById('qpFailed').textContent = failed.length;
 
-  // Status dot
-  const dot = document.getElementById('qpStatusDot');
-  dot.className = 'qp-status-dot';
-  if (status === 'retrying')   dot.classList.add('retrying');
-  else if (status === 'processing') dot.classList.add('processing');
-  else if (status === 'paused')     dot.classList.add('paused');
-  else if (failed && failed.length) dot.classList.add('failed');
-  else if (marked === total && total > 0) dot.classList.add('done');
+  isPaused = !!data.paused;
+  const chip = document.getElementById('qpStatusChip');
+  const [cls, dot, label] = isPaused ? ['chip-warn', 'dot-warn', 'Paused']
+    : current.some(j => j.retry_count > 0) ? ['chip-warn', 'dot-warn', 'Retrying']
+    : busy ? ['chip-info', 'dot-info', 'Marking'] : failed.length ? ['chip-bad', 'dot-bad', 'Some failed']
+    : total ? ['chip-ok', 'dot-ok', 'All marked'] : ['', '', 'Idle'];
+  chip.className = 'chip ' + cls;
+  document.getElementById('qpStatusDot').className = 'dot ' + dot;
+  document.getElementById('qpStatusLabel').textContent = label;
+  document.getElementById('qpPauseIcon').className = isPaused ? 'fa-solid fa-play' : 'fa-solid fa-pause';
+  document.getElementById('qpPauseLabel').textContent = isPaused ? 'Resume marking' : 'Pause marking';
 
-  // Progress
-  document.getElementById('qpPct').textContent       = `${percentage}%`;
-  document.getElementById('qpBarFill').style.width   = `${percentage}%`;
-  document.getElementById('qpMarked').textContent    = marked;
-  document.getElementById('qpRemaining').textContent = remaining;
-  document.getElementById('qpFailed').textContent    = (failed || []).length;
-
-  // Current job
-  const curSection   = document.getElementById('qpCurrentSection');
-  const curJobBox    = document.getElementById('qpCurrentJobBox');
-  const curSpinner   = document.getElementById('qpCurrentSpinner');
-
-  if (current_job) {
-    curSection.classList.add('show');
-    const isRetrying = current_job.status === 'retrying' || (current_job.retry_count > 0);
-    curJobBox.className = 'qp-current-job' + (isRetrying ? ' retrying' : '');
-    curSpinner.className = 'qp-job-spinner' + (isRetrying ? ' retrying' : '');
-    document.getElementById('qpCurName').textContent =
-      current_job.student_name || current_job.student_id;
-    document.getElementById('qpCurMeta').textContent = isRetrying
-      ? `Retry #${current_job.retry_count} — reconnecting to AI service…`
-      : `ID: ${current_job.student_id} · ${current_job.page_count || '?'} pages`;
-  } else {
-    curSection.classList.remove('show');
-  }
-
-  // Pause state
-  isPaused = paused;
-  const pauseLabel   = document.getElementById('qpPauseLabel');
-  const pauseIcon    = document.getElementById('qpPauseIcon');
-  const pauseBtn     = document.getElementById('qpPauseBtn');
-  const pauseHdrIcon = document.getElementById('qpPauseHeaderIcon');
-  if (paused) {
-    pauseLabel.textContent = 'Resume Queue';
-    pauseIcon.className    = 'fa-solid fa-play';
-    pauseHdrIcon.className = 'fa-solid fa-play';
-    pauseBtn.classList.add('paused');
-  } else {
-    pauseLabel.textContent = 'Pause Queue';
-    pauseIcon.className    = 'fa-solid fa-pause';
-    pauseHdrIcon.className = 'fa-solid fa-pause';
-    pauseBtn.classList.remove('paused');
-  }
-
-  // FAB badge
-  const fabBadge = document.getElementById('queueFabBadge');
-  fabBadge.textContent = remaining;
-  if (total > 0 && queueMinimized) document.getElementById('queueFab').classList.add('visible');
-
-  // Build combined job list: pending first, then completed, then failed/cancelled
-  const allJobs = [
-    ...(queue || []),
-    ...(completed || []),
-    ...((failed || []).concat(data.cancelled || [])),
-  ];
-
-  const jobList = document.getElementById('qpJobList');
-  if (!allJobs.length) {
-    jobList.innerHTML = `<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:12px;">No students queued yet</div>`;
-  } else {
-    jobList.innerHTML = allJobs.map(job => renderJobItem(job)).join('');
-  }
-
-  // Activity log — newest at top
-  if (log && log.length) {
-    document.getElementById('qpLog').innerHTML = log.slice().reverse().map(entry =>
-      `<div class="qp-log-entry">
-         <span class="qp-log-time">${entry.time}</span>
-         <span class="qp-log-msg">${escHtml(entry.message)}</span>
-       </div>`
-    ).join('');
-  }
+  const jobs = [...current, ...waiting, ...failed, ...cancelled, ...done.slice().reverse()];
+  document.getElementById('qpJobList').innerHTML = jobs.length ? jobs.map(renderJobItem).join('')
+    : '<div class="qp-empty">Students you upload appear here while they\'re marked.</div>';
 }
 
 function renderJobItem(job) {
-  const initials = (job.student_name || job.student_id || '?').substring(0, 2).toUpperCase();
-  const score    = job.score != null ? job.score : null;
+  const score = job.score != null ? Math.round(job.score * 10) / 10 : null;
+  const scoreHtml = score !== null && job.status === 'completed'
+    ? `<span class="score ${score >= 70 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low'}">${score}%</span>` : '';
+  const icons = {
+    pending: '<i class="fa-regular fa-clock qp-job-status-icon pending" title="Waiting"></i>',
+    processing: '<span class="spinner qp-job-status-icon processing" title="Marking"></span>',
+    retrying: '<i class="fa-solid fa-rotate fa-spin qp-job-status-icon retrying" title="Retrying"></i>',
+    completed: '<i class="fa-solid fa-circle-check qp-job-status-icon completed" title="Marked"></i>',
+    failed: '<i class="fa-solid fa-circle-exclamation qp-job-status-icon failed" title="Failed"></i>',
+    cancelled: '<i class="fa-solid fa-ban qp-job-status-icon cancelled" title="Cancelled"></i>',
+  };
+  let action = '';
+  if (job.status === 'pending') action = `<button class="icon-btn icon-btn-sm" onclick="cancelJob('${esc(job.job_id)}')" aria-label="Cancel ${esc(job.student_name)}" title="Cancel"><i class="fa-solid fa-xmark"></i></button>`;
+  else if (job.status === 'failed' || job.status === 'cancelled') action = `<button class="btn btn-secondary btn-sm" onclick="retryJob('${esc(job.job_id)}')">Retry</button>`;
 
-  let scoreHtml = '';
-  if (score !== null) {
-    const cls = score >= 70 ? 'high' : score >= 50 ? 'mid' : 'low';
-    scoreHtml = `<span class="qp-job-score ${cls}">${score}%</span>`;
-  }
+  let sub = `ID ${esc(job.student_id)}`, subCls = '';
+  if (job.status === 'processing') sub = job.retry_count ? `Waiting for the AI service (attempt ${job.retry_count + 1})` : 'Marking now';
+  else if (job.status === 'retrying') sub = `Waiting for the AI service (attempt ${(job.retry_count || 0) + 1})`;
+  else if (job.status === 'pending') sub = 'Waiting';
+  else if (job.status === 'failed') { sub = esc(job.error || 'Marking failed'); subCls = 'bad'; }
+  else if (job.status === 'completed' && job.review_reason) { sub = 'Needs review: ' + esc(job.review_reason); subCls = 'warn'; }
+  else if (job.status === 'cancelled') sub = 'Cancelled';
 
-  let statusIcon = '';
-  switch(job.status) {
-    case 'pending':    statusIcon = '<i class="fa-regular fa-clock qp-job-status-icon pending"></i>'; break;
-    case 'processing': statusIcon = '<i class="fa-solid fa-spinner fa-spin qp-job-status-icon processing"></i>'; break;
-    case 'retrying':   statusIcon = '<i class="fa-solid fa-rotate qp-job-status-icon retrying fa-spin"></i>'; break;
-    case 'completed':  statusIcon = '<i class="fa-solid fa-circle-check qp-job-status-icon completed"></i>'; break;
-    case 'failed':     statusIcon = '<i class="fa-solid fa-circle-xmark qp-job-status-icon failed"></i>'; break;
-    case 'cancelled':  statusIcon = '<i class="fa-solid fa-ban qp-job-status-icon cancelled"></i>'; break;
-  }
-
-  let actionBtn = '';
-  if (job.status === 'pending') {
-    actionBtn = `<span class="qp-job-action" onclick="cancelJob('${job.job_id}')" title="Cancel">✕</span>`;
-  } else if (job.status === 'failed' || job.status === 'cancelled') {
-    actionBtn = `<span class="qp-job-action retry" onclick="retryJob('${job.job_id}')" title="Retry">↺</span>`;
-  }
-
-  const timeStr = job.completed_at || job.started_at || job.queued_at || '';
-  let subText   = `ID: ${job.student_id}`;
-  if (job.status === 'retrying' && job.retry_count) {
-    subText = `Retry #${job.retry_count} — reconnecting…`;
-  } else if (job.status === 'failed') {
-    // Plain reason from the server (never a raw error), then the retry hint
-    subText = `<span style="color:var(--danger);">${escHtml(job.error || 'Marking failed')} — tap ↺ to retry</span>`;
-  } else if (job.status === 'completed' && job.review_reason) {
-    subText = `<span style="color:var(--warning);">Needs review — ${escHtml(job.review_reason)}</span>`;
-  } else if (timeStr) {
-    subText += ` · ${timeStr}`;
-  }
-
-  return `
-    <div class="qp-job-item ${job.status}" id="job-${job.job_id}">
-      <div class="qp-job-avatar">${initials}</div>
-      <div class="qp-job-info">
-        <div class="qp-job-title">${escHtml(job.student_name || job.student_id)}</div>
-        <div class="qp-job-sub">${subText}</div>
-      </div>
-      <div class="qp-job-right">
-        ${scoreHtml}
-        ${statusIcon}
-        ${actionBtn}
-      </div>
-    </div>`;
+  return `<div class="qp-job-item ${job.status}" id="job-${esc(job.job_id)}">
+      <div class="qp-job-info"><div class="qp-job-title">${esc(job.student_name || job.student_id)}</div><div class="qp-job-sub ${subCls}">${sub}</div></div>
+      <div class="qp-job-right">${scoreHtml}${icons[job.status] || ''}${action}</div></div>`;
 }
 
-/* ════════════════════════════════════════════════════════
-   QUEUE ACTIONS
-════════════════════════════════════════════════════════ */
-async function togglePause() {
-  const url = isPaused ? '/api/queue/resume' : '/api/queue/pause';
-  try { await fetch(url, { method: 'POST' }); startQueuePolling(); } catch(e) {}
-}
+async function togglePause() { try { await fetch(isPaused ? '/api/queue/resume' : '/api/queue/pause', { method: 'POST' }); } catch (e) {} startQueuePolling(); }
+async function cancelJob(id) { try { await fetch(`/api/queue/cancel/${id}`, { method: 'POST' }); } catch (e) {} startQueuePolling(); }
+async function retryJob(id) { try { await fetch(`/api/queue/retry/${id}`, { method: 'POST' }); } catch (e) {} startQueuePolling(); }
 
-async function cancelJob(jobId) {
-  try { await fetch(`/api/queue/cancel/${jobId}`, { method: 'POST' }); startQueuePolling(); } catch(e) {}
-}
+window.addEventListener('online', () => { document.getElementById('qpNetworkBanner').classList.remove('show'); startQueuePolling(); });
+window.addEventListener('offline', () => document.getElementById('qpNetworkBanner').classList.add('show'));
+window.addEventListener('beforeunload', stopCamera);
 
-async function retryJob(jobId) {
-  try { await fetch(`/api/queue/retry/${jobId}`, { method: 'POST' }); startQueuePolling(); } catch(e) {}
-}
+/* Enter moves from ID to name, then to capture */
+document.getElementById('student_id').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('student_name').focus(); } });
+document.getElementById('student_name').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
 
-/* ════════════════════════════════════════════════════════
-   NETWORK EVENTS — inform queue panel
-════════════════════════════════════════════════════════ */
-window.addEventListener('online', () => {
-  isOnline = true;
-  document.getElementById('qpNetworkBanner').classList.remove('show');
-  // Poll immediately when network returns
-  startQueuePolling();
-});
-
-window.addEventListener('offline', () => {
-  isOnline = false;
-  document.getElementById('qpNetworkBanner').classList.add('show');
-});
-
-/* ════════════════════════════════════════════════════════
-   UTILITY
-════════════════════════════════════════════════════════ */
-function escHtml(s) {
-  return String(s || '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-/* ════════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════════ */
-async function init() {
-  // Restore sidebar state (head script already applied it pre-paint via
-  // the shared 'edumark_settings_v2' key — this just syncs the JS-side
-  // classes so toggleSidebar() has a consistent starting point).
-  if (document.documentElement.classList.contains('sb-collapsed')) {
-    document.getElementById('sidebar').classList.add('collapsed');
-    document.getElementById('mainContent').classList.add('expanded');
-  }
-
-  // Load cameras and start
-  await loadCameras();
-  await startCamera();
+(async function init() {
   updateDisplay();
-
-  // Start polling — picks up any jobs already in the queue (e.g. after page reload)
   startQueuePolling();
-
-  // If there are existing jobs, open queue automatically
-  try {
-    const res  = await fetch('/api/queue/status', { signal: AbortSignal.timeout(3000) });
-    const data = await res.json();
-    if (data && data.total > 0) {
-      hasQueued = true;
-      openQueue();
-      renderQueuePanel(data);
-    }
-  } catch(e) { /* ignore — polling will pick it up */ }
-}
-
-init();
+  if (!cameraSupported()) { switchMode('upload'); return; }
+  if (!(await startCamera())) switchMode('upload');
+  setTimeout(() => document.getElementById('student_id').focus(), 100);
+})();
 </script>
-</body>
-</html>
+{% endblock %}

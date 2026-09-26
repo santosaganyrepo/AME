@@ -1,7 +1,7 @@
 """
 Logging for the marking path (D1.1).
 
-One logger, "edumark.marking", used by the marker, the queue and the key
+One logger, "exammanager.marking", used by the marker, the queue and the key
 rotator. Messages go to the console (same text the old print() calls
 produced) and to a rotating file at logs/marking.log (5 MB x 5 files).
 Idempotent: calling setup_marking_logging() more than once is harmless.
@@ -12,7 +12,7 @@ import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-LOGGER_NAME = "edumark.marking"
+LOGGER_NAME = "exammanager.marking"
 _LOG_DIR = Path(__file__).parent / "logs"
 
 _configured = False

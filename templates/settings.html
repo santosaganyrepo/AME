@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% set active = 'settings' %}
+{% block title %}Settings{% endblock %}
+{% block topbar_title %}Settings{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block head %}
+<style>
+  .setting { display: flex; align-items: center; justify-content: space-between; gap: var(--s5); }
+  .setting + .setting { margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--line); }
+  .setting-text { min-width: 0; }
+  .setting-name { font-weight: 600; }
+  .setting-desc { font-size: 14px; color: var(--ink-2); margin-top: 2px; max-width: 60ch; }
+  .theme-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 170px)); gap: var(--s3); }
+  .theme-card { border: 1.5px solid var(--line-strong); border-radius: var(--r-md); padding: var(--s2); background: var(--surface); cursor: pointer; text-align: left; }
+  .theme-card[aria-pressed="true"] { border-color: var(--primary); box-shadow: var(--focus); }
+  .theme-swatch { height: 74px; border-radius: 6px; display: grid; grid-template-columns: 30% 1fr; overflow: hidden; border: 1px solid var(--line); }
+  .theme-swatch .sw-side { border-right: 1px solid rgba(128,128,128,.25); }
+  .theme-swatch .sw-main { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .theme-swatch .sw-bar { height: 7px; border-radius: 3px; }
+  .theme-label { display: flex; align-items: center; justify-content: space-between; padding: var(--s2) var(--s1) 0; font-weight: 600; font-size: 14px; }
+  .theme-label i { color: var(--primary); visibility: hidden; }
+  .theme-card[aria-pressed="true"] .theme-label i { visibility: visible; }
+  .kv { display: grid; grid-template-columns: 180px 1fr; gap: var(--s3) var(--s4); font-size: 14.5px; }
+  .kv dt { color: var(--ink-3); }
+  .kv dd { margin: 0; font-weight: 500; }
+  @media (max-width: 560px) { .kv { grid-template-columns: 1fr; gap: 2px; } .kv dd { margin-bottom: var(--s3); } .setting { flex-direction: column; align-items: flex-start; } }
+  .log-table td, .log-table th { font-size: 13.5px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 class="page-title">Settings</h1>
+    <p class="page-sub">Appearance on this device, and how ExamManager looks after stored scripts.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-head"><div><h2 class="panel-title">Appearance</h2><p class="panel-desc">Saved on this device only</p></div></div>
+  <div class="panel-body">
+    <div class="theme-cards" role="group" aria-label="Theme">
+      <button class="theme-card" data-theme-choice="light" aria-pressed="false">
+        <div class="theme-swatch" style="background:#EEEDE9">
+          <div class="sw-side" style="background:#F4F3EF"></div>
+          <div class="sw-main"><div class="sw-bar" style="background:#1F5BD8;width:45%"></div><div class="sw-bar" style="background:#DAD8D2"></div><div class="sw-bar" style="background:#DAD8D2;width:70%"></div></div>
+        </div>
+        <div class="theme-label">Light <i class="fa-solid fa-circle-check"></i></div>
+      </button>
+      <button class="theme-card" data-theme-choice="dark" aria-pressed="false">
+        <div class="theme-swatch" style="background:#050505">
+          <div class="sw-side" style="background:#000"></div>
+          <div class="sw-main"><div class="sw-bar" style="background:#3D7BF5;width:45%"></div><div class="sw-bar" style="background:#25272B"></div><div class="sw-bar" style="background:#25272B;width:70%"></div></div>
+        </div>
+        <div class="theme-label">Dark <i class="fa-solid fa-circle-check"></i></div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><div><h2 class="panel-title">Automatic clean-up</h2><p class="panel-desc">Frees disk space by deleting old answer-script photos</p></div></div>
+  <div class="panel-body">
+    <div class="setting">
+      <div class="setting-text">
+        <div class="setting-name">Delete scripts {{ auto_deletion.get('deletion_hours', 48) }} hours after upload</div>
+        <p class="setting-desc">Runs each time ExamManager starts. Marks, feedback and exported spreadsheets are kept — only the page photos are removed, so those students can't be re-marked afterwards.</p>
+      </div>
+      <label class="switch" title="Automatic clean-up">
+        <input type="checkbox" id="autoDelToggle" {% if auto_deletion.get('enabled') %}checked{% endif %} aria-label="Automatic clean-up">
+        <span></span>
+      </label>
+    </div>
+    <div class="setting">
+      <div class="setting-text">
+        <div class="setting-name">Scripts that would be deleted now</div>
+        <p class="setting-desc" id="previewText">Checking…</p>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="logBtn"><i class="fa-solid fa-clock-rotate-left"></i> Deletion history</button>
+    </div>
+    <div id="logWrap" class="hidden mt-4">
+      <div class="table-wrap panel">
+        <table class="table log-table"><thead><tr><th>Student</th><th>Session</th><th>Deleted</th><th class="right">Size</th></tr></thead><tbody id="logBody"></tbody></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><div><h2 class="panel-title">System</h2><p class="panel-desc">Changed by your administrator in the .env file</p></div></div>
+  <div class="panel-body">
+    <dl class="kv">
+      <dt>AI model</dt><dd>{{ system.model }}{% if system.fallback_model %} <span class="muted">(falls back to {{ system.fallback_model }} when busy)</span>{% endif %}</dd>
+      <dt>AI keys</dt><dd>{% if system['keys'].total_keys %}{{ system['keys'].total_keys }} configured{% if system['keys'].keys_cooling_down %}, {{ system['keys'].keys_cooling_down }} resting after hitting a limit{% endif %}{% else %}<span class="chip chip-bad">None — marking is off</span>{% endif %}</dd>
+      <dt>Marked at the same time</dt><dd>{{ system.workers }} script{{ 's' if system.workers != 1 }}</dd>
+    </dl>
+  </div>
+</section>
+{% endblock %}
+
+{% block modals %}
+<div class="modal" id="confirmDelModal" role="dialog" aria-modal="true" aria-labelledby="cdTitle">
+  <div class="modal-box">
+    <div class="modal-head"><h2 class="modal-title" id="cdTitle">Turn on automatic clean-up?</h2></div>
+    <div class="modal-body">
+      <p>Answer-script photos older than {{ auto_deletion.get('deletion_hours', 48) }} hours will be <strong>permanently deleted</strong> every time ExamManager starts.</p>
+      <p class="mt-2">Students whose photos are deleted can't be re-marked. Marks and feedback are kept.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" id="cdCancel">Keep it off</button>
+      <button class="btn btn-danger" id="cdConfirm">Turn on clean-up</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+  var toggle = document.getElementById('autoDelToggle');
+
+  async function post(url, body) {
+    var r = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+    return r.json().catch(function () { return {}; });
+  }
+
+  toggle.addEventListener('change', async function () {
+    if (toggle.checked) { toggle.checked = false; EM.openModal('confirmDelModal'); return; }
+    var d = await post('/settings/disable-auto-deletion');
+    EM.toast(d.success ? 'Automatic clean-up turned off' : 'Could not change the setting', d.success ? 'ok' : 'bad');
+  });
+  document.getElementById('cdCancel').onclick = function () { EM.closeModal('confirmDelModal'); };
+  document.getElementById('cdConfirm').onclick = async function () {
+    var d = await post('/settings/enable-auto-deletion', { confirmed: true });
+    EM.closeModal('confirmDelModal');
+    if (d.success) { toggle.checked = true; EM.toast('Automatic clean-up turned on'); }
+    else EM.toast('Could not change the setting', 'bad');
+  };
+
+  fetch('/settings/deletion-preview', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (d) {
+    document.getElementById('previewText').textContent = d.total_folders
+      ? d.total_folders + ' student script folder' + (d.total_folders === 1 ? '' : 's') + ' (' + d.total_size_mb + ' MB) are older than the limit.'
+      : 'None — no scripts are older than the limit.';
+  }).catch(function () { document.getElementById('previewText').textContent = 'Could not check right now.'; });
+
+  document.getElementById('logBtn').onclick = async function () {
+    var wrap = document.getElementById('logWrap');
+    if (!wrap.classList.contains('hidden')) { wrap.classList.add('hidden'); return; }
+    var d = await fetch('/settings/deletion-log', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).catch(function () { return {}; });
+    var rows = (d.log || []).slice().reverse();
+    document.getElementById('logBody').innerHTML = rows.length ? rows.map(function (x) {
+      return '<tr><td>' + EM.esc(x.student_name) + ' <span class="cell-sub">' + EM.esc(x.student_id) + '</span></td><td>' + EM.esc(x.exam_session) +
+        '</td><td class="num">' + EM.esc(x.deletion_time) + '</td><td class="right num">' + EM.esc((+x.size_mb || 0).toFixed(1)) + ' MB</td></tr>';
+    }).join('') : '<tr><td colspan="4" class="muted">Nothing has been deleted.</td></tr>';
+    wrap.classList.remove('hidden');
+  };
+})();
+</script>
+{% endblock %}

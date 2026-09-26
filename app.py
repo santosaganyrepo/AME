@@ -16,7 +16,7 @@ from excel_generator import generate_exam_spreadsheet
 from settings import SettingsManager
 from queue_manager import get_queue_manager
 from key_rotator import key_rotator
-from utils.image_validator import ImageValidator
+from image_validator import ImageValidator
 from storage import read_json, update_json, write_json_atomic, load_metadata_cached
 from page_prep import is_pdf_bytes, pdf_to_page_images, convert_pdf_pages_in_folder
 from rubric_check import rubric_total_warning
@@ -363,6 +363,9 @@ def update_student_marks(exam_folder: Path, sid: str, questions: dict,
         print(f"update_student_marks error: {e}")
 
 
+_BACKUP_DIR_RE = re.compile(r"_backup_\d+$")
+
+
 def _all_meta_files() -> list:
     """
     Every session's students_metadata.json. Same result as rglob(), but it
@@ -375,8 +378,12 @@ def _all_meta_files() -> list:
         return []
     found = []
     for dirpath, dirnames, filenames in os.walk(root):
+        # "<exam>_backup_<time>" is the copy kept when a session is
+        # overwritten at setup — it is not a live session, so it must not
+        # show up as a duplicate on the dashboard or in results.
         dirnames[:] = [d for d in dirnames
-                       if not d.startswith("student_") and d not in ("_batch_staging", "ai_runs", "previous_uploads")]
+                       if not d.startswith("student_") and not _BACKUP_DIR_RE.search(d)
+                       and d not in ("_batch_staging", "ai_runs", "previous_uploads")]
         if "students_metadata.json" in filenames:
             found.append(Path(dirpath) / "students_metadata.json")
     return found
@@ -569,22 +576,38 @@ def setup_session():
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         })
 
+        rubric_uploads = [f for f in request.files.getlist("rubrics[]") if f and f.filename]
+        qp_uploads     = [f for f in request.files.getlist("question_papers[]") if f and f.filename]
+
+        # Re-running setup on an existing session replaces its materials. Old
+        # files must go first: a 2-page question paper uploaded over an old
+        # 5-page one used to leave pages 3–5 behind, and the AI read them all.
+        # A group is only cleared when new material for it was provided.
+        stale = []
+        if qp_uploads:
+            stale += list(exam_folder.glob("question_paper_*"))
+        if rubric_uploads or rubric_text.strip():
+            stale += list(exam_folder.glob("rubric_*"))
+        for old_file in stale:
+            if old_file.is_file():
+                old_file.unlink()
+
         def save_files(file_list, prefix):
             """Saves uploaded files exactly as received — no compression."""
             saved = []
-            for idx, f in enumerate(file_list):
-                if not (f and f.filename):
+            for f in file_list:
+                ext = f.filename.rsplit(".", 1)[-1].lower() if "." in f.filename else ""
+                if ext not in ("pdf", "jpg", "jpeg", "png", "webp"):
+                    print(f"⚠️  Skipped {prefix} upload with unsupported type: {f.filename!r}")
                     continue
-                ext      = f.filename.rsplit(".", 1)[-1].lower()
-                filename = f"{prefix}_{idx + 1}.{ext}"
-                fpath    = exam_folder / filename
-                f.save(str(fpath))
+                filename = f"{prefix}_{len(saved) + 1}.{ext}"
+                f.save(str(exam_folder / filename))
                 saved.append(filename)
             return saved
 
         with ThreadPoolExecutor(max_workers=2) as pool:
-            rf = pool.submit(save_files, request.files.getlist("rubrics[]"),         "rubric")
-            qf = pool.submit(save_files, request.files.getlist("question_papers[]"), "question_paper")
+            rf = pool.submit(save_files, rubric_uploads, "rubric")
+            qf = pool.submit(save_files, qp_uploads,     "question_paper")
             saved_rubrics = rf.result()
             saved_qps     = qf.result()
 
@@ -1120,47 +1143,9 @@ def api_key_status():
 
 @app.route("/students")
 def view_students():
-    exam_sessions = []
-
-    meta_files = sorted(_all_meta_files(), key=lambda p: p.stat().st_mtime, reverse=True)
-    for meta_file in meta_files:
-        try:
-            data = load_metadata_cached(meta_file, None, copy_result=False)
-            if not isinstance(data, dict):
-                raise ValueError("unreadable metadata")
-
-            exam_info     = data.get("exam_info", {})
-            students_list = data.get("students", [])
-
-            if not exam_info:
-                parts = meta_file.parent.relative_to(Config.UPLOAD_FOLDER).parts
-                if len(parts) >= 5:
-                    exam_info = {
-                        "year":      parts[0],
-                        "term":      parts[1],
-                        "class":     parts[2].split("_")[0],
-                        "stream":    parts[2].split("_")[1] if "_" in parts[2] else "",
-                        "subject":   parts[3],
-                        "exam_type": parts[4],
-                    }
-
-            if students_list:
-                exam_sessions.append({
-                    **exam_info,
-                    "students":       students_list,
-                    "total_students": len(students_list),
-                    "marked_count":   sum(1 for s in students_list if s.get("marked")),
-                    "uploaded_count": sum(1 for s in students_list if not s.get("marked")),
-                })
-        except Exception as e:
-            print(f"Error reading {meta_file}: {e}")
-
-    stats = {
-        "total_students": sum(e["total_students"] for e in exam_sessions),
-        "total_marked":   sum(e["marked_count"]   for e in exam_sessions),
-        "total_sessions": len(exam_sessions),
-    }
-    return render_template("view_students.html", exam_sessions=exam_sessions, stats=stats)
+    """Results page — it loads its data from /api/sessions (cached), so the
+    route itself does no work."""
+    return render_template("view_students.html")
 
 
 @app.route("/all-exams")
@@ -1174,7 +1159,7 @@ def all_exams():
 @app.route("/generate-excel", methods=["POST"])
 def generate_excel():
     try:
-        data     = request.get_json()
+        data     = request.get_json(silent=True) or {}
         required = ["year", "term", "class", "stream", "subject", "exam_type", "format"]
         for field in required:
             if field not in data:
@@ -1211,6 +1196,8 @@ def generate_excel():
                          download_name=output_file.name, mimetype=mime)
     except FileNotFoundError:
         return jsonify({"success": False, "message": "No data found for this session. Check that all fields match exactly."}), 404
+    except ValueError:
+        return jsonify({"success": False, "message": "There are no students in this session yet."}), 404
     except Exception as e:
         print(f"Excel error: {e}")
         return jsonify({"success": False, "message": "Could not generate spreadsheet. Please try again."}), 500
@@ -1434,13 +1421,29 @@ def api_session_report(session_id):
 
 @app.route("/settings")
 def settings_page():
-    return redirect(url_for("index", _anchor="settings"))
+    from ai_marker_gemini_improved import PRIMARY_MODEL, FALLBACK_MODEL
+    auto = settings_manager.load_settings().get("auto_deletion", {})
+    return render_template(
+        "settings.html", active="settings",
+        auto_deletion=auto,
+        system={
+            "model": PRIMARY_MODEL,
+            "fallback_model": FALLBACK_MODEL,
+            "keys": key_rotator.status(),
+            "workers": get_queue_manager().get_status().get("worker_count"),
+        },
+    )
+
+
+@app.route("/help")
+def help_page():
+    return render_template("help.html", active="help")
 
 
 @app.route("/settings/enable-auto-deletion", methods=["POST"])
 def enable_auto_deletion():
-    data = request.get_json()
-    return jsonify(settings_manager.enable_auto_deletion(confirmed=data.get("confirmed", False)))
+    data = request.get_json(silent=True) or {}
+    return jsonify(settings_manager.enable_auto_deletion(confirmed=bool(data.get("confirmed", False))))
 
 
 @app.route("/settings/disable-auto-deletion", methods=["POST"])
@@ -1600,7 +1603,7 @@ if __name__ == "__main__":
 
     from waitress import serve
     host, port = Config.HOST, Config.PORT
-    print(f"🌐 EduMark AI running on http://localhost:{port}")
+    print(f"🌐 ExamManager running on http://localhost:{port}")
     for addr in _lan_addresses():
         print(f"   On other devices on this network: http://{addr}:{port}")
     serve(app, host=host, port=port, threads=Config.SERVER_THREADS,

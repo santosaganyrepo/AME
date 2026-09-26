@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% set active = 'help' %}
+{% block title %}Help{% endblock %}
+{% block topbar_title %}Help{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
+
+{% block head %}
+<style>
+  .help-steps { counter-reset: step; display: flex; flex-direction: column; gap: var(--s5); }
+  .help-step { display: grid; grid-template-columns: 32px 1fr; gap: var(--s3); }
+  .help-step::before { counter-increment: step; content: counter(step); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); font-weight: 700; font-size: 14px; }
+  .help-step h3 { font-size: 15.5px; margin-bottom: 4px; }
+  .help-step p, .help-text { color: var(--ink-2); font-size: 14.5px; max-width: 68ch; }
+  details { border-top: 1px solid var(--line); }
+  details:first-of-type { border-top: 0; }
+  summary { list-style: none; cursor: pointer; padding: var(--s4) var(--s5); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: var(--s3); }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 12px; color: var(--ink-3); transition: transform var(--t); }
+  details[open] summary::after { transform: rotate(180deg); }
+  details > div { padding: 0 var(--s5) var(--s5); color: var(--ink-2); font-size: 14.5px; max-width: 72ch; }
+  .legend { display: grid; grid-template-columns: auto 1fr; gap: var(--s3) var(--s4); align-items: center; font-size: 14.5px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1 class="page-title">How ExamManager works</h1>
+    <p class="page-sub">The AI reads each script against your marking scheme and scores it stage by stage. ExamManager — never the AI — adds the marks up, and you have the final say on every result.</p>
+  </div>
+</div>
+
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">Marking an exam</h2></div>
+  <div class="panel-body">
+    <div class="help-steps">
+      <div class="help-step"><div><h3>Set up the exam</h3><p>Open <a href="{{ url_for('setup_start') }}">Mark an exam</a>. Choose the year, term, class, stream and subject, enter the total marks for the paper, and add the question paper and marking scheme as photos or PDFs.</p></div></div>
+      <div class="help-step"><div><h3>Add students' scripts</h3><p>Photograph each student's pages with the camera, or upload them from your device. For a whole class, upload one ZIP file with a folder per student named like <code>001_John Doe</code>.</p></div></div>
+      <div class="help-step"><div><h3>Let the queue mark them</h3><p>Scripts are marked in the background. You can keep adding students while earlier ones are being marked, and close the page — marking carries on.</p></div></div>
+      <div class="help-step"><div><h3>Review, adjust and export</h3><p>In <a href="{{ url_for('view_students') }}">Results</a>, check anything flagged, change a mark if you disagree, then download a spreadsheet or print student reports.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">What the result labels mean</h2></div>
+  <div class="panel-body">
+    <div class="legend">
+      <span class="chip chip-ok"><i class="fa-solid fa-check"></i> Marked</span><span>Marked by the AI with no problems found.</span>
+      <span class="chip chip-warn"><i class="fa-solid fa-flag"></i> Needs review</span><span>Marked, but something looked wrong — for example the stage marks add up to more than the paper total. Check it before sharing.</span>
+      <span class="chip chip-bad"><i class="fa-solid fa-circle-exclamation"></i> Failed</span><span>Couldn't be marked. The reason is shown next to the student; use <strong>Retry failed</strong> once it's fixed.</span>
+      <span class="chip"><i class="fa-regular fa-clock"></i> Waiting</span><span>Uploaded and waiting in the marking queue.</span>
+      <span class="chip chip-info"><i class="fa-solid fa-pen"></i> Edited</span><span>A teacher changed the mark. The AI's original mark is kept on record.</span>
+    </div>
+    <p class="help-text mt-4">Scores are coloured by band: <span class="score score-high">70% and above</span>, <span class="score score-mid">50–69%</span>, <span class="score score-low">below 50%</span>.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2 class="panel-title">Common questions</h2></div>
+  <details><summary>Can I change a mark the AI gave?</summary><div>Yes. In Results, open the session and choose <strong>Edit</strong> on the student's row. Your mark becomes the final mark everywhere — reports and spreadsheets — and the AI's original mark is kept alongside it. A student with a teacher's mark is never re-marked by the AI.</div></details>
+  <details><summary>What files can I upload?</summary><div>JPG, PNG and WEBP photos, and PDF files. For the best results, photograph pages flat, in good light, with the whole page in view. Blurry or very dark pages are rejected before upload so they can be retaken.</div></details>
+  <details><summary>How long does marking take?</summary><div>Usually under a minute per script. Several scripts are marked at the same time. When the AI service is busy, ExamManager waits and retries automatically — you don't need to do anything.</div></details>
+  <details><summary>A student shows “Failed”. What should I do?</summary><div>Read the reason next to their name. If the pages were unreadable, upload them again. If the AI service was busy or its daily limit was reached, use <strong>Retry failed</strong> on the session later.</div></details>
+  <details><summary>How do I add more students to an exam I already set up?</summary><div>In Results, open the session's menu and choose <strong>Add students</strong>. You don't need to upload the question paper or marking scheme again.</div></details>
+  <details><summary>Where is my data stored?</summary><div>On the computer running ExamManager, in the <code>uploads</code> folder. Your administrator can make a backup at any time with <code>python tools/backup.py</code>.</div></details>
+</section>
+{% endblock %}

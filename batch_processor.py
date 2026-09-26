@@ -29,9 +29,12 @@ function of (zip_path, staging_dir) -> manifest dict.
 """
 
 import io
+import os
 import re
 import shutil
+import threading
 import zipfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from PIL import Image
@@ -46,7 +49,11 @@ MAX_ZIP_UNCOMPRESSED_BYTES = 500 * 1024 * 1024   # 500 MB total, uncompressed
 MAX_COMPRESSION_RATIO      = 100                 # per-file zip-bomb guard
 LARGE_BATCH_PAGE_THRESHOLD = 1000                # requires explicit confirm
 
-ALLOWED_EXTS  = {".jpg", ".jpeg", ".png", ".pdf"}
+ALLOWED_EXTS  = {".jpg", ".jpeg", ".png", ".webp", ".pdf"}
+IMAGE_EXTS    = {".jpg", ".jpeg", ".png", ".webp"}
+# Students are extracted in parallel: image decoding, the blur check and PDF
+# rendering release the GIL, so a class ZIP is processed several times faster.
+EXTRACT_WORKERS = max(2, min(8, os.cpu_count() or 2))
 ARCHIVE_EXTS  = {".zip", ".rar", ".7z", ".tar", ".gz", ".tgz"}
 JUNK_BASENAMES = {".ds_store", "thumbs.db", "desktop.ini"}
 
@@ -163,7 +170,12 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
         zf = zipfile.ZipFile(zip_path)
     except zipfile.BadZipFile:
         raise ValueError("corrupted_zip")
+    # Always closed — an open handle stops the ZIP being deleted on Windows.
+    with zf:
+        return _validate_open_zip(zf, staging_dir, warnings, blocking_errors)
 
+
+def _validate_open_zip(zf, staging_dir: Path, warnings: list, blocking_errors: list) -> dict:
     infos = [i for i in zf.infolist() if not i.is_dir()]
 
     if not infos:
@@ -260,7 +272,7 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
             warnings.append({
                 "code": "unsupported_type",
                 "message": f"Unsupported file skipped: '{leaf_name}'. Only JPG, "
-                           "PNG and PDF answer sheets are supported.",
+                           "PNG, WEBP and PDF answer sheets are supported.",
             })
             continue
 
@@ -298,119 +310,121 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
                            "— their pages were combined. Please verify this is correct.",
             })
 
-    # ── Extract + validate content, per student ─────────────────────────────
+    # ── Extract + validate content, per student (in parallel) ───────────────
+    zip_lock = threading.Lock()   # one reader at a time on the shared archive
+    with ThreadPoolExecutor(max_workers=EXTRACT_WORKERS) as pool:
+        results = list(pool.map(
+            lambda sid: _extract_student(zf, zip_lock, sid, students[sid], staging_dir),
+            sorted(students.keys())))
     students_out = []
-    for sid in sorted(students.keys()):
-        data = students[sid]
-        dest_folder = staging_dir / f"student_{sid}"
-        dest_folder.mkdir(parents=True, exist_ok=True)
+    for out, student_warnings in results:   # merged in ID order — deterministic
+        students_out.append(out)
+        warnings.extend(student_warnings)
 
-        used_basenames = set()
-        valid_pages = []
-        flagged_pages = []   # [{"filename": saved page name, "reason": str}]
-        # page2 before page10 — plain sorting sent long scripts out of order (D2.4)
-        for zname in sorted(data["files"], key=natural_key):
-            leaf = zname.rsplit("/", 1)[-1]
-            ext  = Path(leaf).suffix.lower()
-            try:
+    return _build_manifest(students_out, warnings, blocking_errors)
+
+
+def _extract_student(zf, zip_lock, sid: str, data: dict, staging_dir: Path):
+    """Extracts + checks one student's files. Returns (manifest entry, warnings)."""
+    warnings = []
+    dest_folder = staging_dir / f"student_{sid}"
+    dest_folder.mkdir(parents=True, exist_ok=True)
+
+    valid_pages = []
+    flagged_pages = []   # [{"filename": saved page name, "reason": str}]
+    # page2 before page10 — plain sorting sent long scripts out of order (D2.4)
+    for zname in sorted(data["files"], key=natural_key):
+        leaf = zname.rsplit("/", 1)[-1]
+        ext  = Path(leaf).suffix.lower()
+        try:
+            with zip_lock:
                 raw = zf.read(zname)
+        except Exception:
+            warnings.append({"code": "read_error", "message": f"Could not read '{leaf}' from the archive — skipped."})
+            continue
+
+        if len(raw) == 0:
+            warnings.append({"code": "empty_file", "message": f"Skipped empty file: '{leaf}' (Student {sid})."})
+            continue
+
+        if ext in IMAGE_EXTS:
+            try:
+                Image.open(io.BytesIO(raw)).verify()
             except Exception:
-                warnings.append({"code": "read_error", "message": f"Could not read '{leaf}' from the archive — skipped."})
+                warnings.append({"code": "corrupted_image", "message": f"Skipped corrupted image: '{leaf}' (Student {sid})."})
+                continue
+        elif ext == ".pdf":
+            if raw[:5] != b"%PDF-":
+                warnings.append({"code": "corrupted_pdf", "message": f"Skipped corrupted PDF: '{leaf}' (Student {sid})."})
                 continue
 
-            if len(raw) == 0:
-                warnings.append({"code": "empty_file", "message": f"Skipped empty file: '{leaf}' (Student {sid})."})
+        valid_pages.append((ext, raw, leaf))
+
+    # PDF answer scripts are rendered to one JPEG per page here (D5.1), so
+    # the marker only ever sees page images; each PDF is kept alongside
+    # as original.pdf / original_2.pdf.
+    page_no, pdf_no = 0, 0
+    for ext, raw, leaf in valid_pages:
+        if ext == ".pdf":
+            try:
+                rendered = pdf_to_page_images(raw)
+            except Exception:
+                rendered = []
+            if not rendered:
+                warnings.append({"code": "corrupted_pdf", "message": f"Skipped unreadable PDF: '{leaf}' (Student {sid})."})
                 continue
+            pdf_no += 1
+            (dest_folder / ("original.pdf" if pdf_no == 1 else f"original_{pdf_no}.pdf")).write_bytes(raw)
+            for img in rendered:
+                page_no += 1
+                (dest_folder / f"page_{page_no}.jpg").write_bytes(img)
+            continue
 
-            if ext in (".jpg", ".jpeg", ".png"):
-                try:
-                    Image.open(io.BytesIO(raw)).verify()
-                except Exception:
-                    warnings.append({"code": "corrupted_image", "message": f"Skipped corrupted image: '{leaf}' (Student {sid})."})
-                    continue
-            elif ext == ".pdf":
-                if raw[:5] != b"%PDF-":
-                    warnings.append({"code": "corrupted_pdf", "message": f"Skipped corrupted PDF: '{leaf}' (Student {sid})."})
-                    continue
+        page_no += 1
+        page_name = f"page_{page_no}{ext}"
+        (dest_folder / page_name).write_bytes(raw)
 
-            base = Path(leaf).name
-            stem = Path(base).stem
-            counter = 2
-            while base in used_basenames:
-                base = f"{stem}_v{counter}{ext}"
-                counter += 1
-            used_basenames.add(base)
-            valid_pages.append((ext, raw, leaf))
-
-        # PDF answer scripts are rendered to one JPEG per page here (D5.1), so
-        # the marker only ever sees page images; each PDF is kept alongside
-        # as original.pdf / original_2.pdf.
-        page_no, pdf_no = 0, 0
-        for ext, raw, leaf in valid_pages:
-            if ext == ".pdf":
-                try:
-                    rendered = pdf_to_page_images(raw)
-                except Exception:
-                    rendered = []
-                if not rendered:
-                    warnings.append({"code": "corrupted_pdf", "message": f"Skipped unreadable PDF: '{leaf}' (Student {sid})."})
-                    continue
-                pdf_no += 1
-                (dest_folder / ("original.pdf" if pdf_no == 1 else f"original_{pdf_no}.pdf")).write_bytes(raw)
-                for img in rendered:
-                    page_no += 1
-                    (dest_folder / f"page_{page_no}.jpg").write_bytes(img)
-                continue
-
-            page_no += 1
-            page_name = f"page_{page_no}{ext}"
-            (dest_folder / page_name).write_bytes(raw)
-
-            # Quality check runs on photos/scans only (pages rendered from a
-            # PDF above are exempt — a clean white PDF page trips the
-            # "washed out" check). Never blocks the upload; this only flags the page so
-            # the teacher can see and decide whether to fix or proceed.
-            if ext in (".jpg", ".jpeg", ".png"):
-                is_ok, reason, _score = _quality_checker.validate_image_bytes(raw)
-                if not is_ok:
-                    flagged_pages.append({
-                        "filename": leaf,
-                        "saved_as": page_name,
-                        "reason":   reason,
-                    })
-
-        issues = set(data["issues"])
-        if not page_no:
-            status = "error"
-            issues.add("no_valid_pages")
-            shutil.rmtree(dest_folder, ignore_errors=True)
-        elif not data["name"]:
-            status = "check"
-            issues.add("name_missing")
-        elif flagged_pages:
-            status = "check"
-            issues.add("poor_image_quality")
-        elif issues:
-            status = "check"
-        else:
-            status = "ready"
-
-        if flagged_pages:
-            names = ", ".join(f"'{p['filename']}' ({p['reason']})" for p in flagged_pages)
-            warnings.append({
-                "code": "poor_image_quality",
-                "message": f"Student {sid}: possible image quality issue — {names}. "
-                           f"You can still upload this batch; only this student's affected pages may be under-marked.",
+        # Quality check runs on photos/scans only (pages rendered from a
+        # PDF above are exempt — a clean white PDF page trips the
+        # "washed out" check). Never blocks the upload; this only flags the page so
+        # the teacher can see and decide whether to fix or proceed.
+        is_ok, reason, _score = _quality_checker.validate_image_bytes(raw)
+        if not is_ok:
+            flagged_pages.append({
+                "filename": leaf,
+                "saved_as": page_name,
+                "reason":   reason,
             })
 
-        students_out.append({
-            "id":     sid,
-            "name":   data["name"],
-            "pages":  page_no,
-            "status": status,
-            "issues": [ISSUE_TEXT.get(code, code) for code in sorted(issues)],
-            "flagged_pages": flagged_pages,
+    issues = set(data["issues"])
+    if not page_no:
+        status = "error"
+        issues.add("no_valid_pages")
+        shutil.rmtree(dest_folder, ignore_errors=True)
+    elif not data["name"]:
+        status = "check"
+        issues.add("name_missing")
+    elif flagged_pages:
+        status = "check"
+        issues.add("poor_image_quality")
+    elif issues:
+        status = "check"
+    else:
+        status = "ready"
+
+    if flagged_pages:
+        names = ", ".join(f"'{p['filename']}' ({p['reason']})" for p in flagged_pages)
+        warnings.append({
+            "code": "poor_image_quality",
+            "message": f"Student {sid}: possible image quality issue — {names}. "
+                       f"You can still upload this batch; only this student's affected pages may be under-marked.",
         })
 
-    zf.close()
-    return _build_manifest(students_out, warnings, blocking_errors)
+    return {
+        "id":     sid,
+        "name":   data["name"],
+        "pages":  page_no,
+        "status": status,
+        "issues": [ISSUE_TEXT.get(code, code) for code in sorted(issues)],
+        "flagged_pages": flagged_pages,
+    }, warnings

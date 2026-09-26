@@ -1,830 +1,419 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduMark AI — Batch Upload</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script>
-    (function () {
-      try {
-        var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-        document.documentElement.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
-        if (s.sidebarCollapsed) document.documentElement.classList.add('sb-collapsed');
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-  <style>
-    :root, html[data-theme="dark"] {
-      --bg: #0f172a; --bg-panel: #131c2e; --bg-elevated: #1b2436;
-      --bg-card: rgba(255,255,255,0.055); --bg-card-h: rgba(255,255,255,0.09);
-      --bg-input: rgba(255,255,255,0.05);
-      --border: rgba(255,255,255,0.11); --border-h: rgba(255,255,255,0.22);
-      --accent: #818cf8; --accent-soft: rgba(129,140,248,0.16); --accent-glow: rgba(129,140,248,0.20);
-      --purple: var(--accent); --purple-soft: var(--accent-soft);
-      --success: #34d399; --success-soft: rgba(52,211,153,0.15);
-      --warning: #fbbf24; --warning-soft: rgba(251,191,36,0.15);
-      --danger: #f87171; --danger-soft: rgba(248,113,113,0.15);
-      --info: #60c8ff; --info-soft: rgba(96,200,255,0.13);
-      --text-1: #f2f2f3; --text-2: #b2b2b8; --text-3: #7a7a80;
-      --radius-xs: 7px; --radius-sm: 11px; --radius-md: 16px; --radius-lg: 20px; --radius-xl: 24px;
-      --shadow-md: 0 8px 24px rgba(0,0,0,0.4); --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
-      --sidebar-w: 252px; --sidebar-col: 68px; --header-h: 60px;
-      --transition: all 0.1s cubic-bezier(0.4,0,0.2,1);
-      --font-serif: 'Space Grotesk', sans-serif; --font-body: 'DM Sans', system-ui, sans-serif;
-    }
-    html[data-theme="light"] {
-      --bg: #ffffff; --bg-panel: rgba(255,255,255,0.85); --bg-elevated: #f2f2f2;
-      --bg-card: #ffffff; --bg-card-h: #f4f4f4; --bg-input: #ffffff;
-      --border: rgba(0,0,0,0.10); --border-h: rgba(0,0,0,0.20);
-      --accent: #4f46e5; --accent-soft: rgba(79,70,229,0.08); --accent-glow: rgba(79,70,229,0.14);
-      --purple: var(--accent); --purple-soft: var(--accent-soft);
-      --success: #16a34a; --success-soft: rgba(22,163,74,0.10);
-      --warning: #d97706; --warning-soft: rgba(217,119,6,0.10);
-      --danger: #dc2626; --danger-soft: rgba(220,38,38,0.10);
-      --info: #0284c7; --info-soft: rgba(2,132,199,0.10);
-      --text-1: #0a0a0a; --text-2: #45454a; --text-3: #8a8a90;
-      --shadow-md: 0 8px 24px rgba(0,0,0,0.08); --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-body); background: var(--bg); color: var(--text-1); min-height: 100vh; overflow-x: hidden; font-size: 14px; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: var(--text-3); border-radius: 99px; }
+{% extends "base.html" %}
+{% set active = 'mark' %}
+{% block title %}Upload a class{% endblock %}
+{% block topbar_title %}{{ exam_data.subject }} ({{ exam_data.exam_type }}){% endblock %}
+{% block topbar_context %}{{ exam_data.class }} {{ exam_data.stream }}, {{ exam_data.term }} {{ exam_data.year }}{% endblock %}
+{% block topbar_actions %}
+<a class="btn btn-ghost btn-sm" href="{{ url_for('upload_student') }}"><i class="fa-solid fa-camera"></i> <span class="hide-sm">Add one by one instead</span></a>
+{% endblock %}
+{% block content_class %}content-narrow{% endblock %}
 
-    .shell { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  @media (max-width: 640px) { .hide-sm { display: none; } }
+  .view { display: none; } .view.active { display: block; }
+  .src-row { display: flex; justify-content: space-between; align-items: center; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s4); }
+  .src-pane { display: none; } .src-pane.active { display: block; }
+  .dropzone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .dropzone.has-file { border-style: solid; border-color: var(--ok); background: var(--ok-soft); }
+  .dropzone.has-file .dropzone-icon { color: var(--ok); }
+  .folder-review { display: none; margin-top: var(--s3); }
+  .folder-review.show { display: flex; }
+  .example { font-family: var(--mono); font-size: 13px; background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--s3) var(--s4); line-height: 1.7; color: var(--ink-2); white-space: pre; overflow-x: auto; }
+  .msg-box { display: none; margin-top: var(--s4); } .msg-box.show { display: flex; }
+  .loading { text-align: center; padding: var(--s10) var(--s5); }
+  .loading .spinner { width: 32px; height: 32px; border-width: 3px; color: var(--primary); }
 
-    /* Sidebar — identical pattern to the rest of the app */
-    .sidebar {
-      width: var(--sidebar-w); min-height: 100vh; background: var(--bg-panel);
-border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
-      z-index: 100; transition: var(--transition); overflow: hidden;
-    }
-    .sidebar.collapsed { width: var(--sidebar-col); }
-    html.sb-collapsed .sidebar:not(.mobile-open) { width: var(--sidebar-col); }
-    .sidebar-brand { display: flex; align-items: center; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); min-height: var(--header-h); }
-    .sidebar-toggle-btn { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-1); cursor: pointer; font-size: 13px; }
-    .sidebar-toggle-btn:hover { background: var(--bg-card-h); border-color: var(--border-h); }
-    .brand-link { display: flex; align-items: center; gap: 8px; text-decoration: none; overflow: hidden; min-width: 0; }
-    .sidebar.collapsed .sidebar-brand { justify-content: center; padding: 12px 0; }
-    .sidebar.collapsed .brand-link { display: none; }
-    .brand-icon { width: 34px; height: 34px; background: linear-gradient(135deg, var(--purple), var(--accent)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-    .brand-text { overflow: hidden; transition: var(--transition); }
-    .brand-name { font-family: var(--font-serif); font-size: 16px; font-weight: 700; white-space: nowrap; }
-    .brand-tag { font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .sidebar.collapsed .brand-text { opacity: 0; width: 0; }
-    .sidebar-nav { flex: 1; padding: 14px 10px; overflow-y: auto; overflow-x: hidden; }
-    .nav-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-3); padding: 0 10px; margin: 10px 0 5px; white-space: nowrap; transition: var(--transition); }
-    .sidebar.collapsed .nav-section-label { opacity: 0; }
-    .nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); margin-bottom: 2px; text-decoration: none; color: var(--text-2); white-space: nowrap; border: 1px solid transparent; position: relative; }
-    .nav-item:hover { background: var(--bg-card-h); color: var(--text-1); border-color: var(--border); transform: translateX(2px); }
-    .nav-item.active { background: var(--accent-soft); color: var(--text-1); border-color: rgba(128,128,128,0.25); }
-    .nav-icon { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; }
-    .nav-label { font-size: 13px; font-weight: 500; overflow: hidden; transition: var(--transition); }
-    .sidebar.collapsed .nav-label { opacity: 0; width: 0; }
-    .nav-badge { margin-left: auto; background: var(--purple); color: var(--bg); font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 99px; flex-shrink: 0; }
-    .sidebar.collapsed .nav-badge { opacity: 0; width: 0; padding: 0; overflow: hidden; }
-    .sidebar-footer { padding: 10px; border-top: 1px solid var(--border); }
+  .review-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-bottom: var(--s5); }
+  .rstat { padding: var(--s4) var(--s5); }
+  .rstat + .rstat { border-left: 1px solid var(--line); }
+  .rstat-val { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rstat-lbl { font-size: 13.5px; color: var(--ink-3); }
+  #statusBanner { margin-bottom: var(--s5); }
+  .stu-name.missing { color: var(--warn); font-style: italic; }
+  .issues-panel { display: none; margin-top: var(--s5); }
+  .issues-panel.show { display: block; }
+  .issue-group-title { font-weight: 650; margin: var(--s4) 0 var(--s2); }
+  .issue-group-title:first-child { margin-top: 0; }
+  .issue-item { display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s2) 0; font-size: 14px; color: var(--ink-2); border-top: 1px solid var(--line); }
+  .issue-item i { margin-top: 3px; }
+  .issue-item.blocking i { color: var(--bad); } .issue-item.warning i { color: var(--warn); }
+  .confirm-row { display: none; margin-top: var(--s5); } .confirm-row.show { display: flex; }
+  .review-actions { display: flex; gap: var(--s2); justify-content: flex-end; flex-wrap: wrap; margin-top: var(--s5); }
+  .review-actions .spacer { flex: 1; }
+</style>
+{% endblock %}
 
-    .main-content { flex: 1; margin-left: var(--sidebar-w); min-height: 100vh; transition: var(--transition); display: flex; flex-direction: column; }
-    .main-content.expanded { margin-left: var(--sidebar-col); }
-    html.sb-collapsed .main-content { margin-left: var(--sidebar-col); }
-
-    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: var(--header-h); background: var(--bg-panel);border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .hamburger { display: none; width: 34px; height: 34px; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 15px; color: var(--text-1); }
-    .session-pill { display: flex; align-items: center; gap: 7px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 99px; padding: 5px 12px; font-size: 12px; color: var(--text-2); max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .session-pill i { color: var(--accent); font-size: 10px; flex-shrink: 0; }
-    .topbar-right { display: flex; align-items: center; gap: 8px; }
-    .tb-link { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-2); font-size: 12px; font-weight: 600; text-decoration: none; transition: var(--transition); }
-    .tb-link:hover { background: var(--bg-card-h); color: var(--text-1); }
-    .end-session-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; background: var(--danger-soft); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-sm); color: var(--danger); font-size: 12px; font-weight: 600; text-decoration: none; transition: var(--transition); }
-    .end-session-btn:hover { background: rgba(239,68,68,0.25); }
-
-    .page-content { flex: 1; padding: 26px 24px 80px; max-width: 900px; margin: 0 auto; width: 100%; }
-    .view { display: none; }
-    .view.active { display: block; animation: fadeUp 0.25s ease both; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    .page-hero { margin-bottom: 20px; }
-    .hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(128,128,128,0.2); padding: 4px 12px; border-radius: 99px; margin-bottom: 12px; }
-    .hero-title { font-family: var(--font-serif); font-size: 24px; font-weight: 700; margin-bottom: 6px; }
-    .hero-sub { font-size: 13px; color: var(--text-2); }
-
-    .glass-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
-    .card-body { padding: 22px; }
-
-    .tip-box { display: flex; align-items: flex-start; gap: 10px; padding: 12px 15px; background: var(--info-soft); border: 1px solid rgba(96,200,255,0.18); border-radius: var(--radius-xs); margin-bottom: 18px; font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
-    .tip-box i { color: var(--info); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-    .tip-box strong { color: var(--text-1); }
-    .tip-box code { background: rgba(128,128,128,0.15); padding: 1px 6px; border-radius: 4px; font-size: 11.5px; }
-
-    .drop-zone { border: 2px dashed rgba(128,128,128,0.3); border-radius: var(--radius-md); padding: 46px 20px; text-align: center; cursor: pointer; transition: var(--transition); position: relative; background: rgba(128,128,128,0.03); }
-    .drop-zone:hover { border-color: rgba(128,128,128,0.6); background: rgba(128,128,128,0.06); }
-    .drop-zone.has-file { border-color: rgba(52,211,153,0.45); background: var(--success-soft); }
-    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .drop-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.55; }
-    .drop-title { font-size: 14.5px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; }
-    .drop-zone.has-file .drop-title { color: var(--success); }
-    .drop-hint { font-size: 12px; color: var(--text-3); }
-
-    .src-toggle { display: flex; gap: 4px; background: rgba(128,128,128,0.06); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 16px; }
-    .src-btn { flex: 1; padding: 9px 10px; border: none; border-radius: 8px; background: transparent; color: var(--text-2); font-family: var(--font-body); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .src-btn.active { background: var(--bg-card); color: var(--text-1); border: 1px solid var(--border); box-shadow: var(--shadow-md); }
-    .src-pane { display: none; }
-    .src-pane.active { display: block; }
-
-    .folder-review { display: none; margin-top: 14px; }
-    .folder-review.show { display: block; }
-    .fr-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 13px; background: rgba(128,128,128,0.05); border: 1px solid var(--border); border-radius: var(--radius-xs); margin-bottom: 8px; font-size: 12.5px; color: var(--text-2); }
-    .fr-row strong { color: var(--text-1); }
-    .fr-change { font-size: 11.5px; color: var(--accent); cursor: pointer; text-decoration: underline; background: none; border: none; font-family: var(--font-body); }
-    .quality-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 700; background: var(--warning-soft); color: var(--warning); border: 1px solid rgba(251,191,36,0.28); margin-left: 6px; }
-
-    .submit-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: var(--radius-md); color: var(--bg); font-family: var(--font-body); font-size: 14.5px; font-weight: 700; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 18px; box-shadow: 0 4px 20px var(--accent-glow); }
-    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 26px var(--accent-glow); }
-    .submit-btn:disabled { background: var(--bg-elevated); color: var(--text-3); box-shadow: none; cursor: not-allowed; }
-    .btn-secondary { background: var(--bg-card); color: var(--text-2); border: 1px solid var(--border); box-shadow: none; }
-    .btn-secondary:hover:not(:disabled) { background: var(--bg-card-h); color: var(--text-1); box-shadow: none; transform: none; }
-    .btn-warn { background: var(--warning); color: #1c1200; }
-
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(128,128,128,0.3); border-radius: 50%; border-top-color: var(--accent); animation: spin 0.8s linear infinite; }
-    .submit-btn .spinner { border-top-color: var(--bg); border-color: rgba(128,128,128,0.35); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .msg-box { display: none; padding: 12px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-top: 14px; align-items: center; gap: 8px; }
-    .msg-box.show { display: flex; }
-    .msg-box.error { background: var(--danger-soft); border: 1px solid rgba(248,113,113,0.28); color: var(--danger); }
-
-    /* Review view */
-    .review-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
-    .review-title { font-family: var(--font-serif); font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-    .review-sub { font-size: 12.5px; color: var(--text-3); }
-    .review-stats { display: flex; gap: 18px; flex-wrap: wrap; }
-    .rstat { text-align: right; }
-    .rstat-val { font-family: var(--font-serif); font-size: 20px; font-weight: 700; }
-    .rstat-lbl { font-size: 10.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .status-banner { display: flex; align-items: flex-start; gap: 10px; padding: 13px 16px; border-radius: var(--radius-sm); font-size: 12.5px; line-height: 1.6; margin-bottom: 16px; }
-    .status-banner.blocking { background: var(--danger-soft); border: 1px solid rgba(248,113,113,0.25); color: var(--danger); }
-    .status-banner.warning { background: var(--warning-soft); border: 1px solid rgba(251,191,36,0.25); color: var(--warning); }
-    .status-banner.ok { background: var(--success-soft); border: 1px solid rgba(52,211,153,0.25); color: var(--success); }
-    .status-banner i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
-    .status-banner strong { display: block; margin-bottom: 2px; color: var(--text-1); }
-
-    .students-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 16px; }
-    .students-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    .students-table th { background: var(--bg-elevated); color: var(--text-2); font-weight: 700; padding: 10px 14px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--border); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; }
-    .students-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-2); }
-    .students-table tr:last-child td { border-bottom: none; }
-    .students-table tbody tr:hover td { background: var(--bg-card-h); }
-    .stu-id { font-weight: 700; color: var(--text-1); }
-    .stu-name.missing { color: var(--text-3); font-style: italic; }
-
-    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .badge-ready { background: var(--success-soft); color: var(--success); }
-    .badge-check { background: var(--warning-soft); color: var(--warning); }
-    .badge-error { background: var(--danger-soft); color: var(--danger); }
-
-    .issues-panel { display: none; margin-bottom: 16px; }
-    .issues-panel.show { display: block; }
-    .issue-group-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-3); margin: 14px 0 8px; }
-    .issue-group-title:first-child { margin-top: 0; }
-    .issue-item { display: flex; align-items: flex-start; gap: 9px; padding: 10px 13px; border-radius: var(--radius-xs); font-size: 12.5px; line-height: 1.55; margin-bottom: 6px; }
-    .issue-item.blocking { background: var(--danger-soft); color: var(--text-2); border: 1px solid rgba(248,113,113,0.2); }
-    .issue-item.warning { background: var(--warning-soft); color: var(--text-2); border: 1px solid rgba(251,191,36,0.2); }
-    .issue-item i { flex-shrink: 0; margin-top: 2px; }
-    .issue-item.blocking i { color: var(--danger); }
-    .issue-item.warning i { color: var(--warning); }
-
-    .confirm-row { display: flex; align-items: center; gap: 9px; padding: 12px 14px; background: var(--warning-soft); border: 1px solid rgba(251,191,36,0.25); border-radius: var(--radius-sm); font-size: 12.5px; color: var(--text-2); margin-bottom: 14px; display: none; }
-    .confirm-row.show { display: flex; }
-    .confirm-row input { accent-color: var(--warning); width: 15px; height: 15px; cursor: pointer; }
-
-    .review-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .review-actions .submit-btn { margin-top: 0; flex: 2; min-width: 180px; }
-    .review-actions .btn-secondary { flex: 1; min-width: 110px; }
-
-    .state-block { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 70px 20px; text-align: center; gap: 12px; }
-    .state-icon { font-size: 34px; opacity: 0.35; }
-    .state-title { font-family: var(--font-serif); font-size: 15px; color: var(--text-2); }
-
-    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90; }
-    .mobile-overlay.visible { display: block; }
-
-    @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-      .session-pill { display: none; }
-      .page-content { padding: 18px 14px 60px; }
-      .review-stats { justify-content: flex-start; }
-      .rstat { text-align: left; }
-      .review-actions { flex-direction: column; }
-      .review-actions .submit-btn, .review-actions .btn-secondary { flex: none; width: 100%; }
-    }
-
-    /* ══════════════════════════════════════════════
-       MOBILE / TABLET COMPATIBILITY HARDENING
-    ══════════════════════════════════════════════ */
-    html, body { max-width: 100vw; overflow-x: hidden; }
-
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .sidebar { transform: translateX(-100%); width: var(--sidebar-w); }
-      .sidebar.mobile-open { transform: translateX(0); }
-      .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
-      .main-content { margin-left: 0 !important; }
-      .hamburger { display: flex; }
-    }
-
-    /* iOS Safari auto-zooms into inputs under 16px, leaving the page
-       stuck zoomed until manually corrected. */
-    @media (max-width: 900px) {
-      .drop-zone, .folder-review { font-size: 16px; }
-    }
-
-    @media (max-width: 480px) {
-      .students-wrap { max-width: 100%; -webkit-overflow-scrolling: touch; }
-      .review-header { flex-direction: column; }
-      .review-stats { width: 100%; }
-    }
-
-    @keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
-    body { animation: pageIn 0.05s linear; }
-  </style>
-</head>
-<body>
-
-<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileSidebar()"></div>
-
-<div class="shell">
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <button class="sidebar-toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-      <a class="brand-link" href="/">
-        <div class="brand-icon">🎓</div>
-        <div class="brand-text"><div class="brand-name">EduMark AI</div><div class="brand-tag">Smart Exam Grading</div></div>
-      </a>
+{% block content %}
+<!-- VIEW: upload -->
+<div class="view active" id="view-upload">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Upload a whole class</h1>
+      <p class="page-sub">Put each student's scanned pages in their own folder, then upload the folder or a ZIP of it. Nothing is marked until you've reviewed the list.</p>
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Main</div>
-      <a class="nav-item" href="/"><span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span><span class="nav-label">Dashboard</span></a>
-      <a class="nav-item active" href="/setup-start"><span class="nav-icon"><i class="fa-solid fa-pen-to-square"></i></span><span class="nav-label">Mark Exams</span><span class="nav-badge">AI</span></a>
-      <a class="nav-item" href="/students"><span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span><span class="nav-label">View Results</span></a>
-      <div class="nav-section-label">System</div>
-      <a class="nav-item" href="/settings"><span class="nav-icon"><i class="fa-solid fa-sliders"></i></span><span class="nav-label">Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-      <a class="nav-item" href="/#help"><span class="nav-icon"><i class="fa-solid fa-circle-question"></i></span><span class="nav-label">Help &amp; About</span></a>
-    </div>
-  </aside>
+  </div>
 
-  <div class="main-content" id="mainContent">
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="hamburger" onclick="openMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <div class="session-pill">
-          <i class="fa-solid fa-lock"></i>
-          <span>{{ exam_data.class }} {{ exam_data.stream }} · {{ exam_data.subject }} · {{ exam_data.exam_type }}</span>
+  <section class="panel">
+    <div class="panel-body">
+      <div class="src-row">
+        <div class="segmented" role="group" aria-label="What to upload">
+          <button type="button" class="active" id="srcZipBtn" onclick="setSource('zip')"><i class="fa-solid fa-file-zipper"></i> ZIP file</button>
+          <button type="button" id="srcFolderBtn" onclick="setSource('folder')"><i class="fa-solid fa-folder-open"></i> Folder</button>
         </div>
       </div>
-      <div class="topbar-right">
-        <a class="tb-link" href="/upload-student"><i class="fa-solid fa-camera"></i> Individual Upload</a>
-        <a class="end-session-btn" href="/end-session" onclick="return confirm('End this marking session?')"><i class="fa-solid fa-xmark"></i> End Session</a>
-      </div>
-    </div>
 
-    <div class="page-content">
-
-      <!-- ═══════════ VIEW: UPLOAD ZIP ═══════════ -->
-      <div class="view active" id="view-upload">
-        <div class="page-hero">
-          <div class="hero-eyebrow"><i class="fa-solid fa-file-zipper" style="font-size:10px;"></i> Batch Upload</div>
-          <h1 class="hero-title">Upload a class ZIP file</h1>
-          <p class="hero-sub">One folder per student — EduMark AI will sort, validate, and organize everything for you.</p>
-        </div>
-
-        <div class="glass-card">
-          <div class="card-body">
-            <div class="tip-box">
-              <i class="fa-solid fa-circle-info"></i>
-              <span>
-                Each student needs their own folder named <strong>ID_Name</strong> — for example
-                <code>001_John Doe</code> — containing their scanned pages as JPG, PNG, or PDF.
-                Files placed outside a student folder are ignored, and a single wrapping folder
-                (from zipping a whole directory) is stripped automatically.
-              </span>
-            </div>
-
-            <div class="src-toggle">
-              <button type="button" class="src-btn active" id="srcZipBtn" onclick="setSource('zip')">
-                <i class="fa-solid fa-file-zipper"></i> ZIP File
-              </button>
-              <button type="button" class="src-btn" id="srcFolderBtn" onclick="setSource('folder')">
-                <i class="fa-solid fa-folder-open"></i> Folder
-              </button>
-            </div>
-
-            <form id="uploadForm">
-
-              <div class="src-pane active" id="pane-zip">
-                <div class="drop-zone" id="dropZone">
-                  <input type="file" id="zipInput" accept=".zip" />
-                  <div class="drop-icon" id="dropIcon">📦</div>
-                  <div class="drop-title" id="dropTitle">Click or drag your class ZIP here</div>
-                  <div class="drop-hint" id="dropHint">.zip files only</div>
-                </div>
-              </div>
-
-              <div class="src-pane" id="pane-folder">
-                <div class="drop-zone" id="folderDropZone">
-                  <input type="file" id="folderInput" webkitdirectory directory multiple />
-                  <div class="drop-icon" id="folderDropIcon">🗂️</div>
-                  <div class="drop-title" id="folderDropTitle">Click to choose your class folder</div>
-                  <div class="drop-hint" id="folderDropHint">Navigate to the folder that contains one sub-folder per student, then click "Select" — nothing uploads until you confirm below</div>
-                </div>
-                <div class="folder-review" id="folderReview">
-                  <div class="fr-row">
-                    <span><strong id="frFolderName">—</strong> selected</span>
-                    <button type="button" class="fr-change" onclick="document.getElementById('folderInput').click()">Choose a different folder</button>
-                  </div>
-                  <div class="fr-row">
-                    <span id="frCounts">—</span>
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" class="submit-btn" id="uploadSubmitBtn" disabled>
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <span id="uploadSubmitLabel">Upload &amp; Validate</span>
-              </button>
-            </form>
-
-            <div class="msg-box error" id="uploadMsgBox"><i class="fa-solid fa-circle-exclamation"></i><span id="uploadMsgText"></span></div>
+      <form id="uploadForm">
+        <div class="src-pane active" id="pane-zip">
+          <div class="dropzone" id="dropZone">
+            <input type="file" id="zipInput" accept=".zip" aria-label="Choose a ZIP file" />
+            <div class="dropzone-icon" id="dropIcon"><i class="fa-solid fa-file-zipper"></i></div>
+            <div class="dropzone-title" id="dropTitle">Choose a ZIP file or drag it here</div>
+            <div class="dropzone-hint" id="dropHint">Up to 500 MB</div>
           </div>
         </div>
-      </div>
-
-      <!-- ═══════════ VIEW: VALIDATING (loading) ═══════════ -->
-      <div class="view" id="view-loading">
-        <div class="state-block">
-          <div class="spinner" style="width:34px;height:34px;border-width:3px;"></div>
-          <div class="state-title">Auditing archive — checking folders, files, and image quality…</div>
-        </div>
-      </div>
-
-      <!-- ═══════════ VIEW: REVIEW ═══════════ -->
-      <div class="view" id="view-review">
-        <div class="review-header">
-          <div>
-            <div class="review-title" id="reviewTitle">Batch Upload Review</div>
-            <div class="review-sub">{{ exam_data.subject }} — {{ exam_data.class }} {{ exam_data.stream }} · {{ exam_data.term }} {{ exam_data.year }}</div>
+        <div class="src-pane" id="pane-folder">
+          <div class="dropzone" id="folderDropZone">
+            <input type="file" id="folderInput" webkitdirectory directory multiple aria-label="Choose a class folder" />
+            <div class="dropzone-icon" id="folderDropIcon"><i class="fa-solid fa-folder-open"></i></div>
+            <div class="dropzone-title" id="folderDropTitle">Choose the class folder</div>
+            <div class="dropzone-hint" id="folderDropHint">Pick the folder that contains one folder per student</div>
           </div>
-          <div class="review-stats">
-            <div class="rstat"><div class="rstat-val" id="statStudents">0</div><div class="rstat-lbl">Students</div></div>
-            <div class="rstat"><div class="rstat-val" id="statPages">0</div><div class="rstat-lbl">Pages</div></div>
-            <div class="rstat"><div class="rstat-val" id="statReady">0</div><div class="rstat-lbl">Ready</div></div>
+          <div class="callout callout-info folder-review" id="folderReview">
+            <i class="fa-solid fa-folder"></i>
+            <span><strong id="frFolderName">—</strong>: <span id="frCounts">—</span></span>
           </div>
         </div>
-
-        <div id="statusBanner"></div>
-
-        <div class="students-wrap">
-          <table class="students-table">
-            <thead>
-              <tr><th>Student ID</th><th>Name</th><th>Pages</th><th>Status</th></tr>
-            </thead>
-            <tbody id="studentsBody"></tbody>
-          </table>
-        </div>
-
-        <div class="issues-panel" id="issuesPanel">
-          <div id="issuesContent"></div>
-        </div>
-
-        <div class="confirm-row" id="largeBatchConfirm">
-          <input type="checkbox" id="largeBatchCheckbox" onchange="onLargeBatchToggle()" />
-          <span>This is a large batch (over 1,000 pages) — I understand marking will take a while and want to proceed anyway.</span>
-        </div>
-
+        <div class="callout callout-bad msg-box" id="uploadMsgBox" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span id="uploadMsgText"></span></div>
         <div class="review-actions">
-          <button class="submit-btn btn-secondary" onclick="backToUpload()"><i class="fa-solid fa-arrow-left"></i> Back</button>
-          <button class="submit-btn btn-secondary" id="fixIssuesBtn" onclick="toggleIssuesPanel()" style="display:none;"><i class="fa-solid fa-triangle-exclamation"></i> Fix Issues</button>
-          <button class="submit-btn" id="startMarkingBtn" onclick="startMarking()"><i class="fa-solid fa-wand-magic-sparkles"></i> Start Marking</button>
+          <button type="submit" class="btn btn-primary btn-lg" id="uploadSubmitBtn" disabled><span id="uploadSubmitLabel">Check files</span></button>
         </div>
-
-        <div class="msg-box error" id="reviewMsgBox"><i class="fa-solid fa-circle-exclamation"></i><span id="reviewMsgText"></span></div>
-      </div>
-
+      </form>
     </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2 class="panel-title">How to arrange the files</h2></div>
+    <div class="panel-body">
+      <p class="mb-4 muted">Name each folder with the student's ID, then their name. Pages can be JPG, PNG, WEBP or PDF, and are read in number order.</p>
+      <div class="example">S2B_Physics/
+  001_John Doe/
+    page1.jpg
+    page2.jpg
+  002_Mary Akello/
+    script.pdf</div>
+    </div>
+  </section>
+</div>
+
+<!-- VIEW: checking -->
+<div class="view" id="view-loading">
+  <div class="panel loading">
+    <span class="spinner"></span>
+    <p class="mt-4" style="font-weight:600">Checking the files</p>
+    <p class="muted">Reading each student's folder and checking photo quality. Large classes can take a minute.</p>
   </div>
 </div>
 
+<!-- VIEW: review -->
+<div class="view" id="view-review">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title" id="reviewTitle">Review before marking</h1>
+      <p class="page-sub">Students marked Skipped won't be added. Everyone else is marked when you start.</p>
+    </div>
+  </div>
+  <section class="panel review-stats">
+    <div class="rstat"><div class="rstat-val" id="statStudents">0</div><div class="rstat-lbl">Students</div></div>
+    <div class="rstat"><div class="rstat-val" id="statPages">0</div><div class="rstat-lbl">Pages</div></div>
+    <div class="rstat"><div class="rstat-val" id="statReady">0</div><div class="rstat-lbl">Ready with no issues</div></div>
+  </section>
+  <div id="statusBanner"></div>
+
+  <section class="panel">
+    <div class="table-wrap">
+      <table class="table students-table">
+        <thead><tr><th>ID</th><th>Name</th><th class="right">Pages</th><th>Status</th></tr></thead>
+        <tbody id="studentsBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel issues-panel" id="issuesPanel"><div class="panel-body" id="issuesContent"></div></section>
+
+  <label class="check callout callout-warn confirm-row" id="largeBatchConfirm">
+    <input type="checkbox" id="largeBatchCheckbox" onchange="onLargeBatchToggle()" />
+    <span>This batch has more than 1,000 pages and will take a while to mark. Start anyway.</span>
+  </label>
+
+  <div class="review-actions">
+    <button class="btn btn-ghost" onclick="backToUpload()"><i class="fa-solid fa-arrow-left"></i> Choose other files</button>
+    <span class="spacer"></span>
+    <button class="btn btn-secondary" id="fixIssuesBtn" onclick="toggleIssuesPanel()" style="display:none"><i class="fa-solid fa-list"></i> Show details</button>
+    <button class="btn btn-primary" id="startMarkingBtn" onclick="startMarking()">Start marking</button>
+  </div>
+  <div class="callout callout-bad msg-box" id="reviewMsgBox" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span id="reviewMsgText"></span></div>
+</div>
+
+<!-- VIEW: done -->
+<div class="view" id="view-done">
+  <section class="panel">
+    <div class="empty">
+      <div class="empty-icon" style="background:var(--ok-soft);color:var(--ok)"><i class="fa-solid fa-check"></i></div>
+      <div class="empty-title" id="doneTitle">Marking has started</div>
+      <p class="empty-desc" id="doneText"></p>
+      <div class="row" style="justify-content:center;margin-top:var(--s5);flex-wrap:wrap">
+        <a class="btn btn-secondary" href="{{ url_for('view_students') }}">Go to results</a>
+        <a class="btn btn-primary" href="{{ url_for('upload_student') }}">Watch the marking queue</a>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
 let currentBatch = null;   // { batch_id, manifest }
 let selectedFile = null;
 let largeBatchAcknowledged = false;
+const esc = EM.esc;
 
-/* ── Sidebar ─────────────────────────────────────────── */
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const mc = document.getElementById('mainContent');
-  sb.classList.toggle('collapsed');
-  mc.classList.toggle('expanded');
-  const collapsed = sb.classList.contains('collapsed');
-  document.documentElement.classList.toggle('sb-collapsed', collapsed);
-  try {
-    var s = JSON.parse(localStorage.getItem('edumark_settings_v2') || '{}');
-    s.sidebarCollapsed = collapsed;
-    localStorage.setItem('edumark_settings_v2', JSON.stringify(s));
-  } catch (e) {}
-}
-function openMobileSidebar() { document.getElementById('sidebar').classList.add('mobile-open'); document.getElementById('mobileOverlay').classList.add('visible'); }
-function closeMobileSidebar() { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('mobileOverlay').classList.remove('visible'); }
-if (document.documentElement.classList.contains('sb-collapsed')) {
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('sidebar').classList.add('collapsed');
-    document.getElementById('mainContent').classList.add('expanded');
-  });
-}
-
-/* ── View switching ──────────────────────────────────── */
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
 
-/* ── Source mode: 'zip' or 'folder' ──────────────────── */
-let sourceMode = 'zip';
-let folderFiles = null;      // FileList from the webkitdirectory input, kept until confirmed
-let folderZipBlob = null;    // built lazily on submit
-
+/* ── Source: ZIP or folder ── */
+let sourceMode = 'zip', folderFiles = null;
 function setSource(mode) {
   sourceMode = mode;
   document.getElementById('srcZipBtn').classList.toggle('active', mode === 'zip');
   document.getElementById('srcFolderBtn').classList.toggle('active', mode === 'folder');
   document.getElementById('pane-zip').classList.toggle('active', mode === 'zip');
   document.getElementById('pane-folder').classList.toggle('active', mode === 'folder');
-  hideUploadError();
-  updateSubmitState();
+  hideUploadError(); updateSubmitState();
 }
 
-/* ── ZIP drop zone (input itself covers the box — no manual .click(),
-     which was firing the native picker twice) ─────────────────────── */
 const dropZone = document.getElementById('dropZone');
 const zipInput = document.getElementById('zipInput');
-
-zipInput.addEventListener('change', e => {
-  if (e.target.files[0]) setSelectedFile(e.target.files[0]);
-});
-['dragover', 'dragleave', 'drop'].forEach(evt => {
-  dropZone.addEventListener(evt, e => e.preventDefault());
-});
-dropZone.addEventListener('dragover', () => dropZone.classList.add('has-file'));
-dropZone.addEventListener('dragleave', () => { if (!selectedFile) dropZone.classList.remove('has-file'); });
+zipInput.addEventListener('change', e => { if (e.target.files[0]) setSelectedFile(e.target.files[0]); });
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
 dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
   const f = e.dataTransfer.files[0];
   if (f && f.name.toLowerCase().endsWith('.zip')) setSelectedFile(f);
+  else showUploadError('That isn\'t a ZIP file. Choose a .zip file, or use the Folder option.');
 });
-
 function setSelectedFile(file) {
   selectedFile = file;
   dropZone.classList.add('has-file');
-  document.getElementById('dropIcon').textContent = '✅';
+  document.getElementById('dropIcon').innerHTML = '<i class="fa-solid fa-check"></i>';
   document.getElementById('dropTitle').textContent = file.name;
-  document.getElementById('dropHint').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB — click to change`;
-  updateSubmitState();
+  document.getElementById('dropHint').textContent = `${(file.size / 1024 / 1024).toFixed(1)} MB. Click to choose a different file.`;
+  hideUploadError(); updateSubmitState();
 }
 
-/* ── Folder picker — native OS folder dialog lets the teacher browse
-     freely and only "selects" when they explicitly click that dialog's
-     own Select/Upload button, so nothing is chosen by accident. Once a
-     folder comes back, we show a review row with a "choose a different
-     folder" escape hatch before anything is sent anywhere. ──────────── */
 const folderDropZone = document.getElementById('folderDropZone');
 const folderInput = document.getElementById('folderInput');
-
 folderInput.addEventListener('change', e => {
   const files = Array.from(e.target.files || []);
   if (!files.length) return;
   folderFiles = files;
-  folderZipBlob = null; // rebuild lazily on submit
-
   const topFolder = (files[0].webkitRelativePath || files[0].name).split('/')[0];
-  const studentFolders = new Set(
-    files
-      .map(f => (f.webkitRelativePath || '').split('/'))
-      .filter(parts => parts.length > 2)
-      .map(parts => parts[1])
-  );
-
+  const studentFolders = new Set(files.map(f => (f.webkitRelativePath || '').split('/')).filter(p => p.length > 2).map(p => p[1]));
   folderDropZone.classList.add('has-file');
-  document.getElementById('folderDropIcon').textContent = '✅';
+  document.getElementById('folderDropIcon').innerHTML = '<i class="fa-solid fa-check"></i>';
   document.getElementById('folderDropTitle').textContent = topFolder;
   document.getElementById('folderDropHint').textContent = 'Click to choose a different folder';
   document.getElementById('frFolderName').textContent = topFolder;
-  document.getElementById('frCounts').textContent =
-    `${studentFolders.size || 0} student folder(s) detected · ${files.length} file(s) total`;
+  document.getElementById('frCounts').textContent = `${studentFolders.size} student folder${studentFolders.size === 1 ? '' : 's'}, ${files.length} file${files.length === 1 ? '' : 's'}`;
   document.getElementById('folderReview').classList.add('show');
   updateSubmitState();
 });
 
 function updateSubmitState() {
-  const btn = document.getElementById('uploadSubmitBtn');
-  const label = document.getElementById('uploadSubmitLabel');
-  if (sourceMode === 'zip') {
-    label.textContent = 'Upload & Validate';
-    btn.disabled = !selectedFile;
-  } else {
-    label.textContent = 'Upload & Validate';
-    btn.disabled = !(folderFiles && folderFiles.length);
-  }
+  document.getElementById('uploadSubmitBtn').disabled = sourceMode === 'zip' ? !selectedFile : !(folderFiles && folderFiles.length);
 }
 
-/* Builds an in-browser ZIP that mirrors the picked folder's structure,
-   so the existing, already-working batch endpoint needs no changes at
-   all — folder upload is just a friendlier front door onto it. */
+/* The chosen folder is zipped in the browser, so it uses the same checks as a ZIP upload. */
 async function buildZipFromFolder(files) {
   const zip = new JSZip();
   files.forEach(f => {
-    const rel = f.webkitRelativePath || f.name;
-    // Drop the single top-level wrapper folder — the backend already
-    // strips one wrapping level, but doing it here keeps the zip small
-    // and the manifest's folder names exactly what the teacher expects.
-    const parts = rel.split('/');
-    const trimmed = parts.length > 1 ? parts.slice(1).join('/') : rel;
-    zip.file(trimmed, f);
+    const parts = (f.webkitRelativePath || f.name).split('/');
+    zip.file(parts.length > 1 ? parts.slice(1).join('/') : parts[0], f);
   });
   return zip.generateAsync({ type: 'blob', compression: 'STORE' });
 }
 
-function showUploadError(msg) {
-  document.getElementById('uploadMsgText').textContent = msg;
-  document.getElementById('uploadMsgBox').classList.add('show');
-}
+function showUploadError(msg) { document.getElementById('uploadMsgText').textContent = msg; document.getElementById('uploadMsgBox').classList.add('show'); }
 function hideUploadError() { document.getElementById('uploadMsgBox').classList.remove('show'); }
 
-/* ── Upload & validate ───────────────────────────────── */
 document.getElementById('uploadForm').addEventListener('submit', async function (e) {
   e.preventDefault();
   hideUploadError();
-
   const btn = document.getElementById('uploadSubmitBtn');
-  let uploadBlob, uploadName;
-
+  let blob, name;
   if (sourceMode === 'zip') {
     if (!selectedFile) return;
-    uploadBlob = selectedFile;
-    uploadName = selectedFile.name;
+    blob = selectedFile; name = selectedFile.name;
   } else {
     if (!folderFiles || !folderFiles.length) return;
     btn.disabled = true;
-    try {
-      folderZipBlob = await buildZipFromFolder(folderFiles);
-    } catch (err) {
-      btn.disabled = false;
-      showUploadError('Could not package that folder for upload. Please try again.');
-      return;
-    }
-    uploadBlob = folderZipBlob;
-    uploadName = ((folderFiles[0].webkitRelativePath || 'class').split('/')[0]) + '.zip';
+    btn.innerHTML = '<span class="spinner"></span> Packaging folder…';
+    try { blob = await buildZipFromFolder(folderFiles); }
+    catch (err) { btn.disabled = false; btn.innerHTML = '<span id="uploadSubmitLabel">Check files</span>'; showUploadError('Could not read that folder. Try again, or upload a ZIP file.'); return; }
+    name = ((folderFiles[0].webkitRelativePath || 'class').split('/')[0]) + '.zip';
   }
-
   btn.disabled = true;
   showView('view-loading');
-
   const fd = new FormData();
-  fd.append('batch_zip', uploadBlob, uploadName);
-
+  fd.append('batch_zip', blob, name);
   try {
     const res = await fetch('/api/batch/upload', { method: 'POST', body: fd });
+    if (res.status === 401) { location.href = '/login?next=' + encodeURIComponent(location.pathname); return; }
     const data = await res.json();
-
-    if (!data.success) {
-      showView('view-upload');
-      btn.disabled = false;
-      showUploadError(data.message || 'Could not process this batch.');
-      return;
-    }
-
+    btn.innerHTML = '<span id="uploadSubmitLabel">Check files</span>';
+    if (!data.success) { showView('view-upload'); btn.disabled = false; showUploadError(data.message || 'Could not read this batch.'); return; }
     currentBatch = { batch_id: data.manifest.batch_id, manifest: data.manifest };
     renderReview(data.manifest);
     showView('view-review');
   } catch (err) {
-    showView('view-upload');
-    btn.disabled = false;
-    showUploadError('Network error while uploading. Please check your connection and try again.');
+    btn.innerHTML = '<span id="uploadSubmitLabel">Check files</span>';
+    showView('view-upload'); btn.disabled = false;
+    showUploadError('The upload did not finish. Check the connection and try again.');
   }
 });
 
-/* ── Review rendering ────────────────────────────────── */
+/* ── Review ── */
 function statusBadge(status) {
-  if (status === 'ready') return `<span class="badge badge-ready"><i class="fa-solid fa-check"></i> Ready</span>`;
-  if (status === 'check') return `<span class="badge badge-check"><i class="fa-solid fa-triangle-exclamation"></i> Check</span>`;
-  return `<span class="badge badge-error"><i class="fa-solid fa-xmark"></i> Skipped</span>`;
+  if (status === 'ready') return '<span class="chip chip-ok"><i class="fa-solid fa-check"></i> Ready</span>';
+  if (status === 'check') return '<span class="chip chip-warn"><i class="fa-solid fa-triangle-exclamation"></i> Check</span>';
+  return '<span class="chip chip-bad"><i class="fa-solid fa-xmark"></i> Skipped</span>';
 }
-
-function qualityChip(student) {
-  const flagged = student.flagged_pages || [];
-  if (!flagged.length) return '';
-  return `<span class="quality-chip" title="${flagged.map(p => esc(p.filename + ': ' + p.reason)).join(' | ')}">
-    <i class="fa-solid fa-image"></i> ${flagged.length} blurry page${flagged.length !== 1 ? 's' : ''}
-  </span>`;
+function qualityNote(s) {
+  const n = (s.flagged_pages || []).length;
+  return n ? `<div class="cell-sub">${n} unclear page${n === 1 ? '' : 's'}</div>` : (s.issues && s.issues.length && s.status !== 'ready' ? `<div class="cell-sub">${esc(s.issues[0])}</div>` : '');
 }
 
 function renderReview(manifest) {
   const students = manifest.students || [];
-  const ready = students.filter(s => s.status === 'ready').length;
-
   document.getElementById('statStudents').textContent = manifest.total_students || 0;
   document.getElementById('statPages').textContent = manifest.total_pages || 0;
-  document.getElementById('statReady').textContent = ready;
+  document.getElementById('statReady').textContent = students.filter(s => s.status === 'ready').length;
 
-  // Student table
-  const body = document.getElementById('studentsBody');
-  if (!students.length) {
-    body.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:26px;">No students could be read from this archive.</td></tr>`;
-  } else {
-    body.innerHTML = students.map(s => `
-      <tr title="${(s.issues || []).map(esc).join(' | ')}">
-        <td class="stu-id">${esc(s.id)}</td>
-        <td class="stu-name ${!s.name ? 'missing' : ''}">${s.name ? esc(s.name) : 'Name missing'}</td>
-        <td>${s.pages}</td>
-        <td>${statusBadge(s.status)}${qualityChip(s)}</td>
-      </tr>`).join('');
-  }
+  document.getElementById('studentsBody').innerHTML = students.length
+    ? students.map(s => `<tr>
+        <td class="num">${esc(s.id)}</td>
+        <td class="stu-name ${!s.name ? 'missing' : ''}">${s.name ? esc(s.name) : 'Name missing — add it to the folder name'}</td>
+        <td class="right num">${s.pages}</td>
+        <td>${statusBadge(s.status)}${qualityNote(s)}</td></tr>`).join('')
+    : '<tr><td colspan="4" class="muted" style="text-align:center;padding:24px">No student folders could be read from these files.</td></tr>';
 
-  // Status banner
   const banner = document.getElementById('statusBanner');
   if (manifest.severity === 'blocking') {
     const errs = (manifest.blocking_errors || []).map(e => e.message).join(' ');
-    banner.innerHTML = `<div class="status-banner blocking"><i class="fa-solid fa-circle-exclamation"></i><div><strong>This batch can't be marked yet</strong>${esc(errs || 'Please resolve the issues below and re-upload.')}</div></div>`;
+    banner.innerHTML = `<div class="callout callout-bad"><i class="fa-solid fa-circle-exclamation"></i><div><strong>These files can't be marked yet.</strong> ${esc(errs || 'Fix the problems below and upload again.')}</div></div>`;
   } else if (manifest.severity === 'warning') {
-    banner.innerHTML = `<div class="status-banner warning"><i class="fa-solid fa-triangle-exclamation"></i><div><strong>Ready, with a few things to check</strong>Some files or folders had minor issues. Review them below — you can still mark this batch as-is.</div></div>`;
+    banner.innerHTML = '<div class="callout callout-warn"><i class="fa-solid fa-triangle-exclamation"></i><div><strong>Ready, with a few things to check.</strong> Open the details to see them. You can still start marking.</div></div>';
   } else {
-    banner.innerHTML = `<div class="status-banner ok"><i class="fa-solid fa-circle-check"></i><div><strong>Everything looks good</strong>All student folders were read cleanly and are ready for AI marking.</div></div>`;
+    banner.innerHTML = '<div class="callout callout-ok"><i class="fa-solid fa-circle-check"></i><div><strong>Everything looks good.</strong> Every folder was read cleanly.</div></div>';
   }
 
-  // Issues panel
-  const allIssues = [
-    ...(manifest.blocking_errors || []).map(e => ({ ...e, level: 'blocking' })),
-    ...(manifest.warnings || []).map(e => ({ ...e, level: 'warning' })),
-  ];
-  const qualityFlags = students.flatMap(s =>
-    (s.flagged_pages || []).map(p => ({ ...p, studentId: s.id, studentName: s.name }))
-  );
-  const issuesContent = document.getElementById('issuesContent');
+  const allIssues = [...(manifest.blocking_errors || []).map(e => ({ ...e, level: 'blocking' })),
+                     ...(manifest.warnings || []).map(e => ({ ...e, level: 'warning' }))];
+  const qualityFlags = students.flatMap(s => (s.flagged_pages || []).map(p => ({ ...p, studentId: s.id, studentName: s.name })));
   const fixBtn = document.getElementById('fixIssuesBtn');
   if (allIssues.length || qualityFlags.length) {
     const blocking = allIssues.filter(i => i.level === 'blocking');
     const warn = allIssues.filter(i => i.level === 'warning' && i.code !== 'poor_image_quality');
     let html = '';
-    if (blocking.length) {
-      html += `<div class="issue-group-title">Must be fixed before marking</div>`;
-      html += blocking.map(i => `<div class="issue-item blocking"><i class="fa-solid fa-ban"></i><span>${esc(i.message)}</span></div>`).join('');
-    }
-    if (qualityFlags.length) {
-      html += `<div class="issue-group-title">Image quality — optional to fix, won't block upload</div>`;
-      html += qualityFlags.map(p => `
-        <div class="issue-item warning">
-          <i class="fa-solid fa-image"></i>
-          <span><strong>${esc(p.studentId)}${p.studentName ? ' — ' + esc(p.studentName) : ''}</strong>:
-          <code>${esc(p.filename)}</code> — ${esc(p.reason)}.
-          You can still upload the whole batch; only this page may be under-marked.</span>
-        </div>`).join('');
-    }
-    if (warn.length) {
-      html += `<div class="issue-group-title">Worth checking (won't block marking)</div>`;
-      html += warn.map(i => `<div class="issue-item warning"><i class="fa-solid fa-circle-info"></i><span>${esc(i.message)}</span></div>`).join('');
-    }
-    issuesContent.innerHTML = html;
+    if (blocking.length) html += '<div class="issue-group-title">Must be fixed</div>' + blocking.map(i => `<div class="issue-item blocking"><i class="fa-solid fa-circle-xmark"></i><span>${esc(i.message)}</span></div>`).join('');
+    if (qualityFlags.length) html += '<div class="issue-group-title">Unclear pages (these may lose marks)</div>' + qualityFlags.map(p =>
+      `<div class="issue-item warning"><i class="fa-solid fa-image"></i><span><strong>${esc(p.studentId)}${p.studentName ? ', ' + esc(p.studentName) : ''}</strong>: <code>${esc(p.filename)}</code> ${esc(p.reason)}</span></div>`).join('');
+    if (warn.length) html += '<div class="issue-group-title">Worth checking</div>' + warn.map(i => `<div class="issue-item warning"><i class="fa-solid fa-circle-info"></i><span>${esc(i.message)}</span></div>`).join('');
+    document.getElementById('issuesContent').innerHTML = html;
     fixBtn.style.display = 'inline-flex';
   } else {
-    issuesContent.innerHTML = '';
+    document.getElementById('issuesContent').innerHTML = '';
     fixBtn.style.display = 'none';
   }
-  document.getElementById('issuesPanel').classList.remove('show');
+  document.getElementById('issuesPanel').classList.toggle('show', manifest.severity === 'blocking');
 
-  // Large batch confirmation
   largeBatchAcknowledged = false;
-  const largeRow = document.getElementById('largeBatchConfirm');
-  const cb = document.getElementById('largeBatchCheckbox');
-  if (manifest.requires_large_batch_confirmation) {
-    largeRow.classList.add('show');
-    cb.checked = false;
-  } else {
-    largeRow.classList.remove('show');
-  }
-
+  document.getElementById('largeBatchConfirm').classList.toggle('show', !!manifest.requires_large_batch_confirmation);
+  document.getElementById('largeBatchCheckbox').checked = false;
   updateStartButtonState();
   document.getElementById('reviewMsgBox').classList.remove('show');
 }
-
 function toggleIssuesPanel() { document.getElementById('issuesPanel').classList.toggle('show'); }
-
-function onLargeBatchToggle() {
-  largeBatchAcknowledged = document.getElementById('largeBatchCheckbox').checked;
-  updateStartButtonState();
-}
-
+function onLargeBatchToggle() { largeBatchAcknowledged = document.getElementById('largeBatchCheckbox').checked; updateStartButtonState(); }
 function updateStartButtonState() {
   const btn = document.getElementById('startMarkingBtn');
   if (!currentBatch) { btn.disabled = true; return; }
-  const manifest = currentBatch.manifest;
-  const blocked = manifest.severity === 'blocking';
-  const needsConfirm = manifest.requires_large_batch_confirmation && !largeBatchAcknowledged;
-  btn.disabled = blocked || needsConfirm;
+  const m = currentBatch.manifest;
+  btn.disabled = m.severity === 'blocking' || (m.requires_large_batch_confirmation && !largeBatchAcknowledged);
 }
 
-/* ── Back / discard ──────────────────────────────────── */
-async function backToUpload() {
-  if (currentBatch) {
-    try { await fetch('/api/batch/discard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ batch_id: currentBatch.batch_id }) }); } catch (e) {}
-  }
+async function discardBatch() {
+  if (!currentBatch) return;
+  try { await fetch('/api/batch/discard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ batch_id: currentBatch.batch_id }) }); } catch (e) {}
   currentBatch = null;
-  selectedFile = null;
-  folderFiles = null;
-  folderZipBlob = null;
+}
+async function backToUpload() {
+  await discardBatch();
+  selectedFile = null; folderFiles = null;
   dropZone.classList.remove('has-file');
-  document.getElementById('dropIcon').textContent = '📦';
-  document.getElementById('dropTitle').textContent = 'Click or drag your class ZIP here';
-  document.getElementById('dropHint').textContent = '.zip files only';
+  document.getElementById('dropIcon').innerHTML = '<i class="fa-solid fa-file-zipper"></i>';
+  document.getElementById('dropTitle').textContent = 'Choose a ZIP file or drag it here';
+  document.getElementById('dropHint').textContent = 'Up to 500 MB';
   zipInput.value = '';
   folderDropZone.classList.remove('has-file');
-  document.getElementById('folderDropIcon').textContent = '🗂️';
-  document.getElementById('folderDropTitle').textContent = 'Click to choose your class folder';
-  document.getElementById('folderDropHint').textContent = 'Navigate to the folder that contains one sub-folder per student, then click "Select" — nothing uploads until you confirm below';
+  document.getElementById('folderDropIcon').innerHTML = '<i class="fa-solid fa-folder-open"></i>';
+  document.getElementById('folderDropTitle').textContent = 'Choose the class folder';
+  document.getElementById('folderDropHint').textContent = 'Pick the folder that contains one folder per student';
   document.getElementById('folderReview').classList.remove('show');
   folderInput.value = '';
   updateSubmitState();
   showView('view-upload');
 }
 
-/* ── Start marking ───────────────────────────────────── */
 async function startMarking() {
   if (!currentBatch) return;
-
-  const manifest = currentBatch.manifest;
-  const students = manifest.students || [];
-  const flaggedCount = students.filter(s => (s.flagged_pages || []).length).length;
-  const hasWarnings = manifest.severity === 'warning' || flaggedCount > 0;
-
-  if (hasWarnings && !confirm(
-    `Heads up: ${flaggedCount ? flaggedCount + ' student(s) have blurry or poor-quality page(s)' : 'this batch has some non-blocking issues'} — ` +
-    `those specific pages may be under-marked since the AI can't read them clearly.\n\n` +
-    `Everyone else in the class is unaffected. Upload anyway?`
-  )) {
-    return;
-  }
-
+  const students = currentBatch.manifest.students || [];
+  const flagged = students.filter(s => (s.flagged_pages || []).length).length;
+  if (flagged && !confirm(`${flagged} student${flagged === 1 ? ' has' : 's have'} unclear pages that may lose marks. Everyone else is unaffected.\n\nStart marking anyway?`)) return;
   const btn = document.getElementById('startMarkingBtn');
   btn.disabled = true;
   const orig = btn.innerHTML;
-  btn.innerHTML = '<span class="spinner"></span> Queuing students…';
-
+  btn.innerHTML = '<span class="spinner"></span> Adding students…';
   try {
-    const res = await fetch('/api/batch/confirm', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ batch_id: currentBatch.batch_id }),
-    });
+    const res = await fetch('/api/batch/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ batch_id: currentBatch.batch_id }) });
     const data = await res.json();
     if (data.success) {
-      window.location.href = '/upload-student';
+      currentBatch = null;   // confirmed: the server has already moved the files
+      document.getElementById('doneTitle').textContent = data.queued ? `${data.queued} student${data.queued === 1 ? ' is' : 's are'} being marked` : 'No students were added';
+      document.getElementById('doneText').textContent = data.message || '';
+      showView('view-done');
     } else {
-      btn.disabled = false;
-      btn.innerHTML = orig;
-      document.getElementById('reviewMsgText').textContent = data.message || 'Could not start marking. Please try again.';
+      btn.disabled = false; btn.innerHTML = orig;
+      document.getElementById('reviewMsgText').textContent = data.message || 'Could not start marking. Try again.';
       document.getElementById('reviewMsgBox').classList.add('show');
     }
   } catch (e) {
-    btn.disabled = false;
-    btn.innerHTML = orig;
-    document.getElementById('reviewMsgText').textContent = 'Network error while starting marking. Please try again.';
+    btn.disabled = false; btn.innerHTML = orig;
+    document.getElementById('reviewMsgText').textContent = 'The server could not be reached. Try again.';
     document.getElementById('reviewMsgBox').classList.add('show');
   }
 }
 
-/* ── Utility ─────────────────────────────────────────── */
-function esc(s) {
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-/* Clean up staged batch if the teacher navigates away before confirming */
+/* Unconfirmed uploads are removed if the teacher leaves the page. */
 window.addEventListener('beforeunload', () => {
   if (currentBatch) {
-    try {
-      navigator.sendBeacon('/api/batch/discard', new Blob([JSON.stringify({ batch_id: currentBatch.batch_id })], { type: 'application/json' }));
-    } catch (e) {}
+    try { navigator.sendBeacon('/api/batch/discard', new Blob([JSON.stringify({ batch_id: currentBatch.batch_id })], { type: 'application/json' })); } catch (e) {}
   }
 });
 </script>
-</body>
-</html>
+{% endblock %}

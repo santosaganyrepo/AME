@@ -9,7 +9,7 @@ that settings / deletion-log writes now go through the atomic helper in
 storage.py.)
 """
 
-import json
+import os
 from pathlib import Path
 from datetime import datetime, timedelta
 import shutil
@@ -118,57 +118,78 @@ class SettingsManager:
         hours = settings.get("auto_deletion", {}).get("deletion_hours", 48)
         return datetime.now() - timedelta(hours=hours)
 
+    # Upload times are written as "%Y-%m-%d %H:%M" (app.add_or_update_student);
+    # older records may carry seconds.
+    _SYNC_FORMATS = ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M")
+
+    @classmethod
+    def _parse_sync_time(cls, value: str):
+        for fmt in cls._SYNC_FORMATS:
+            try:
+                return datetime.strptime(value, fmt)
+            except (TypeError, ValueError):
+                continue
+        return None
+
+    @staticmethod
+    def _metadata_files(uploads_folder: Path):
+        """Every session's students_metadata.json, without walking into the
+        (large) student page folders or the batch staging area."""
+        for dirpath, dirnames, filenames in os.walk(uploads_folder):
+            dirnames[:] = [d for d in dirnames
+                           if not d.startswith("student_") and d != "_batch_staging"]
+            if "students_metadata.json" in filenames:
+                yield Path(dirpath) / "students_metadata.json"
+
     def find_folders_for_deletion(self, uploads_folder: Path) -> list:
         """
-        Finds all student folders older than 48 hours
-        Returns list of folder paths and their metadata
+        Finds all student folders older than the deletion threshold (48 h).
+        Returns a list of folder paths and their metadata.
+
+        (Fixed: this used to iterate the metadata file as a flat
+        {student_id: info} dict and parse times with seconds, so it never
+        found anything — metadata is {"exam_info": …, "students": [...]}.)
         """
         threshold_time = self.get_deletion_threshold_time()
         folders_to_delete = []
+        if not Path(uploads_folder).exists():
+            return folders_to_delete
 
-        # Find all exam sessions
-        for metadata_file in uploads_folder.rglob("students_metadata.json"):
+        for metadata_file in self._metadata_files(Path(uploads_folder)):
             exam_path = metadata_file.parent
+            data = read_json(metadata_file, None)
+            students = data.get("students", []) if isinstance(data, dict) else []
 
-            try:
-                with open(metadata_file, "r") as f:
-                    students_data = json.load(f)
+            for student_info in students:
+                if not isinstance(student_info, dict):
+                    continue
+                student_id = str(student_info.get("id") or student_info.get("student_id") or "")
+                folder_name = student_info.get("folder") or f"student_{student_id}"
+                if not student_id or "/" in folder_name or "\\" in folder_name or folder_name in (".", ".."):
+                    continue
+                student_folder = exam_path / folder_name
+                if not student_folder.is_dir():
+                    continue
 
-                # Check each student
-                for student_id, student_info in students_data.items():
-                    student_folder = exam_path / f"student_{student_id}"
+                sync_time_str = student_info.get("sync_time")
+                sync_time = self._parse_sync_time(sync_time_str)
+                if sync_time is None or sync_time >= threshold_time:
+                    continue
 
-                    if not student_folder.exists():
-                        continue
+                try:
+                    folder_size = sum(f.stat().st_size for f in student_folder.rglob("*") if f.is_file())
+                except OSError:
+                    folder_size = 0
 
-                    # Check upload time
-                    sync_time_str = student_info.get("sync_time")
-                    if not sync_time_str:
-                        continue
-
-                    try:
-                        sync_time = datetime.strptime(sync_time_str, "%Y-%m-%d %H:%M:%S")
-
-                        # If older than threshold, mark for deletion
-                        if sync_time < threshold_time:
-                            # Calculate folder size
-                            folder_size = sum(f.stat().st_size for f in student_folder.rglob("*") if f.is_file())
-
-                            folders_to_delete.append({
-                                "path": str(student_folder),
-                                "student_id": student_id,
-                                "student_name": student_info.get("student_name", "Unknown"),
-                                "upload_time": sync_time_str,
-                                "age_hours": (datetime.now() - sync_time).total_seconds() / 3600,
-                                "size_mb": folder_size / (1024 * 1024),
-                                "exam_session": str(exam_path.relative_to(uploads_folder)),
-                            })
-                    except ValueError:
-                        continue
-
-            except Exception as e:
-                print(f"Error processing {metadata_file}: {e}")
-                continue
+                folders_to_delete.append({
+                    "path": str(student_folder),
+                    "student_id": student_id,
+                    "student_name": student_info.get("student_name", "Unknown"),
+                    "upload_time": sync_time_str,
+                    "age_hours": (datetime.now() - sync_time).total_seconds() / 3600,
+                    "size_mb": folder_size / (1024 * 1024),
+                    "exam_session": str(exam_path.relative_to(uploads_folder)),
+                })
 
         return folders_to_delete
 

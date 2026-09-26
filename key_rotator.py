@@ -20,6 +20,14 @@ key hits a quota error, only that key goes into cooldown; workers on other
 keys are unaffected. If every key is cooling down, acquire() tells the
 caller how long until the earliest one is usable again, so the worker waits
 exactly that long instead of a fixed sleep.
+
+How long a key sits out depends on what Google said:
+  * a per-minute quota hit uses the reply's own retryDelay (often 10–40 s)
+    instead of a blind 60 s, so the key comes back as soon as it can;
+  * a per-DAY quota hit parks the key for an hour — re-trying it every
+    minute only burns attempts and fails students;
+  * an invalid / expired key is parked for 6 hours so it never fails a
+    student's job again, and is reported by slot in the log.
 """
 
 import os
@@ -51,11 +59,34 @@ def load_api_keys_from_env() -> list:
     return unique
 
 
+_RETRY_DELAY_RE = re.compile(r"retry[_ ]?delay['\"]?\s*[:=]\s*['\"]?(\d+(?:\.\d+)?)s", re.IGNORECASE)
+_RETRY_IN_RE    = re.compile(r"retry in (\d+(?:\.\d+)?)\s*s", re.IGNORECASE)
+
+
+def quota_cooldown_secs(error_text: str, default: float = 60.0) -> float:
+    """
+    Seconds a key should rest after this quota error: the server's own
+    retryDelay when it gives one, an hour for a per-day quota, else `default`.
+    """
+    text = error_text or ""
+    if re.search(r"per\s*day|perday|daily", text, re.IGNORECASE):
+        return APIKeyRotator.DAILY_COOLDOWN_SECS
+    m = _RETRY_DELAY_RE.search(text) or _RETRY_IN_RE.search(text)
+    if m:
+        return min(max(float(m.group(1)) + 1.0, 5.0), APIKeyRotator.DAILY_COOLDOWN_SECS)
+    return default
+
+
 class APIKeyRotator:
     """Thread-safe key pool with per-key cooldowns and per-job leases."""
 
     QUOTA_KEYWORDS = ("429", "resource_exhausted", "resource exhausted", "quota")
-    COOLDOWN_SECS  = 60   # how long a key sits out after a 429/quota hit
+    BAD_KEY_KEYWORDS = ("api key not valid", "api_key_invalid", "api key expired",
+                        "api_key_expired", "api key was reported as leaked",
+                        "permission_denied: api key", "consumer_suspended")
+    COOLDOWN_SECS       = 60          # fallback when a 429 gives no retryDelay
+    DAILY_COOLDOWN_SECS = 3600        # per-day quota exhausted
+    BAD_KEY_COOLDOWN_SECS = 6 * 3600  # invalid / expired / suspended key
 
     def __init__(self, keys):
         self._keys = [k for k in keys if k]
@@ -70,6 +101,10 @@ class APIKeyRotator:
     def is_quota_error(self, error_text: str) -> bool:
         el = (error_text or "").lower()
         return any(k in el for k in self.QUOTA_KEYWORDS)
+
+    def is_bad_key_error(self, error_text: str) -> bool:
+        el = (error_text or "").lower()
+        return any(k in el for k in self.BAD_KEY_KEYWORDS)
 
     def slot_of(self, key: str) -> Optional[int]:
         """1-based position of `key` in .env order — safe to log (never the key itself)."""
@@ -123,19 +158,29 @@ class APIKeyRotator:
                     return key
             return min(self._keys, key=lambda k: self._exhausted_until.get(k, 0))
 
-    def report_quota_error(self, key: str, reason: str = ""):
+    def report_quota_error(self, key: str, reason: str = "") -> float:
         """
         Called by whichever worker's job just failed on THIS specific key.
         Only that key goes into cooldown — other workers on other keys are
-        completely unaffected.
+        completely unaffected. Returns the cooldown applied, in seconds.
         """
+        return self._cool(key, quota_cooldown_secs(reason, self.COOLDOWN_SECS), "hit quota", reason)
+
+    def report_bad_key(self, key: str, reason: str = "") -> float:
+        """An invalid/expired key: parked for hours so it stops failing jobs."""
+        return self._cool(key, self.BAD_KEY_COOLDOWN_SECS, "was REJECTED (invalid or expired key — replace it in .env)", reason)
+
+    def _cool(self, key: str, secs: float, what: str, reason: str) -> float:
         with self._lock:
-            self._exhausted_until[key] = time.time() + self.COOLDOWN_SECS
+            until = time.time() + secs
+            # never shorten a longer cooldown another worker already set
+            self._exhausted_until[key] = max(until, self._exhausted_until.get(key, 0))
             slot = self.slot_of(key)
         import logging
-        logging.getLogger("edumark.marking").warning(
-            f"🔑 Key slot {slot} (…{key[-6:]}) hit quota ({(reason or '429')[:120]}). "
-            f"Cooling down {self.COOLDOWN_SECS}s.")
+        logging.getLogger("exammanager.marking").warning(
+            f"🔑 Key slot {slot} (…{key[-6:]}) {what} ({(reason or '429')[:160]}). "
+            f"Cooling down {secs:.0f}s.")
+        return secs
 
     def status(self) -> dict:
         with self._lock:
