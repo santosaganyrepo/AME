@@ -984,6 +984,20 @@ z-index: 1000;
   </div>
 </div>
 
+<!-- Rubric total check (shown after setup has completed — never blocks it) -->
+<div class="modal-backdrop" id="rubricWarnBackdrop">
+  <div class="modal-card">
+    <div class="modal-icon">📐</div>
+    <div class="modal-title">Please check the total marks</div>
+    <div class="modal-body" id="rubricWarnText"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="continueAfterSetup()">
+        <i class="fa-solid fa-arrow-right"></i> Continue
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- App Shell -->
 <div class="shell">
 
@@ -1036,6 +1050,10 @@ z-index: 1000;
         <a class="sb-item" href="/#help" data-tip="Help & About">
           <span class="sb-ico"><i class="fa-solid fa-circle-question"></i></span>
           <span class="sb-lbl">Help &amp; About</span>
+        </a>
+        <a class="sb-item" href="/logout" data-tip="Sign out">
+          <span class="sb-ico"><i class="fa-solid fa-right-from-bracket"></i></span>
+          <span class="sb-lbl">Sign out</span>
         </a>
       </div>
     </div>
@@ -1694,6 +1712,22 @@ function showDuplicateModal(data) {
 
 function hideModal() { el('modalBackdrop').classList.remove('show'); }
 
+/* After a successful setup: go on to choose-method, unless the rubric's
+   readable stage marks disagree with the total entered — then show that
+   warning first and continue when the teacher dismisses it. */
+function afterSetupSuccess(result, delayMs) {
+  if (result && result.rubric_warning) {
+    el('rubricWarnText').textContent = result.rubric_warning;
+    el('rubricWarnBackdrop').classList.add('show');
+    return;
+  }
+  setTimeout(() => location.href = '/choose-method', delayMs);
+}
+function continueAfterSetup() {
+  el('rubricWarnBackdrop').classList.remove('show');
+  location.href = '/choose-method';
+}
+
 function cancelOverwrite() {
   hideModal();
   pendingFormData = null;
@@ -1714,7 +1748,7 @@ async function confirmOverwrite() {
     const result = await res.json();
     if (result.success) {
       showMsg('✅ Overwritten! Redirecting…', 'success');
-      setTimeout(() => location.href = '/choose-method', 1000);
+      afterSetupSuccess(result, 1000);
     } else {
       showMsg('Error: ' + result.message, 'error');
       btn.disabled = false;
@@ -1760,7 +1794,7 @@ el('setupForm').onsubmit = async function(e) {
         `✅ Session ready — ${result.files_saved.question_papers} paper(s), ${result.files_saved.rubrics} rubric(s) saved${marksNote}. Redirecting…`,
         'success'
       );
-      setTimeout(() => location.href = '/choose-method', 1200);
+      afterSetupSuccess(result, 1200);
     } else {
       showMsg('Error: ' + (result.message || 'Unknown error'), 'error');
       btn.disabled = false;

@@ -24,6 +24,23 @@ except ImportError:
     print("⚠️ odfpy not installed. Install with: pip install odfpy")
 
 
+def _stage_marks(student: dict) -> list:
+    """Per-stage marks for the optional stage columns (D5.2): the saved
+    stage_scores list, or the older per-question dict where one exists."""
+    stages = student.get('stage_scores') or []
+    if stages:
+        return [s.get('marks') for s in stages if isinstance(s, dict)]
+    questions = student.get('questions') or {}
+    out = []
+    for v in questions.values():
+        out.append(v.get('score') if isinstance(v, dict) else v)
+    return out
+
+
+def _fmt_pct(v):
+    return None if v is None else round(float(v), 1)
+
+
 class ExcelGenerator:
     """Generates Excel spreadsheets from student data"""
     
@@ -83,6 +100,8 @@ class ExcelGenerator:
                 'feedback': student.get('overall_feedback', 'No feedback available'),
                 'overridden': overridden,
                 'ai_score': float(student.get('ai_score')) if overridden and student.get('ai_score') is not None else None,
+                'marked': bool(student.get('marked')),
+                'stages': _stage_marks(student),
             })
 
         students_list.sort(key=lambda x: str(x['id']))
@@ -98,6 +117,17 @@ class ExcelGenerator:
         ('status',   'Status',          15),
         ('score',    'Total Score (%)', 16),
         ('feedback', 'AI Feedback',     60),
+    ]
+
+    # Optional columns (D5.2) — only written when the teacher ticks them, so
+    # an export from an older client, or with the defaults, is unchanged.
+    # 'stages' expands into one column per stage (Stage 1, Stage 2, …).
+    OPTIONAL_COLUMN_DEFS = [
+        ('ai_score',    'AI Score (%)',            14),
+        ('final_score', 'Teacher Final (%)',       16),
+        ('difference',  'Difference (Final − AI)', 20),
+        ('overridden',  'Overridden',              12),
+        ('stages',      'Stage',                   10),
     ]
 
     @staticmethod
@@ -119,9 +149,46 @@ class ExcelGenerator:
                 continue
             if columns.get(key, True):
                 selected.append(key)
+        for key, _, _ in ExcelGenerator.OPTIONAL_COLUMN_DEFS:
+            if columns.get(key, False):
+                selected.append(key)
         # Preserve the canonical left-to-right order regardless of dict order.
-        order = [k for k, _, _ in ExcelGenerator.COLUMN_DEFS]
+        order = [k for k, _, _ in ExcelGenerator.COLUMN_DEFS + ExcelGenerator.OPTIONAL_COLUMN_DEFS]
         return [k for k in order if k in selected]
+
+    @classmethod
+    def _expand_columns(cls, col_keys: list, students: list) -> list:
+        """[(key, label, width)] with 'stages' expanded to Stage 1…N."""
+        defs = {k: (label, width) for k, label, width in cls.COLUMN_DEFS + cls.OPTIONAL_COLUMN_DEFS}
+        out = []
+        for key in col_keys:
+            if key == 'stages':
+                n = max((len(s.get('stages') or []) for s in students), default=0)
+                out += [(f'stage_{i}', f'Stage {i}', 10) for i in range(1, n + 1)]
+            else:
+                out.append((key, *defs[key]))
+        return out
+
+    @staticmethod
+    def _optional_value(student: dict, key: str):
+        """Value for an optional (D5.2) column, or None to leave the cell empty."""
+        overridden = student.get('overridden')
+        ai = student.get('ai_score') if overridden else (student['total_score'] if student.get('marked') else None)
+        if key == 'ai_score':
+            return _fmt_pct(ai)
+        if key == 'final_score':
+            return _fmt_pct(student['total_score']) if overridden else None
+        if key == 'difference':
+            if overridden and ai is not None:
+                return round(float(student['total_score']) - float(ai), 1)
+            return None
+        if key == 'overridden':
+            return 'Yes' if overridden else 'No'
+        if key.startswith('stage_'):
+            idx = int(key.split('_', 1)[1]) - 1
+            stages = student.get('stages') or []
+            return stages[idx] if idx < len(stages) else None
+        return None
 
     def generate_xlsx(self, students: list, exam_info: dict, output_path: Path,
                       columns: dict = None) -> bool:
@@ -135,8 +202,9 @@ class ExcelGenerator:
         if not XLSX_AVAILABLE:
             raise ImportError("openpyxl is not installed. Install with: pip install openpyxl")
 
-        col_keys = self._resolve_columns(columns)
-        col_map  = {k: (label, width) for k, label, width in self.COLUMN_DEFS}
+        cols     = self._expand_columns(self._resolve_columns(columns), students)
+        col_keys = [k for k, _, _ in cols]
+        col_map  = {k: (label, width) for k, label, width in cols}
         ncols    = len(col_keys)
 
         wb = Workbook()
@@ -201,6 +269,12 @@ class ExcelGenerator:
                     if student['status'] == 'Marked':
                         cell.fill = PatternFill(start_color="d4edda", end_color="d4edda", fill_type="solid")
                         cell.font = Font(color="155724", bold=True)
+                    elif student['status'] == 'Needs review':
+                        cell.fill = PatternFill(start_color="fff3cd", end_color="fff3cd", fill_type="solid")
+                        cell.font = Font(color="856404", bold=True)
+                    elif student['status'] == 'Failed':
+                        cell.fill = PatternFill(start_color="f8d7da", end_color="f8d7da", fill_type="solid")
+                        cell.font = Font(color="721c24", bold=True)
 
                 elif key == 'score':
                     score = student['total_score']
@@ -226,6 +300,9 @@ class ExcelGenerator:
                         fb = f"[Manually overridden — original AI mark: {student['ai_score']}%] {fb}"
                     cell.value = fb
 
+                else:
+                    cell.value = self._optional_value(student, key)
+
         # Borders
         thin_border = Border(
             left=Side(style='thin'), right=Side(style='thin'),
@@ -248,8 +325,9 @@ class ExcelGenerator:
         if not ODS_AVAILABLE:
             raise ImportError("odfpy is not installed. Install with: pip install odfpy")
 
-        col_keys = self._resolve_columns(columns)
-        col_map  = {k: label for k, label, _ in self.COLUMN_DEFS}
+        cols     = self._expand_columns(self._resolve_columns(columns), students)
+        col_keys = [k for k, _, _ in cols]
+        col_map  = {k: label for k, label, _ in cols}
 
         doc = OpenDocumentSpreadsheet()
         table = Table(name="Student Marks")
@@ -320,7 +398,14 @@ class ExcelGenerator:
                     cell.addElement(P(text=fb))
 
                 else:
-                    cell = TableCell(valuetype="string")
+                    val = self._optional_value(student, key)
+                    if isinstance(val, (int, float)):
+                        cell = TableCell(valuetype="float", value=val)
+                        cell.addElement(P(text=str(val)))
+                    else:
+                        cell = TableCell(valuetype="string")
+                        if val is not None:
+                            cell.addElement(P(text=str(val)))
 
                 row.addElement(cell)
             table.addElement(row)

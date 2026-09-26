@@ -1,26 +1,36 @@
 """
-Queue Manager v4 — Parallel Async AI Marking Queue
+Queue Manager v5 — Parallel Async AI Marking Queue
 ====================================================
-v4 changes over v3:
-- Runs N worker threads concurrently instead of 1, each pulling a key
-  from the shared key_rotator before marking a student. This is the
-  single biggest throughput lever for mass testing: turns "40 students
-  x ~20s each, strictly sequential" into N students marking in parallel.
-- Uses the SAME key_rotator instance as app.py (imported from
-  key_rotator.py) so key cooldown state is consistent everywhere —
-  there is exactly one source of truth for which keys are healthy.
-- Per-worker current-job tracking (was a single self._current_job) so
-  the status API can report everything actively marking at once.
+v5 changes over v4:
+- Jobs survive a restart (6.6): every waiting/running job is written to
+  pending_jobs.json (atomic writes) and removed when it finishes. The
+  `python app.py` entry point calls restore_pending_jobs() once on start.
+  Old sessions are never scanned — only jobs that were actually waiting or
+  running are picked up again.
+- Error classification fix (6.4): the marker's parse-failure messages embed
+  the first 300 characters of the AI's reply, and ordinary words in a
+  student's answer ("network", "connection", "internal", …) made those look
+  like network errors — the job then retried forever. Classification now
+  ignores the quoted AI text, and every job has a hard attempt cap.
+- Keys are leased per job (D2.2): a worker only ever marks with a key that
+  is not cooling down; if every key is cooling down it waits exactly until
+  the earliest one recovers instead of a fixed sleep. A quota error cools
+  that key and moves the job straight to another key — no 10 s wait.
+- One timing line per job in logs/marking.log (D1.1) and an ai_runs/ record
+  per AI call (written by the marker, D1.2).
+- Results are saved with the locked atomic helper (6.1), keep the previous
+  mark in mark_history on a re-mark (D3.5), save "Needs review" with a
+  review_reason when the marker flags a result (D3.1/D3.2), and a failed
+  student keeps a plain failure_reason a teacher understands (D6.2).
 
-Everything else — retry classification, permanent-vs-transient errors,
-metadata persistence, job cancel/retry — is unchanged from v3.
+Everything else — N parallel workers sharing one key_rotator, permanent-vs-
+transient errors, job cancel/retry, the status API shape — is unchanged.
 """
 
+import json
 import threading
 import uuid
-import json
 import time
-import os
 import traceback
 from pathlib import Path
 from datetime import datetime
@@ -28,6 +38,12 @@ from typing import Optional, List, Dict
 from enum import Enum
 
 from key_rotator import key_rotator
+from marking_log import get_marking_logger
+from storage import read_json, update_json
+
+log = get_marking_logger()
+
+PENDING_JOBS_FILE = Path(__file__).parent / "pending_jobs.json"
 
 
 # ─── Error classification ─────────────────────────────────────────────────────
@@ -43,19 +59,53 @@ TRANSIENT_KEYWORDS = [
 ]
 
 RETRY_DELAY_SECS  = 10          # seconds between retries on transient errors
+MAX_JOB_ATTEMPTS  = 8           # hard cap per job (waiting for a cooled key doesn't count)
 PERMANENT_ERRORS = [
     "google_api_key not configured",
     "marking_failed_no_content",    # AI returned sentinel — blank pages
+    "no student answer content",    # the marker's wording for the same sentinel
     "no answer sheets found",
     "student folder not found",
+    "no scores list found",         # AI replied, but not in the required format
+    "could not parse any scores",
+    "ai reply incomplete",
+    "cannot mark:",                 # question paper / rubric missing
+    "no valid answer images",
 ]
 
 
+def _strip_ai_text(error_str: str) -> str:
+    """Drops the quoted AI reply the marker appends after 'Raw (first 300):'."""
+    return error_str.split("Raw (first", 1)[0]
+
+
 def _is_transient(error_str: str) -> bool:
-    el = error_str.lower()
+    el = _strip_ai_text(error_str).lower()
     if any(p in el for p in PERMANENT_ERRORS):
         return False
     return any(k in el for k in TRANSIENT_KEYWORDS)
+
+
+def friendly_failure(error_str: str) -> str:
+    """Short, plain reason a teacher understands (D6.2)."""
+    el = _strip_ai_text(error_str or "").lower()
+    if "not configured" in el or "no gemini api keys" in el:
+        return "AI service not set up — contact your administrator"
+    if "answer content" in el or "marking_failed_no_content" in el:
+        return "Pages unreadable or blank — re-capture and upload again"
+    if "no answer sheets" in el or "no valid answer images" in el or "student folder not found" in el:
+        return "No readable pages found — upload this student's pages again"
+    if "cannot mark:" in el:
+        return "Question paper or marking scheme missing — re-upload them in setup"
+    if "incomplete" in el:
+        return "Report incomplete — please re-mark"
+    if "no scores list" in el or "could not parse" in el:
+        return "AI reply could not be read — please re-mark"
+    if any(k in el for k in ("429", "quota", "resource_exhausted", "resource exhausted", "busy")):
+        return "AI service busy — retry"
+    if any(k in el for k in TRANSIENT_KEYWORDS):
+        return "Could not reach the AI service — retry"
+    return "Could not mark this student's script — retry, or check the uploaded pages"
 
 
 # ─── Job model ────────────────────────────────────────────────────────────────
@@ -69,18 +119,22 @@ class JobStatus(str, Enum):
 
 
 class MarkingJob:
-    def __init__(self, student_id, student_name, exam_folder, exam_info, page_count):
-        self.job_id        = str(uuid.uuid4())[:8]
+    def __init__(self, student_id, student_name, exam_folder, exam_info, page_count,
+                 folder: str = None, job_id: str = None, enqueued_ts: float = None):
+        self.job_id        = job_id or str(uuid.uuid4())[:8]
         self.student_id    = student_id
         self.student_name  = student_name
         self.exam_folder   = exam_folder          # str — survives pickling
         self.exam_info     = exam_info
         self.page_count    = page_count
+        self.folder        = folder or f"student_{student_id}"   # survives an ID override
         self.status        = JobStatus.PENDING
         self.score         = None
         self.error         = None
+        self.review_reason = None
         self.retry_count   = 0
         self.worker_id     = None
+        self.enqueued_ts   = enqueued_ts or time.time()
         self.queued_at     = datetime.now().strftime("%H:%M:%S")
         self.started_at    = None
         self.completed_at  = None
@@ -95,11 +149,24 @@ class MarkingJob:
             "status":       self.status.value,
             "score":        self.score,
             "error":        self.error,
+            "review_reason": self.review_reason,
             "retry_count":  self.retry_count,
             "worker_id":    self.worker_id,
             "queued_at":    self.queued_at,
             "started_at":   self.started_at,
             "completed_at": self.completed_at,
+        }
+
+    def to_pending_record(self) -> dict:
+        return {
+            "job_id":       self.job_id,
+            "student_id":   self.student_id,
+            "student_name": self.student_name,
+            "exam_folder":  self.exam_folder,
+            "exam_info":    self.exam_info,
+            "page_count":   self.page_count,
+            "folder":       self.folder,
+            "enqueued_ts":  self.enqueued_ts,
         }
 
 
@@ -109,7 +176,7 @@ class QueueManager:
     MAX_COMPLETED   = 300
     MAX_WORKERS     = 7   # ceiling regardless of how many keys are configured
 
-    def __init__(self):
+    def __init__(self, pending_file: Path = None):
         self._lock         = threading.Lock()
         self._condition     = threading.Condition(self._lock)
         self._pending:      List[MarkingJob] = []
@@ -118,6 +185,8 @@ class QueueManager:
         self._paused       = False
         self._stop_evt     = threading.Event()
         self._log: List[dict] = []
+        self._pending_file = Path(pending_file or PENDING_JOBS_FILE)
+        self._restored     = False
 
         # Shared with app.py — one source of truth for key cooldown state.
         self._key_pool = key_rotator
@@ -145,15 +214,61 @@ class QueueManager:
             f"🚀 Marking queue started — {self._worker_count} parallel worker(s), "
             f"{len(self._key_pool)} API key(s) in rotation"
         )
+        if len(self._key_pool) == 0:
+            self._log_event("⚠  No Gemini API keys in .env (GEMINI_API_KEY_1 …) — marking is disabled")
 
-    def enqueue(self, student_id, student_name, exam_folder, exam_info, page_count) -> "MarkingJob":
-        job = MarkingJob(student_id, student_name, str(exam_folder), exam_info, page_count)
+    def enqueue(self, student_id, student_name, exam_folder, exam_info, page_count,
+                folder: str = None) -> "MarkingJob":
+        job = MarkingJob(student_id, student_name, str(exam_folder), exam_info, page_count, folder=folder)
+        self._persist_add(job)
         with self._condition:
             self._pending.append(job)
             self._log_event(
                 f"📥 Queued: {student_name} (ID: {student_id}, {page_count} page{'s' if page_count!=1 else ''})")
             self._condition.notify_all()
         return job
+
+    def restore_pending_jobs(self) -> int:
+        """
+        Called once by the `python app.py` entry point (6.6): re-queues every
+        job that was waiting or running when the app last stopped. Nothing
+        else is scanned — finished jobs were removed from the file already.
+        """
+        if self._restored:
+            return 0
+        self._restored = True
+        if len(self._key_pool) == 0:
+            n = len(read_json(self._pending_file, {}) or {})
+            if n:
+                self._log_event(f"⚠  {n} unfinished job(s) kept in pending_jobs.json — add API keys to .env and restart to mark them")
+            return 0
+
+        records = read_json(self._pending_file, {}) or {}
+        restored = 0
+        with self._condition:
+            queued_ids = {j.job_id for j in self._pending} | {j.job_id for j in self._current_jobs.values()}
+            for rec in sorted(records.values(), key=lambda r: r.get("enqueued_ts", 0)):
+                if rec.get("job_id") in queued_ids:
+                    continue
+                if not Path(rec.get("exam_folder", "")).exists():
+                    continue
+                job = MarkingJob(rec["student_id"], rec.get("student_name", ""), rec["exam_folder"],
+                                 rec.get("exam_info") or {}, rec.get("page_count", 0),
+                                 folder=rec.get("folder"), job_id=rec.get("job_id"),
+                                 enqueued_ts=rec.get("enqueued_ts"))
+                self._pending.append(job)
+                restored += 1
+            if restored:
+                self._log_event(f"♻  Restored {restored} unfinished marking job(s) from before the restart")
+                self._condition.notify_all()
+        return restored
+
+    def is_queued(self, exam_folder: str, student_id: str) -> bool:
+        """True if this student is already waiting or being marked."""
+        ef = str(exam_folder)
+        with self._lock:
+            active = list(self._pending) + list(self._current_jobs.values())
+            return any(j.exam_folder == ef and str(j.student_id) == str(student_id) for j in active)
 
     def pause(self):
         with self._lock:
@@ -175,8 +290,11 @@ class QueueManager:
                     self._pending.pop(i)
                     self._completed.append(job)
                     self._log_event(f"❌ Cancelled: {job.student_name}")
-                    return True
-        return False
+                    break
+            else:
+                return False
+        self._persist_remove(job)
+        return True
 
     def retry_job(self, job_id: str) -> bool:
         with self._condition:
@@ -189,13 +307,17 @@ class QueueManager:
                     job.worker_id    = None
                     job.started_at   = None
                     job.completed_at = None
+                    job.enqueued_ts  = time.time()
                     job.queued_at    = datetime.now().strftime("%H:%M:%S")
                     self._completed.remove(job)
                     self._pending.append(job)
                     self._log_event(f"🔄 Re-queued: {job.student_name}")
                     self._condition.notify_all()
-                    return True
-        return False
+                    break
+            else:
+                return False
+        self._persist_add(job)
+        return True
 
     def get_status(self) -> dict:
         with self._lock:
@@ -243,6 +365,21 @@ class QueueManager:
                 "log":          list(self._log[-30:]),
             }
 
+    # ── pending_jobs.json (6.6) ───────────────────────────────────────────────
+
+    def _persist_add(self, job: MarkingJob):
+        try:
+            update_json(self._pending_file,
+                        lambda d: d.__setitem__(job.job_id, job.to_pending_record()), default={})
+        except Exception as e:
+            log.warning(f"[Queue] Could not record pending job {job.job_id}: {e}")
+
+    def _persist_remove(self, job: MarkingJob):
+        try:
+            update_json(self._pending_file, lambda d: d.pop(job.job_id, None) and None, default={})
+        except Exception as e:
+            log.warning(f"[Queue] Could not clear pending job {job.job_id}: {e}")
+
     # ── Internal worker ────────────────────────────────────────────────────────
 
     def _log_event(self, message: str):
@@ -250,7 +387,7 @@ class QueueManager:
         self._log.append(entry)
         if len(self._log) > self.MAX_LOG_ENTRIES:
             self._log = self._log[-self.MAX_LOG_ENTRIES:]
-        print(f"[Queue {entry['time']}] {message}")
+        log.info(f"[Queue {entry['time']}] {message}")
 
     def _worker_loop(self, worker_id: int):
         """Daemon loop for one worker — never exits while app is running."""
@@ -260,7 +397,15 @@ class QueueManager:
                 with self._condition:
                     self._condition.wait(timeout=2.0)
                 continue
-            self._process_job(job, worker_id)
+            try:
+                self._process_job(job, worker_id)
+            except Exception as exc:   # never let one bad job kill a worker thread
+                log.error(f"[Queue W{worker_id}] Worker error on {job.student_id}: {exc}")
+                traceback.print_exc()
+                self._fail_job(job, "An unexpected error occurred. Try re-queuing this student.", str(exc))
+                with self._lock:
+                    self._current_jobs.pop(worker_id, None)
+                    self._completed.append(job)
 
     def _pick_next_job(self, worker_id: int) -> Optional[MarkingJob]:
         with self._condition:
@@ -274,25 +419,60 @@ class QueueManager:
             self._log_event(f"🤖 [W{worker_id}] Marking: {job.student_name} (ID: {job.student_id})")
             return job
 
+    def _acquire_key(self, job: MarkingJob, worker_id: int) -> Optional[str]:
+        """A key that is not cooling down; waits for the earliest one if all are (D2.2)."""
+        announced = False
+        while not self._stop_evt.is_set():
+            key, wait = self._key_pool.acquire()
+            if key:
+                return key
+            if not announced:
+                self._log_event(f"⏳ [W{worker_id}] All API keys cooling down — "
+                                f"{job.student_name} continues in {wait:.0f}s")
+                announced = True
+            self._stop_evt.wait(min(wait, 60))
+        return None
+
     def _process_job(self, job: MarkingJob, worker_id: int):
         """
-        Run the AI marking with unlimited retries on transient errors.
-        Permanent errors (blank pages, missing API key) fail immediately.
-        Quota errors put that specific key in cooldown and grab a fresh
-        one from the shared pool on the next attempt — other workers are
-        unaffected since they're on different keys.
+        Run the AI marking. Transient errors retry (capped at MAX_JOB_ATTEMPTS);
+        permanent errors (blank pages, missing QP/rubric, unreadable AI reply)
+        fail straight away. A quota error cools only that key and the job moves
+        to another key immediately — other workers are unaffected.
         """
         exam_folder    = Path(job.exam_folder)
-        student_folder = exam_folder / f"student_{job.student_id}"
+        student_folder = exam_folder / job.folder
+        t_start        = time.time()
+        queue_wait     = t_start - job.enqueued_ts
+        run_info: dict = {}
+        key_slots: List[int] = []
+        final_error    = None
+        attempts       = 0
 
         while True:  # ← retry loop
             api_key = None
             try:
                 if len(self._key_pool) == 0:
-                    self._fail_job(job, "AI service not configured. Contact your administrator.")
+                    final_error = "AI service not configured"
+                    self._fail_job(job, "AI service not configured. Contact your administrator.",
+                                   "google_api_key not configured")
                     break
 
-                api_key = self._key_pool.get_key()
+                attempts += 1
+                if attempts > MAX_JOB_ATTEMPTS:
+                    self._fail_job(job, "AI service busy — please retry this student.",
+                                   final_error or "busy: attempt limit reached")
+                    break
+
+                teacher = self.teacher_final_mark(exam_folder, job)
+                if teacher is not None:
+                    self._keep_teacher_mark(job, worker_id, teacher.get("total_score"))
+                    break
+
+                api_key = self._acquire_key(job, worker_id)
+                if api_key is None:     # shutting down — job stays in pending_jobs.json
+                    return
+                key_slots.append(self._key_pool.slot_of(api_key))
 
                 from ai_marker_gemini_improved import AIMarker
                 marker = AIMarker(api_key=api_key)
@@ -302,47 +482,62 @@ class QueueManager:
                     exam_path      = exam_folder,
                     student_folder = student_folder,
                     exam_info      = job.exam_info,
+                    runs_dir       = student_folder / "ai_runs",
                 )
+                run_info = result.get("_run") or run_info
 
                 if result.get("success"):
                     score = result.get("total_score", 0)
-                    self._save_marks(exam_folder, job.student_id, result)
+                    reasons = (result.get("_run") or {}).get("review_reasons") or []
+                    if self._save_marks(exam_folder, job, result) == "teacher_final":
+                        teacher = self.teacher_final_mark(exam_folder, job) or {}
+                        self._keep_teacher_mark(job, worker_id, teacher.get("total_score"))
+                        break
                     with self._lock:
-                        job.status       = JobStatus.COMPLETED
-                        job.score        = score
-                        job.error        = None
-                        job.completed_at = datetime.now().strftime("%H:%M:%S")
+                        job.status        = JobStatus.COMPLETED
+                        job.score         = score
+                        job.error         = None
+                        job.review_reason = "; ".join(reasons) or None
+                        job.completed_at  = datetime.now().strftime("%H:%M:%S")
                         retry_note = f" (after {job.retry_count} retries)" if job.retry_count else ""
-                        self._log_event(f"✅ [W{worker_id}] Marked: {job.student_name} — {score:.1f}%{retry_note}")
+                        flag_note  = " — needs review" if reasons else ""
+                        self._log_event(f"✅ [W{worker_id}] Marked: {job.student_name} — {score:.1f}%{retry_note}{flag_note}")
                     break  # ← success
 
                 else:
                     err = result.get("error", "Marking returned no result")
-                    if self._key_pool.is_quota_error(err) and api_key:
+                    final_error = err
+                    if self._key_pool.is_quota_error(_strip_ai_text(err)):
                         self._key_pool.report_quota_error(api_key, reason=err[:150])
-                        self._schedule_retry(job, worker_id, "Key hit quota — rotating to next key")
+                        self._note_retry(job, worker_id, "Key hit quota — moving to another key")
                         continue
                     if _is_transient(err):
                         self._schedule_retry(job, worker_id, "AI temporarily unavailable — will retry automatically")
                         continue
                     else:
-                        self._fail_job(job, "Could not mark this student's script. Please check the uploaded pages.")
+                        self._fail_job(job, "Could not mark this student's script. Please check the uploaded pages.", err)
                         break
 
             except Exception as exc:
                 err_str = f"{type(exc).__name__}: {str(exc)}"
+                final_error = err_str
                 if self._key_pool.is_quota_error(err_str) and api_key:
                     self._key_pool.report_quota_error(api_key, reason=err_str[:150])
-                    self._schedule_retry(job, worker_id, "Key hit quota — rotating to next key")
+                    self._note_retry(job, worker_id, "Key hit quota — moving to another key")
                     continue
                 if _is_transient(err_str):
                     self._schedule_retry(job, worker_id, "Network or service issue — retrying automatically")
                     continue
                 else:
-                    print(f"[Queue W{worker_id}] Permanent error for {job.student_id}: {err_str}")
+                    log.error(f"[Queue W{worker_id}] Permanent error for {job.student_id}: {err_str}")
                     traceback.print_exc()
-                    self._fail_job(job, "An unexpected error occurred. Try re-queuing this student.")
+                    self._fail_job(job, "An unexpected error occurred. Try re-queuing this student.", err_str)
                     break
+            finally:
+                self._key_pool.release(api_key)
+
+        self._log_metrics(job, worker_id, queue_wait, time.time() - t_start, key_slots, run_info)
+        self._persist_remove(job)
 
         # Always clean up this worker's current job pointer
         with self._lock:
@@ -350,6 +545,53 @@ class QueueManager:
             self._completed.append(job)
             if len(self._completed) > self.MAX_COMPLETED:
                 self._completed = self._completed[-self.MAX_COMPLETED:]
+
+    def _log_metrics(self, job, worker_id, queue_wait, processing, key_slots, run):
+        """One machine-readable line per job in logs/marking.log (D1.1)."""
+        usage = run.get("usage") or {}
+        metrics = {
+            "job_id":          job.job_id,
+            "student_id":      job.student_id,
+            "exam_folder":     job.exam_folder,
+            "outcome":         job.status.value,
+            "worker":          worker_id,
+            "queue_wait_s":    round(queue_wait, 2),
+            "upload_s":        run.get("prepare_secs"),
+            "ai_call_s":       run.get("ai_secs"),
+            "parse_s":         run.get("parse_secs"),
+            "total_s":         round(processing, 2),
+            "pages":           run.get("pages", job.page_count),
+            "payload_bytes":   run.get("payload_bytes"),
+            "transport":       run.get("transport"),
+            "key_slots":       key_slots,
+            "job_retries":     job.retry_count,
+            "network_retries": run.get("network_retries"),
+            "ai_attempts":     len(run.get("ai_attempts") or []),
+            "finish_reason":   run.get("finish_reason"),
+            "tokens_prompt":   usage.get("prompt"),
+            "tokens_output":   usage.get("output"),
+            "tokens_thinking": usage.get("thinking"),
+            "tokens_total":    usage.get("total"),
+            "file_uploads":    run.get("file_uploads"),
+            "file_cache_hits": run.get("file_cache_hits"),
+            "needs_review":    bool(run.get("review_reasons")),
+        }
+        log.info("📈 job_metrics " + json.dumps(metrics, ensure_ascii=False))
+
+    def _keep_teacher_mark(self, job: MarkingJob, worker_id: int, final_score):
+        """A teacher overrode this student: their mark is final, the AI doesn't re-mark."""
+        with self._lock:
+            job.status        = JobStatus.COMPLETED
+            job.score         = final_score
+            job.error         = None
+            job.review_reason = None
+            job.completed_at  = datetime.now().strftime("%H:%M:%S")
+        self._log_event(f"🔒 [W{worker_id}] {job.student_name} has a teacher's final mark — kept, not re-marked by the AI")
+
+    def _note_retry(self, job: MarkingJob, worker_id: int, user_message: str):
+        """Quota rotation — no sleep, the next attempt takes a different key."""
+        job.retry_count += 1
+        self._log_event(f"🔁 [W{worker_id}] Retry #{job.retry_count} for {job.student_name} — {user_message}")
 
     def _schedule_retry(self, job: MarkingJob, worker_id: int, user_message: str):
         """Sleep RETRY_DELAY_SECS then the while-loop will retry the AI call."""
@@ -361,51 +603,129 @@ class QueueManager:
             f"⏳ [W{worker_id}] Retry #{job.retry_count} for {job.student_name} "
             f"in {RETRY_DELAY_SECS}s — {user_message}"
         )
-        time.sleep(RETRY_DELAY_SECS)
+        self._stop_evt.wait(RETRY_DELAY_SECS)
         with self._lock:
             job.status = JobStatus.PROCESSING
             job.error  = None
 
-    def _fail_job(self, job: MarkingJob, user_message: str):
-        """Mark a job as permanently failed with a friendly message."""
+    def _fail_job(self, job: MarkingJob, user_message: str, raw_error: str = ""):
+        """Mark a job as permanently failed with a friendly message, and record why."""
+        reason = friendly_failure(raw_error or user_message)
         with self._lock:
             job.status       = JobStatus.FAILED
-            job.error        = user_message
+            job.error        = reason
             job.completed_at = datetime.now().strftime("%H:%M:%S")
-            self._log_event(f"⚠  Failed: {job.student_name} — {user_message[:60]}")
+            self._log_event(f"⚠  Failed: {job.student_name} — {reason[:80]}")
+        if raw_error:
+            log.info(f"[Queue] Failure detail for {job.student_id}: {_strip_ai_text(raw_error)[:300]}")
+        self._save_failure(Path(job.exam_folder), job, reason)
 
-    # ── Metadata persistence ───────────────────────────────────────────────────
+    # ── Metadata persistence (locked + atomic, 6.1) ────────────────────────────
 
     @staticmethod
-    def _save_marks(exam_folder: Path, sid: str, marking_result: dict):
-        """Write AI results back to students_metadata.json with retry."""
-        meta_path = exam_folder / "students_metadata.json"
-        for attempt in range(5):
-            try:
-                with open(meta_path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                for student in data.get("students", []):
-                    if student.get("id") == sid or student.get("student_id") == sid:
-                        student.update({
-                            "status":                "Marked",
-                            "marked":                True,
-                            "total_score":           marking_result.get("total_score", 0),
-                            "raw_score":             marking_result.get("raw_score", 0),
-                            "max_score":             marking_result.get("max_score", 100),
-                            "questions":             marking_result.get("questions", {}),
-                            "overall_feedback":      marking_result.get("overall_feedback", ""),
-                            "strengths":             marking_result.get("strengths", []),
-                            "areas_for_improvement": marking_result.get("areas_for_improvement", []),
-                        })
-                        break
-                with open(meta_path, "w", encoding="utf-8") as f:
-                    json.dump(data, f, indent=2, ensure_ascii=False)
+    def _find_student(data: dict, job: MarkingJob) -> Optional[dict]:
+        students = data.get("students", [])
+        for student in students:   # the folder never changes, even after an ID override
+            if student.get("folder") == job.folder:
+                return student
+        for student in students:
+            if student.get("id") == job.student_id or student.get("student_id") == job.student_id:
+                return student
+        return None
+
+    @staticmethod
+    def _save_marks(exam_folder: Path, job: MarkingJob, marking_result: dict) -> str:
+        """
+        Write AI results back to students_metadata.json (locked, atomic).
+        Returns "saved", or "teacher_final" when a teacher overrode this
+        student while the AI was marking — the teacher's mark is final and
+        is never overwritten (the AI's reply stays in ai_runs/ only).
+        """
+        run     = marking_result.get("_run") or {}
+        reasons = run.get("review_reasons") or []
+        now     = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        outcome = {"value": "saved"}
+
+        def mutate(data):
+            student = QueueManager._find_student(data, job)
+            if student is None:
+                log.warning(f"[Queue] {job.student_id} is no longer in {exam_folder.name}/students_metadata.json — result kept in ai_runs/ only")
                 return
-            except Exception as e:
-                if attempt < 4:
-                    time.sleep(0.4 * (attempt + 1))
-                else:
-                    print(f"[Queue] Metadata save failed for {sid}: {e}")
+            if student.get("overridden"):
+                outcome["value"] = "teacher_final"
+                return
+            # D3.5 — keep the previous mark before overwriting it
+            if student.get("marked"):
+                prev = {
+                    "total_score": student.get("total_score"),
+                    "raw_score":   student.get("raw_score"),
+                    "marked_at":   student.get("marked_at"),
+                    "model":       student.get("model"),
+                    "prompt_version": student.get("prompt_version"),
+                    "status":      student.get("status"),
+                }
+                student.setdefault("mark_history", []).append(prev)
+
+            student.update({
+                "status":                "Needs review" if reasons else "Marked",
+                "marked":                True,
+                "total_score":           marking_result.get("total_score", 0),
+                "raw_score":             marking_result.get("raw_score", 0),
+                "max_score":             marking_result.get("max_score", 100),
+                "questions":             marking_result.get("questions", {}),
+                "overall_feedback":      marking_result.get("overall_feedback", ""),
+                "strengths":             marking_result.get("strengths", []),
+                "areas_for_improvement": marking_result.get("areas_for_improvement", []),
+                "stage_scores":          marking_result.get("stage_scores", []),
+                "marked_at":             now,
+                "model":                 run.get("model"),
+                "prompt_version":        run.get("prompt_version"),
+                "folder":                job.folder,
+            })
+            if reasons:
+                student["review_reason"] = "; ".join(reasons)
+            else:
+                student.pop("review_reason", None)
+            student.pop("failure_reason", None)
+
+        try:
+            update_json(exam_folder / "students_metadata.json", mutate,
+                        default={"exam_info": {}, "students": []})
+        except Exception as e:
+            log.error(f"[Queue] Metadata save failed for {job.student_id}: {e}")
+        return outcome["value"]
+
+    @staticmethod
+    def teacher_final_mark(exam_folder: Path, job: MarkingJob) -> Optional[dict]:
+        """The student's record if a teacher has overridden their mark, else None."""
+        data = read_json(Path(exam_folder) / "students_metadata.json", {}) or {}
+        student = QueueManager._find_student(data, job)
+        return student if student and student.get("overridden") else None
+
+    @staticmethod
+    def _save_failure(exam_folder: Path, job: MarkingJob, reason: str):
+        """
+        D6.2 — a student with no mark yet is saved as "Failed" with a plain
+        reason. A student who already HAS a mark keeps it (and its status);
+        only the reason is noted, so a failed re-mark never hides a result.
+        """
+        def mutate(data):
+            student = QueueManager._find_student(data, job)
+            if student is None:
+                return
+            student["failure_reason"] = reason
+            student["failed_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            student.setdefault("folder", job.folder)
+            if not student.get("marked"):
+                student["status"] = "Failed"
+
+        meta = exam_folder / "students_metadata.json"
+        if not meta.exists():
+            return
+        try:
+            update_json(meta, mutate, default={"exam_info": {}, "students": []})
+        except Exception as e:
+            log.error(f"[Queue] Could not record failure for {job.student_id}: {e}")
 
 
 # ─── Singleton accessor ───────────────────────────────────────────────────────

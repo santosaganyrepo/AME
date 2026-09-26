@@ -105,7 +105,9 @@ Everything else is unchanged from v9:
 
 from google import genai
 from google.genai import types
+import hashlib
 import json
+import random
 import threading
 from pathlib import Path
 from typing import Dict, List, Optional
@@ -114,10 +116,49 @@ import time
 import re
 from datetime import datetime
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
+from marking_log import get_marking_logger
+from page_prep import list_answer_pages, list_session_docs, sorted_natural, prepare_page_bytes
+from storage import write_json_atomic
+
+log = get_marking_logger()
+
 FAILURE_SENTINEL = "MARKING_FAILED_NO_CONTENT"
 
 # ── Model ──────────────────────────────────────────────────────────────────────
-PRIMARY_MODEL = "gemini-3.6-flash"
+# Set GEMINI_MODEL in .env to change it — any model switch must go through
+# tools/benchmark.py first (D3.4).
+PRIMARY_MODEL = os.getenv("GEMINI_MODEL", "").strip() or "gemini-3.6-flash"
+
+# Bumped whenever _build_report_prompt's wording changes, so every stored AI
+# run can be traced back to the exact prompt that produced it (D1.2).
+PROMPT_VERSION = "v11"
+
+# ── Output budget (6.7) ────────────────────────────────────────────────────────
+# Thinking tokens count against max_output_tokens, so 8192 could run out
+# before the report was finished. MAX_OUTPUT_TOKENS is the normal budget;
+# RETRY_OUTPUT_TOKENS is used for the single automatic re-try when a reply
+# comes back cut off (D3.1).
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, "") or default)
+    except ValueError:
+        return default
+
+MAX_OUTPUT_TOKENS   = _env_int("GEMINI_MAX_OUTPUT_TOKENS", 32768)
+RETRY_OUTPUT_TOKENS = _env_int("GEMINI_RETRY_OUTPUT_TOKENS", 65536)
+
+# ── Network retries inside one AI call (D2.1) ─────────────────────────────────
+# Quota/429 errors are NOT retried here — they are raised straight away so
+# the queue can cool that key down and move the job to a free key.
+NETWORK_RETRY_DELAYS = (2.0, 5.0, 10.0)
+_sleep = time.sleep   # indirection so tests can skip the waits
+_QUOTA = ("429", "resource_exhausted", "resource exhausted", "quota")
 
 # ── Transient error detection (mirrors queue_manager) ──────────────────────────
 _TRANSIENT = [
@@ -135,15 +176,52 @@ _VALID_IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 # image), so these are sent through as-is rather than being silently dropped.
 _VALID_DOC_EXTS = _VALID_IMAGE_EXTS | {".pdf"}
 
-# ── Gemini File API — shared upload-handle cache ───────────────────────────────
-# Keyed on "abs_path::size::mtime_ns" so a modified/replaced file on disk is
-# never served a stale handle. Shared across AIMarker instances/threads within
-# this process (each queue worker constructs a fresh AIMarker per job, but the
-# QP/rubric for a session are identical across every student in that session —
-# this avoids re-uploading them to Gemini on every single call).
+# ── Gemini File API — shared upload-handle cache (D2.3) ────────────────────────
+# Keyed on "key_fingerprint::abs_path::size::mtime_ns":
+#   * path + size + mtime — a modified/replaced file on disk is never served
+#     a stale handle;
+#   * key fingerprint — an uploaded file belongs to the Google project of the
+#     key that uploaded it, so a handle is only reused by workers holding the
+#     same key (sharing it across keys made every other worker's call fail
+#     and re-upload).
+# Shared by every worker thread in this process. A per-entry lock makes sure
+# that when several workers need the same question paper at the same moment,
+# only one uploads it and the others reuse that upload.
 _file_handle_cache: Dict[str, "types.File"] = {}
 _file_handle_cache_lock = threading.Lock()
+_file_upload_locks: Dict[str, threading.Lock] = {}
 _MAX_FILE_HANDLE_CACHE = 500
+_FILE_HANDLE_SAFETY_SECS = 3600   # re-upload if a handle expires within the hour
+
+
+def _finish_reason(response) -> Optional[str]:
+    try:
+        fr = response.candidates[0].finish_reason
+    except (AttributeError, IndexError, TypeError):
+        return None
+    if fr is None:
+        return None
+    return getattr(fr, "name", None) or str(fr).split(".")[-1]
+
+
+def _usage(response) -> Dict[str, int]:
+    um = getattr(response, "usage_metadata", None)
+    if um is None:
+        return {}
+    out = {}
+    for field, label in (("prompt_token_count", "prompt"),
+                         ("candidates_token_count", "output"),
+                         ("thoughts_token_count", "thinking"),
+                         ("total_token_count", "total")):
+        val = getattr(um, field, None)
+        if val is not None:
+            out[label] = int(val)
+    return out
+
+
+def _looks_like_rejected_file(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    return "file" in msg and any(k in msg for k in ("403", "404", "permission", "not found", "expired", "not exist"))
 
 
 class AIMarker:
@@ -158,7 +236,8 @@ class AIMarker:
     def __init__(self, api_key: str = None):
         self.api_key = api_key or os.environ.get("GOOGLE_API_KEY")
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY not found.")
+            raise ValueError("GOOGLE_API_KEY not configured — add GEMINI_API_KEY_1… to .env")
+        self._key_fp = hashlib.sha256(self.api_key.encode()).hexdigest()[:12]
 
         self.client = genai.Client(
             api_key=self.api_key,
@@ -169,7 +248,9 @@ class AIMarker:
             temperature=0.0,
             top_p=0,
             top_k=1,
-            max_output_tokens=8192,    # report target is now ~220–280 words
+            # Thinking tokens share this budget with the ~220–280 word report,
+            # so it is set well above what the report itself needs (6.7).
+            max_output_tokens=MAX_OUTPUT_TOKENS,
             candidate_count=1,
         )
 
@@ -365,7 +446,7 @@ Student being marked: {student_name} (ID: {student_id})
             if p.exists():
                 with open(p, "r", encoding="utf-8") as f:
                     text = f.read()
-                print(f"📄 Rubric text: {name} ({len(text)} chars)")
+                log.info(f"📄 Rubric text: {name} ({len(text)} chars)")
                 return text
         return ""
 
@@ -391,25 +472,33 @@ Student being marked: {student_name} (ID: {student_id})
         `INLINE_SIZE_THRESHOLD_BYTES`). For larger payloads,
         `prepare_files_via_file_api` is used instead — see that method's
         docstring for why.
+
+        Files are taken in page-number order (page_2 before page_10). Images
+        may be sent as an upright/downscaled in-memory copy when D2.5 is
+        switched on in .env (see page_prep.prepare_page_bytes); the file on
+        disk is never changed.
         """
         parts: List[types.Part] = []
-        for img_path in sorted(image_paths, key=lambda p: p.name):
+        for img_path in sorted_natural(image_paths):
             ext = img_path.suffix.lower()
             if ext not in _VALID_DOC_EXTS:
                 continue
             try:
                 size = img_path.stat().st_size
                 if size < 100:
-                    print(f"   ⚠  Tiny file ({size}B) skipped: {img_path.name}")
+                    log.info(f"   ⚠  Tiny file ({size}B) skipped: {img_path.name}")
                     continue
                 with open(img_path, "rb") as f:
                     data = f.read()
                 mime = self._mime_for(img_path)
+                data, mime, note = prepare_page_bytes(img_path, data, mime)
+                self._payload_bytes += len(data)
                 kind = "PDF" if ext == ".pdf" else "image"
                 parts.append(types.Part.from_bytes(data=data, mime_type=mime))
-                print(f"   ✅ {img_path.name} ({size/1024:.1f} KB) [{kind} · inline]")
+                extra = f" → {len(data)/1024:.1f} KB, {note}" if note else ""
+                log.info(f"   ✅ {img_path.name} ({size/1024:.1f} KB) [{kind} · inline]{extra}")
             except Exception as e:
-                print(f"   ⚠  Could not load {img_path.name}: {e}")
+                log.info(f"   ⚠  Could not load {img_path.name}: {e}")
         return parts
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -437,45 +526,63 @@ Student being marked: {student_name} (ID: {student_id})
             time.sleep(poll)
             file_obj = self.client.files.get(name=file_obj.name)
 
+    @staticmethod
+    def _handle_is_fresh(handle) -> bool:
+        exp = getattr(handle, "expiration_time", None)
+        if exp is None:
+            return True
+        try:
+            return exp.timestamp() - time.time() > _FILE_HANDLE_SAFETY_SECS
+        except Exception:
+            return True
+
     def _upload_file_to_gemini(self, path: Path):
         """
         Uploads a single file via the Gemini File API, reusing a cached
         handle if this exact file (by path + size + mtime) was already
-        uploaded earlier in this process — which happens constantly for the
-        question paper and rubric, since every student in a session shares
-        the same ones.
+        uploaded earlier in this process with the same key — which happens
+        constantly for the question paper and rubric, since every student in
+        a session shares the same ones. A handle close to its 48h expiry is
+        replaced; one the API rejects is dropped by `_forget_file_handles`
+        and re-uploaded on the next attempt.
         """
         stat = path.stat()
-        cache_key = f"{path.resolve()}::{stat.st_size}::{stat.st_mtime_ns}"
+        cache_key = f"{self._key_fp}::{path.resolve()}::{stat.st_size}::{stat.st_mtime_ns}"
 
         with _file_handle_cache_lock:
-            cached = _file_handle_cache.get(cache_key)
+            upload_lock = _file_upload_locks.setdefault(cache_key, threading.Lock())
 
-        if cached is not None:
-            try:
-                refreshed = self.client.files.get(name=cached.name)
-                state_name = getattr(getattr(refreshed, "state", None), "name", "")
-                if state_name == "ACTIVE":
-                    return refreshed
-            except Exception:
-                pass  # handle expired / no longer valid server-side — re-upload below
+        with upload_lock:
+            with _file_handle_cache_lock:
+                cached = _file_handle_cache.get(cache_key)
+            if cached is not None and self._handle_is_fresh(cached):
+                self._file_cache_hits += 1
+                return cached
 
-        mime = self._mime_for(path)
+            mime = self._mime_for(path)
 
-        def _do_upload():
-            return self.client.files.upload(file=str(path), config={"mime_type": mime})
+            def _do_upload():
+                return self.client.files.upload(file=str(path), config={"mime_type": mime})
 
-        uploaded = self._call_with_retry(_do_upload, retries=4, delay=5.0)
-        uploaded = self._wait_for_file_active(uploaded)
+            uploaded = self._call_with_retry(_do_upload)
+            uploaded = self._wait_for_file_active(uploaded)
+            self._file_uploads += 1
 
+            with _file_handle_cache_lock:
+                _file_handle_cache[cache_key] = uploaded
+                if len(_file_handle_cache) > _MAX_FILE_HANDLE_CACHE:
+                    # Drop oldest-inserted entries (dict preserves insertion order)
+                    for stale_key in list(_file_handle_cache.keys())[:100]:
+                        _file_handle_cache.pop(stale_key, None)
+                        _file_upload_locks.pop(stale_key, None)
+
+            return uploaded
+
+    def _forget_file_handles(self):
+        """Drops every cached handle for this key (called when the API rejects one)."""
         with _file_handle_cache_lock:
-            _file_handle_cache[cache_key] = uploaded
-            if len(_file_handle_cache) > _MAX_FILE_HANDLE_CACHE:
-                # Drop oldest-inserted entries (dict preserves insertion order)
-                for stale_key in list(_file_handle_cache.keys())[:100]:
-                    _file_handle_cache.pop(stale_key, None)
-
-        return uploaded
+            for k in [k for k in _file_handle_cache if k.startswith(f"{self._key_fp}::")]:
+                _file_handle_cache.pop(k, None)
 
     def prepare_files_via_file_api(self, paths: List[Path]) -> List[types.Part]:
         """
@@ -487,22 +594,25 @@ Student being marked: {student_name} (ID: {student_id})
         request-size ceiling for long, multi-page exams.
         """
         parts: List[types.Part] = []
-        for path in sorted(paths, key=lambda p: p.name):
+        for path in sorted_natural(paths):
             ext = path.suffix.lower()
             if ext not in _VALID_DOC_EXTS:
                 continue
             try:
                 size = path.stat().st_size
                 if size < 100:
-                    print(f"   ⚠  Tiny file ({size}B) skipped: {path.name}")
+                    log.info(f"   ⚠  Tiny file ({size}B) skipped: {path.name}")
                     continue
                 uploaded = self._upload_file_to_gemini(path)
                 part = types.Part.from_uri(file_uri=uploaded.uri, mime_type=uploaded.mime_type)
                 parts.append(part)
+                self._payload_bytes += size
                 kind = "PDF" if ext == ".pdf" else "image"
-                print(f"   ✅ {path.name} ({size/1024:.1f} KB) [{kind} · File API: {uploaded.name}]")
+                log.info(f"   ✅ {path.name} ({size/1024:.1f} KB) [{kind} · File API: {uploaded.name}]")
             except Exception as e:
-                print(f"   ⚠  Could not upload {path.name} via File API: {e}")
+                if any(k in str(e).lower() for k in _QUOTA):
+                    raise   # let the queue move this job to another key
+                log.info(f"   ⚠  Could not upload {path.name} via File API: {e}")
         return parts
 
     @staticmethod
@@ -526,10 +636,11 @@ Student being marked: {student_name} (ID: {student_id})
         essay exam). Returns (answer_parts, qp_parts, rubric_parts,
         used_file_api: bool).
         """
+        self._payload_bytes = 0
         combined_bytes = self._combined_size_bytes(answer_pages, qp_files, rubric_files)
 
         if combined_bytes > self.INLINE_SIZE_THRESHOLD_BYTES:
-            print(
+            log.info(
                 f"📦  Combined payload {combined_bytes/1024/1024:.1f} MB exceeds the "
                 f"{self.INLINE_SIZE_THRESHOLD_BYTES/1024/1024:.0f} MB inline threshold — "
                 f"switching to the Gemini File API for this call."
@@ -545,27 +656,31 @@ Student being marked: {student_name} (ID: {student_id})
         return answer_parts, qp_parts, rubric_parts, False
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Retry wrapper — 10-second intervals, up to 8 attempts (also reused for
-    # Gemini File API upload calls, with its own shorter retry/backoff args)
+    # Retry wrapper (D2.1) — also reused for Gemini File API upload calls.
+    #   * quota / 429 → raised immediately, never retried on the same key: the
+    #     queue cools that key down and moves the job to a free key.
+    #   * network / temporary service errors → up to 3 retries, 2s / 5s / 10s
+    #     apart plus a little random jitter so workers don't retry in lockstep.
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def _call_with_retry(self, fn, retries: int = 8, delay: float = 10.0):
-        last_exc = None
-        for attempt in range(retries + 1):
+    def _call_with_retry(self, fn, delays=NETWORK_RETRY_DELAYS):
+        attempts = len(delays) + 1
+        for attempt in range(attempts):
             try:
                 return fn()
             except Exception as e:
-                last_exc = e
                 msg = str(e).lower()
-                if any(k in msg for k in _TRANSIENT):
-                    if attempt < retries:
-                        print(f"   ⚠  Transient error (attempt {attempt+1}/{retries+1}): "
-                              f"{type(e).__name__}: {str(e)[:80]}")
-                        print(f"   ⏳ Retrying in {delay:.0f}s…")
-                        time.sleep(delay)
-                        continue
+                if any(k in msg for k in _QUOTA):
+                    raise
+                if any(k in msg for k in _TRANSIENT) and attempt < len(delays):
+                    delay = delays[attempt] + random.uniform(0, delays[attempt] * 0.3)
+                    self._network_retries += 1
+                    log.info(f"   ⚠  Transient error (attempt {attempt+1}/{attempts}): "
+                             f"{type(e).__name__}: {str(e)[:80]}")
+                    log.info(f"   ⏳ Retrying in {delay:.0f}s…")
+                    _sleep(delay)
+                    continue
                 raise
-        raise last_exc
 
     # ═══════════════════════════════════════════════════════════════════════════
     # AI call — ALWAYS fresh content. QP + rubric + answers are sent together
@@ -574,19 +689,34 @@ Student being marked: {student_name} (ID: {student_id})
     # Gemini context caching whatsoever.
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def _call_ai(self, prompt: str, qp_parts, rubric_parts, answer_parts) -> str:
+    def _call_ai(self, prompt: str, qp_parts, rubric_parts, answer_parts,
+                 max_output_tokens: int = None) -> dict:
+        """
+        Returns {"text", "finish_reason", "usage"} — finish_reason and token
+        usage (including thinking tokens) are logged and stored with every
+        run so cut-off replies can be seen and counted (6.7 / D1).
+        """
         all_parts = (
             [types.Part.from_text(text=prompt)]
             + qp_parts + rubric_parts + answer_parts
         )
         contents = [types.Content(role="user", parts=all_parts)]
-        config   = types.GenerateContentConfig(**self._gen_cfg)
+        cfg = dict(self._gen_cfg)
+        if max_output_tokens:
+            cfg["max_output_tokens"] = max_output_tokens
+        config = types.GenerateContentConfig(**cfg)
 
         def _call():
             return self.client.models.generate_content(
-                model=PRIMARY_MODEL, contents=contents, config=config).text.strip()
+                model=PRIMARY_MODEL, contents=contents, config=config)
 
-        return self._call_with_retry(_call)
+        response = self._call_with_retry(_call)
+        return {
+            "text":          (response.text or "").strip(),
+            "finish_reason": _finish_reason(response),
+            "usage":         _usage(response),
+            "max_output_tokens": cfg["max_output_tokens"],
+        }
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Response parser — extracts the per-stage marks obtained; the SYSTEM sums
@@ -624,7 +754,7 @@ Student being marked: {student_name} (ID: {student_id})
                          total_marks: float) -> dict:
 
         if FAILURE_SENTINEL in res_text:
-            print("❌ AI: no valid answer content in images")
+            log.info("❌ AI: no valid answer content in images")
             return {"success": False,
                     "error":   "Images appear to contain no student answer content."}
 
@@ -647,12 +777,13 @@ Student being marked: {student_name} (ID: {student_id})
         # ── The SYSTEM sums the plain numbers — the AI never adds these up ──
         raw_obtained = sum(s["marks"] for s in stage_scores)
         if raw_obtained > total_marks:
-            print(f"⚠  Sum of stage scores {raw_obtained} exceeds paper max {total_marks} — clamping to {total_marks}")
-        raw_obtained = max(0.0, min(raw_obtained, total_marks))
+            log.info(f"⚠  Sum of stage scores {raw_obtained} exceeds paper max {total_marks} — saved as-is and flagged for review")
+        # Flag, don't cap: an impossible total is saved exactly as summed so a
+        # teacher sees the real problem; _score_flags marks it "Needs review".
 
         numbers_str = ", ".join(str(s["marks"]) for s in stage_scores)
-        print(f"🧮  Parsed {len(stage_scores)} attempted stage score(s): [{numbers_str}]")
-        print(f"🧮  System sum: {raw_obtained}/{total_marks}")
+        log.info(f"🧮  Parsed {len(stage_scores)} attempted stage score(s): [{numbers_str}]")
+        log.info(f"🧮  System sum: {raw_obtained}/{total_marks}")
 
         # Everything after the SCORES line is the continuous narrative report
         report_text = res_text[m.end():].strip()
@@ -662,7 +793,7 @@ Student being marked: {student_name} (ID: {student_id})
 
         # ── Percentage is calculated HERE by the system, never by the AI ──
         percentage = (raw_obtained / total_marks * 100) if total_marks else 0.0
-        percentage = round(max(0.0, min(100.0, percentage)), 1)
+        percentage = round(percentage, 1)
 
         return {
             "success":               True,
@@ -680,33 +811,101 @@ Student being marked: {student_name} (ID: {student_id})
         }
 
     # ═══════════════════════════════════════════════════════════════════════════
+    # Result checks — run AFTER parsing and never change the score. They only
+    # decide whether a result is trustworthy or must go to a teacher as
+    # "Needs review" (D3.1 incomplete output, D3.2 flag-don't-cap).
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    _REPORT_END_CHARS = ('.', '!', '?', '"', "'", ')', '”', '’')
+
+    @classmethod
+    def _incomplete_reason(cls, call: dict, parsed: dict) -> Optional[str]:
+        """Why this reply looks cut off, or None if it is complete."""
+        fr = (call.get("finish_reason") or "").upper()
+        if fr and fr != "STOP":
+            return f"AI reply stopped early (finish_reason={fr})"
+        if not parsed.get("success"):
+            return None   # a clean failure (e.g. blank script) is not a truncation
+        report = (parsed.get("overall_feedback") or "").strip()
+        if not report or report == "AI marking complete.":
+            return "AI reply contained scores but no report"
+        if not report.endswith(cls._REPORT_END_CHARS):
+            return "AI report ends mid-sentence"
+        return None
+
+    @staticmethod
+    def _score_flags(res_text: str, parsed: dict, total_marks: float) -> List[str]:
+        """
+        D3.2 — problems with the numbers themselves. Nothing is capped: the
+        score is saved exactly as the stage marks add up, and these reasons
+        mark the result "Needs review" so a teacher decides.
+        (The AI returns plain numbers without stage names, so a per-stage
+        maximum can't be checked here — only what the system can know for
+        certain: unreadable entries, negatives, a single stage above the whole
+        paper, and a total above the paper total.)
+        """
+        flags = []
+        stages = parsed.get("stage_scores") or []
+        m = re.search(r"SCORES\s*:\s*(.+)", res_text or "", re.IGNORECASE)
+        if m:
+            entries = [e.strip() for e in m.group(1).split(",") if e.strip()]
+            unreadable = len(entries) - len(stages)
+            if unreadable > 0:
+                flags.append(f"{unreadable} stage score(s) could not be read")
+        negatives = [s["marks"] for s in stages if s["marks"] < 0]
+        if negatives:
+            flags.append(f"negative stage score(s): {', '.join(f'{n:g}' for n in negatives)}")
+        too_big = [s["marks"] for s in stages if s["marks"] > total_marks]
+        if too_big:
+            flags.append(f"a stage score is larger than the whole paper ({', '.join(f'{n:g}' for n in too_big)} > {total_marks:g})")
+        raw_sum = sum(s["marks"] for s in stages)
+        if raw_sum > total_marks:
+            flags.append(f"stage scores add up to {raw_sum:g}, more than the paper total of {total_marks:g}")
+        if raw_sum < 0:
+            flags.append(f"stage scores add up to {raw_sum:g}, below zero")
+        return flags
+
+    def _save_run_record(self, runs_dir: Optional[Path], record: dict):
+        if not runs_dir:
+            return
+        try:
+            stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+            write_json_atomic(Path(runs_dir) / f"{stamp}.json", record)
+        except Exception as e:
+            log.warning(f"   ⚠  Could not save AI run record: {e}")
+
+    # ═══════════════════════════════════════════════════════════════════════════
     # Public: mark_student
     # ═══════════════════════════════════════════════════════════════════════════
 
     def mark_student(self, student_id: str, student_name: str,
                      exam_path: Path, student_folder: Path,
-                     exam_info: dict = None) -> dict:
+                     exam_info: dict = None, runs_dir: Path = None) -> dict:
+        """
+        Marks one student. The returned dict is unchanged from v11, plus a
+        "_run" entry with timings, token usage, finish_reason, transport and
+        `review_reasons` (empty when the result is trustworthy). When
+        `runs_dir` is given, a JSON record of every AI call is written there
+        (the queue passes student_<id>/ai_runs; the benchmark passes its own
+        output folder so it never writes into a session).
+        """
+        self._payload_bytes = 0
+        self._network_retries = 0
+        self._file_uploads = 0
+        self._file_cache_hits = 0
+
         if not student_folder.exists():
             return {"success": False, "error": f"Student folder not found: {student_folder}"}
 
-        answer_pages = sorted(
-            [p for p in student_folder.iterdir()
-             if p.is_file() and p.name.startswith("page_") and p.suffix.lower() in _VALID_IMAGE_EXTS],
-            key=lambda p: p.name
-        )
-        if not answer_pages:
-            answer_pages = sorted(
-                [p for p in student_folder.iterdir()
-                 if p.is_file() and p.suffix.lower() in _VALID_IMAGE_EXTS],
-                key=lambda p: p.name
-            )
+        # page_2 before page_10 — alphabetical order sent long scripts to the AI out of order (D2.4)
+        answer_pages = list_answer_pages(student_folder)
         if not answer_pages:
             return {"success": False, "error": "No answer sheets found in student folder"}
 
         page_count  = len(answer_pages)
         total_marks = float((exam_info or {}).get("total_marks", 100) or 100)
 
-        print(
+        log.info(
             f"\n{'━'*62}\n"
             f"🎓  {student_name}  (ID: {student_id})\n"
             f"    Folder      : {student_folder}\n"
@@ -729,15 +928,17 @@ Student being marked: {student_name} (ID: {student_id})
         #    only the underlying File API *upload handle* may be reused
         #    across students in the same session (see _upload_file_to_gemini),
         #    which is a pure transport-layer optimisation. ────────────────────
-        qp_files     = sorted(exam_path.glob("question_paper_*"))
-        rubric_files = sorted(exam_path.glob("rubric_*"))
+        qp_files     = list_session_docs(exam_path, "question_paper")
+        rubric_files = list_session_docs(exam_path, "rubric")
 
         # ── Decide inline vs. Gemini File API based on the combined payload
         #    size for THIS call (QP + rubric + this student's answer pages),
         #    then load everything accordingly. ─────────────────────────────
+        t_prep = time.time()
         answer_parts, qp_parts, rubric_parts, used_file_api = self._prepare_documents(
             answer_pages, qp_files, rubric_files
         )
+        prep_secs = time.time() - t_prep
 
         if not answer_parts:
             return {"success": False, "error": "No valid answer images could be loaded"}
@@ -749,15 +950,15 @@ Student being marked: {student_name} (ID: {student_id})
         #    exist but none were loadable (unsupported format, corrupted
         #    file, or a File API upload failure). ─────────────────────────────
         if not qp_files:
-            print(f"⚠️  No question_paper_* files found on disk in {exam_path}")
+            log.info(f"⚠️  No question_paper_* files found on disk in {exam_path}")
         elif not qp_parts:
-            print(f"⚠️  {len(qp_files)} question paper file(s) found but none were loadable "
+            log.info(f"⚠️  {len(qp_files)} question paper file(s) found but none were loadable "
                   f"(unsupported format or corrupted file): {[f.name for f in qp_files]}")
 
         if not rubric_files and not rubric_text:
-            print(f"⚠️  No rubric_* files (and no rubric_text.txt) found on disk in {exam_path}")
+            log.info(f"⚠️  No rubric_* files (and no rubric_text.txt) found on disk in {exam_path}")
         elif rubric_files and not rubric_parts:
-            print(f"⚠️  {len(rubric_files)} rubric file(s) found but none were loadable "
+            log.info(f"⚠️  {len(rubric_files)} rubric file(s) found but none were loadable "
                   f"(unsupported format or corrupted file): {[f.name for f in rubric_files]}")
 
         if not qp_parts or (not rubric_parts and not rubric_text.strip()):
@@ -767,7 +968,7 @@ Student being marked: {student_name} (ID: {student_id})
             if not rubric_parts and not rubric_text.strip():
                 missing.append("marking scheme/rubric")
             missing_str = " and ".join(missing)
-            print(f"🛑  Refusing to mark {student_id} — no {missing_str} available. "
+            log.info(f"🛑  Refusing to mark {student_id} — no {missing_str} available. "
                   f"The AI must always read the rubric before marking a student.")
             return {
                 "success": False,
@@ -785,24 +986,120 @@ Student being marked: {student_name} (ID: {student_id})
             page_count=page_count,
             rubric_notes=rubric_text,
         )
+        prompt_sha = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:16]
 
         total_imgs = len(qp_parts) + len(rubric_parts) + len(answer_parts)
         transport  = "File API" if used_file_api else "inline"
-        print(
-            f"🤖  AI call [{PRIMARY_MODEL}] via {transport}  "
-            f"(QP:{len(qp_parts)} Rubric:{len(rubric_parts)} "
-            f"Ans:{len(answer_parts)} Total:{total_imgs} Pages:{page_count})"
-        )
-        t0       = time.time()
-        res_text = self._call_ai(prompt, qp_parts, rubric_parts, answer_parts)
-        elapsed  = time.time() - t0
-        print(f"📊  Response in {elapsed:.1f}s  [{transport.upper()} — no context cache]")
-        print(f"📝  RAW AI RESPONSE (first 500 chars):\n{res_text[:500]}\n{'·'*40}")
 
-        # ── Parse ────────────────────────────────────────────────────────────
-        result = self._parse_response(res_text, student_id, student_name, total_marks)
+        # ── AI call, with ONE automatic re-try at a larger output budget if the
+        #    reply comes back cut off (D3.1). Each call is stateless and
+        #    re-sends the full question paper + rubric + answers. ─────────────
+        ai_secs = parse_secs = 0.0
+        usage_total: Dict[str, int] = {}
+        attempts = []
+        result, call, incomplete = None, None, None
+        budgets = [None, max(RETRY_OUTPUT_TOKENS, MAX_OUTPUT_TOKENS)]
+        for attempt_no, budget in enumerate(budgets, start=1):
+            log.info(
+                f"🤖  AI call [{PRIMARY_MODEL}] via {transport}  "
+                f"(QP:{len(qp_parts)} Rubric:{len(rubric_parts)} "
+                f"Ans:{len(answer_parts)} Total:{total_imgs} Pages:{page_count})"
+                + (f"  — re-try with max_output_tokens={budget}" if budget else "")
+            )
+            t0 = time.time()
+            try:
+                call = self._call_ai(prompt, qp_parts, rubric_parts, answer_parts, max_output_tokens=budget)
+            except Exception as e:
+                if used_file_api and _looks_like_rejected_file(e) and attempt_no == 1:
+                    # A cached File API handle expired or was refused — drop the
+                    # cache for this key, re-upload, and try once more.
+                    log.info(f"   ♻  File API handle rejected ({str(e)[:80]}) — re-uploading")
+                    self._forget_file_handles()
+                    answer_parts, qp_parts, rubric_parts, used_file_api = self._prepare_documents(
+                        answer_pages, qp_files, rubric_files)
+                    call = self._call_ai(prompt, qp_parts, rubric_parts, answer_parts, max_output_tokens=budget)
+                else:
+                    raise
+            elapsed  = time.time() - t0
+            ai_secs += elapsed
+            res_text = call["text"]
+            for k, v in (call.get("usage") or {}).items():
+                usage_total[k] = usage_total.get(k, 0) + (v or 0)
 
-        print(
+            log.info(f"📊  Response in {elapsed:.1f}s  [{transport.upper()} — no context cache]  "
+                     f"finish_reason={call['finish_reason']}  usage={call['usage']}")
+            log.info(f"📝  RAW AI RESPONSE (first 500 chars):\n{res_text[:500]}\n{'·'*40}")
+
+            # ── Parse ────────────────────────────────────────────────────────
+            t1 = time.time()
+            result = self._parse_response(res_text, student_id, student_name, total_marks)
+            parse_secs += time.time() - t1
+
+            incomplete = self._incomplete_reason(call, result)
+            attempts.append({"attempt": attempt_no, "finish_reason": call["finish_reason"],
+                             "max_output_tokens": call["max_output_tokens"],
+                             "ai_secs": round(elapsed, 2), "incomplete": incomplete})
+
+            self._save_run_record(runs_dir, {
+                "student_id":        student_id,
+                "student_name":      student_name,
+                "exam_folder":       str(exam_path),
+                "at":                datetime.now().isoformat(timespec="seconds"),
+                "model":             PRIMARY_MODEL,
+                "prompt_version":    PROMPT_VERSION,
+                "prompt_sha":        prompt_sha,
+                "attempt":           attempt_no,
+                "max_output_tokens": call["max_output_tokens"],
+                "finish_reason":     call["finish_reason"],
+                "usage":             call["usage"],
+                "transport":         transport,
+                "pages":             page_count,
+                "payload_bytes":     self._payload_bytes,
+                "timings":           {"prepare_secs": round(prep_secs, 3), "ai_secs": round(elapsed, 3)},
+                "raw_response":      res_text,
+                "parsed_stage_scores": result.get("stage_scores"),
+                "raw_score":         result.get("raw_score"),
+                "final_score":       result.get("total_score"),
+                "success":           bool(result.get("success")),
+                "error":             result.get("error"),
+                "incomplete":        incomplete,
+            })
+
+            if not incomplete:
+                break
+            if attempt_no < len(budgets):
+                log.info(f"✂️  {student_id}: {incomplete} — re-trying once with a larger output limit")
+
+        review_reasons = []
+        if incomplete and result.get("success"):
+            review_reasons.append(f"Report incomplete — {incomplete}")
+        elif incomplete and not result.get("success"):
+            result["error"] = f"AI reply incomplete ({incomplete}). {result.get('error', '')}".strip()
+            result["incomplete"] = True
+        if result.get("success"):
+            review_reasons += self._score_flags(call["text"], result, total_marks)
+            if review_reasons:
+                log.info(f"🚩  {student_id} needs review: {'; '.join(review_reasons)}")
+
+        result["_run"] = {
+            "model":             PRIMARY_MODEL,
+            "prompt_version":    PROMPT_VERSION,
+            "finish_reason":     call["finish_reason"],
+            "usage":             usage_total,
+            "transport":         transport,
+            "pages":             page_count,
+            "payload_bytes":     self._payload_bytes,
+            "prepare_secs":      round(prep_secs, 3),
+            "ai_secs":           round(ai_secs, 3),
+            "parse_secs":        round(parse_secs, 4),
+            "ai_attempts":       attempts,
+            "network_retries":   self._network_retries,
+            "file_uploads":      self._file_uploads,
+            "file_cache_hits":   self._file_cache_hits,
+            "review_reasons":    review_reasons,
+        }
+
+        log.info(
             f"✅  {student_id} → {result.get('total_score', 'ERR')}%  "
             f"(raw {result.get('raw_score', 'ERR')}/{total_marks}, {page_count} pages)"
         )
@@ -829,7 +1126,7 @@ Student being marked: {student_name} (ID: {student_id})
             sname = student.get("student_name", "Unknown")
 
             if student.get("status") == "Marked":
-                print(f"ℹ  {sid} already marked — skipping")
+                log.info(f"ℹ  {sid} already marked — skipping")
                 results["marked"] += 1
                 continue
 
@@ -842,8 +1139,7 @@ Student being marked: {student_name} (ID: {student_id})
 
             if res.get("success"):
                 student.update(res)
-                with open(metadata_file, "w", encoding="utf-8") as f:
-                    json.dump(data, f, indent=4)
+                write_json_atomic(metadata_file, data, indent=4)
                 results["marked"] += 1
                 results["details"].append({
                     "student_id": sid, "score": res["total_score"], "status": "success",
@@ -853,10 +1149,10 @@ Student being marked: {student_name} (ID: {student_id})
                 results["details"].append({
                     "student_id": sid, "error": res.get("error"), "status": "failed",
                 })
-                print(f"❌  {sid} failed: {res.get('error')}")
+                log.info(f"❌  {sid} failed: {res.get('error')}")
 
             if delay > 0:
-                print(f"⏳  Waiting {delay}s…")
+                log.info(f"⏳  Waiting {delay}s…")
                 time.sleep(delay)
 
         return results

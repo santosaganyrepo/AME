@@ -1,1 +1,19 @@
 venv/
+.venv/
+
+# Secrets and per-install data — never commit
+.env
+users.json
+pending_jobs.json
+settings.json
+deletion_log.json
+
+# Generated
+logs/
+backups/
+benchmarks/
+__pycache__/
+*.pyc
+.DS_Store
+uploads/exams/_batch_staging/
+*.partial

@@ -823,7 +823,7 @@ border: 1px solid rgba(255,255,255,0.1);
 
           <!-- Upload Mode -->
           <div class="upload-wrap" id="uploadWrap">
-            <input type="file" id="fileInput" accept="image/*" multiple style="display:none;" />
+            <input type="file" id="fileInput" accept="image/*,application/pdf,.pdf" multiple style="display:none;" />
             <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
               <div class="drop-icon">📄</div>
               <div class="drop-title">Tap to select images</div>
@@ -1165,6 +1165,12 @@ function qualityVerdict(metrics) {
 function addCapturedFile(file) {
   const idx = captured.length;
   captured.push(file);
+  if (file.type === 'application/pdf') {
+    // PDFs aren't photos — no blur check here; the server converts each page.
+    captureQuality.push({ ok: true, reason: '' });
+    updateDisplay();
+    return;
+  }
   captureQuality.push(null);
   updateDisplay();
   computeImageMetrics(file).then(metrics => {
@@ -1191,7 +1197,9 @@ function switchMode(mode) {
 ════════════════════════════════════════════════════════ */
 document.getElementById('fileInput').addEventListener('change', function(e) {
   Array.from(e.target.files).forEach(f => {
-    addCapturedFile(new File([f], `page_${captured.length + 1}.jpg`, { type: f.type }));
+    // A PDF answer script keeps its .pdf name — the server turns it into page images.
+    const isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+    addCapturedFile(new File([f], `page_${captured.length + 1}.${isPdf ? 'pdf' : 'jpg'}`, { type: f.type || (isPdf ? 'application/pdf' : '') }));
   });
   this.value = '';
 });
@@ -1225,7 +1233,10 @@ function updateDisplay() {
       let badge = '';
       if (q === null) badge = `<div class="thumb-checking">Checking…</div>`;
       else if (flagged) badge = `<div class="thumb-quality-badge">${q.reason}</div>`;
-      div.innerHTML = `<img src="${url}" alt="Page ${i+1}" />${badge}<div class="thumb-del" onclick="removeImage(${i})" title="Remove">✕</div>`;
+      const preview = f.type === 'application/pdf'
+        ? `<div class="thumb-checking" style="position:static;height:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;border-radius:7px;"><i class="fa-solid fa-file-pdf"></i> PDF</div>`
+        : `<img src="${url}" alt="Page ${i+1}" />`;
+      div.innerHTML = `${preview}${badge}<div class="thumb-del" onclick="removeImage(${i})" title="Remove">✕</div>`;
       gal.appendChild(div);
     });
   }
@@ -1314,7 +1325,9 @@ async function uploadData() {
 
     const pages = data.total_saved || captured.length;
     showQueuedToast(
-      `✅ ${data.student_name || sid} queued for AI marking (${pages} pages)`, 3500);
+      data.queued === false
+        ? `🔒 ${data.message}`
+        : `✅ ${data.student_name || sid} queued for AI marking (${pages} pages)`, data.queued === false ? 5000 : 3500);
 
     // Open queue panel on first student
     if (!hasQueued) {
@@ -1371,19 +1384,35 @@ function toggleQueueMinimize() {
 /* ════════════════════════════════════════════════════════
    QUEUE POLLING — resilient to network drops
 ════════════════════════════════════════════════════════ */
+// Every 2 s while students are waiting or being marked; every 12 s when the
+// queue is idle (a new upload or queue action polls immediately anyway).
+const POLL_ACTIVE_MS = 2000;
+const POLL_IDLE_MS   = 12000;
+let pollDelay = POLL_ACTIVE_MS;
+
+let pollGen = 0;   // restarting polling bumps this, so only one loop ever runs
+
 function startQueuePolling() {
-  if (pollTimer) return;
-  pollQueueStatus();
-  // Poll every 2 s; the fetch itself handles offline gracefully
-  pollTimer = setInterval(pollQueueStatus, 2000);
+  pollDelay = POLL_ACTIVE_MS;
+  if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+  pollLoop(++pollGen);
+}
+
+async function pollLoop(gen) {
+  await pollQueueStatus();
+  if (gen !== pollGen) return;
+  pollTimer = setTimeout(() => pollLoop(gen), pollDelay);
 }
 
 async function pollQueueStatus() {
   try {
     const res  = await fetch('/api/queue/status', { signal: AbortSignal.timeout(5000) });
+    if (res.status === 401) { location.href = '/login?next=' + encodeURIComponent(location.pathname); return; }
     const data = await res.json();
     isOnline   = true;
     document.getElementById('qpNetworkBanner').classList.remove('show');
+    const busy = data && (data.remaining > 0 || ['processing', 'retrying', 'waiting'].includes(data.status));
+    pollDelay = busy ? POLL_ACTIVE_MS : POLL_IDLE_MS;
     renderQueuePanel(data);
   } catch (e) {
     // Network lost — show banner in queue panel; worker retries automatically
@@ -1514,8 +1543,10 @@ function renderJobItem(job) {
   if (job.status === 'retrying' && job.retry_count) {
     subText = `Retry #${job.retry_count} — reconnecting…`;
   } else if (job.status === 'failed') {
-    // Show friendly message, never raw error
-    subText = `<span style="color:var(--danger);">Marking failed — tap ↺ to retry</span>`;
+    // Plain reason from the server (never a raw error), then the retry hint
+    subText = `<span style="color:var(--danger);">${escHtml(job.error || 'Marking failed')} — tap ↺ to retry</span>`;
+  } else if (job.status === 'completed' && job.review_reason) {
+    subText = `<span style="color:var(--warning);">Needs review — ${escHtml(job.review_reason)}</span>`;
   } else if (timeStr) {
     subText += ` · ${timeStr}`;
   }
@@ -1540,15 +1571,15 @@ function renderJobItem(job) {
 ════════════════════════════════════════════════════════ */
 async function togglePause() {
   const url = isPaused ? '/api/queue/resume' : '/api/queue/pause';
-  try { await fetch(url, { method: 'POST' }); pollQueueStatus(); } catch(e) {}
+  try { await fetch(url, { method: 'POST' }); startQueuePolling(); } catch(e) {}
 }
 
 async function cancelJob(jobId) {
-  try { await fetch(`/api/queue/cancel/${jobId}`, { method: 'POST' }); pollQueueStatus(); } catch(e) {}
+  try { await fetch(`/api/queue/cancel/${jobId}`, { method: 'POST' }); startQueuePolling(); } catch(e) {}
 }
 
 async function retryJob(jobId) {
-  try { await fetch(`/api/queue/retry/${jobId}`, { method: 'POST' }); pollQueueStatus(); } catch(e) {}
+  try { await fetch(`/api/queue/retry/${jobId}`, { method: 'POST' }); startQueuePolling(); } catch(e) {}
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1558,7 +1589,7 @@ window.addEventListener('online', () => {
   isOnline = true;
   document.getElementById('qpNetworkBanner').classList.remove('show');
   // Poll immediately when network returns
-  pollQueueStatus();
+  startQueuePolling();
 });
 
 window.addEventListener('offline', () => {

@@ -1,0 +1,32 @@
+{
+  "student_id": "Santos",
+  "student_name": "Student Santos",
+  "exam_folder": "/workspaces/AME/uploads/exams/2025/Term 2/S3_B/Mathematics/mocks",
+  "at": "2026-09-25T17:54:37",
+  "model": "gemini-3.6-flash",
+  "prompt_version": "v11",
+  "prompt_sha": "b943bc50aca9a2a3",
+  "attempt": 1,
+  "max_output_tokens": 32768,
+  "finish_reason": "STOP",
+  "usage": {
+    "prompt": 12230,
+    "output": 8,
+    "thinking": 389,
+    "total": 12627
+  },
+  "transport": "inline",
+  "pages": 5,
+  "payload_bytes": 982191,
+  "timings": {
+    "prepare_secs": 0.002,
+    "ai_secs": 15.306
+  },
+  "raw_response": "MARKING_FAILED_NO_CONTENT",
+  "parsed_stage_scores": null,
+  "raw_score": null,
+  "final_score": null,
+  "success": false,
+  "error": "Images appear to contain no student answer content.",
+  "incomplete": null
+}

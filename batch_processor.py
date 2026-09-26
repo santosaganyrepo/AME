@@ -37,6 +37,7 @@ from pathlib import Path
 from PIL import Image
 
 from image_validator import ImageValidator
+from page_prep import natural_key, pdf_to_page_images
 
 _quality_checker = ImageValidator()
 
@@ -307,7 +308,8 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
         used_basenames = set()
         valid_pages = []
         flagged_pages = []   # [{"filename": saved page name, "reason": str}]
-        for zname in sorted(data["files"]):
+        # page2 before page10 — plain sorting sent long scripts out of order (D2.4)
+        for zname in sorted(data["files"], key=natural_key):
             leaf = zname.rsplit("/", 1)[-1]
             ext  = Path(leaf).suffix.lower()
             try:
@@ -340,13 +342,33 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
             used_basenames.add(base)
             valid_pages.append((ext, raw, leaf))
 
-        for idx, (ext, raw, leaf) in enumerate(valid_pages, start=1):
-            page_name = f"page_{idx}{ext}"
+        # PDF answer scripts are rendered to one JPEG per page here (D5.1), so
+        # the marker only ever sees page images; each PDF is kept alongside
+        # as original.pdf / original_2.pdf.
+        page_no, pdf_no = 0, 0
+        for ext, raw, leaf in valid_pages:
+            if ext == ".pdf":
+                try:
+                    rendered = pdf_to_page_images(raw)
+                except Exception:
+                    rendered = []
+                if not rendered:
+                    warnings.append({"code": "corrupted_pdf", "message": f"Skipped unreadable PDF: '{leaf}' (Student {sid})."})
+                    continue
+                pdf_no += 1
+                (dest_folder / ("original.pdf" if pdf_no == 1 else f"original_{pdf_no}.pdf")).write_bytes(raw)
+                for img in rendered:
+                    page_no += 1
+                    (dest_folder / f"page_{page_no}.jpg").write_bytes(img)
+                continue
+
+            page_no += 1
+            page_name = f"page_{page_no}{ext}"
             (dest_folder / page_name).write_bytes(raw)
 
-            # Quality check runs on images only (PDFs are exempted — Gemini
-            # reads PDF pages natively and blur detection needs a raster
-            # image). Never blocks the upload; this only flags the page so
+            # Quality check runs on photos/scans only (pages rendered from a
+            # PDF above are exempt — a clean white PDF page trips the
+            # "washed out" check). Never blocks the upload; this only flags the page so
             # the teacher can see and decide whether to fix or proceed.
             if ext in (".jpg", ".jpeg", ".png"):
                 is_ok, reason, _score = _quality_checker.validate_image_bytes(raw)
@@ -358,7 +380,7 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
                     })
 
         issues = set(data["issues"])
-        if not valid_pages:
+        if not page_no:
             status = "error"
             issues.add("no_valid_pages")
             shutil.rmtree(dest_folder, ignore_errors=True)
@@ -384,7 +406,7 @@ def validate_and_extract_batch(zip_path: Path, staging_dir: Path) -> dict:
         students_out.append({
             "id":     sid,
             "name":   data["name"],
-            "pages":  len(valid_pages),
+            "pages":  page_no,
             "status": status,
             "issues": [ISSUE_TEXT.get(code, code) for code in sorted(issues)],
             "flagged_pages": flagged_pages,

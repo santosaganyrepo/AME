@@ -39,6 +39,15 @@ class Config:
     CLASSES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7','P8']
     TERMS = ['Term 1', 'Term 2', 'Term 3']
     
+    # ── Runtime files (all git-ignored) ─────────────────────────────────────
+    USERS_FILE        = BASE_DIR / 'users.json'
+    PENDING_JOBS_FILE = BASE_DIR / 'pending_jobs.json'
+    LOG_DIR           = BASE_DIR / 'logs'
+    BACKUP_DIR        = BASE_DIR / 'backups'
+
+    # ── Web server (waitress, single process) ────────────────────────────────
+    SERVER_THREADS = int(os.getenv('SERVER_THREADS', 8))
+
     @staticmethod
     def init_app(app):
         Config.UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
