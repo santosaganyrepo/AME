@@ -21,7 +21,7 @@
 
   .cam-view { position: relative; aspect-ratio: 4 / 3; max-height: 420px; background: #000; border-radius: var(--r-md); overflow: hidden; transition: opacity var(--t-fast); }
   .cam-view video { width: 100%; height: 100%; object-fit: contain; }
-  .cam-status { position: absolute; top: var(--s3); left: var(--s3); display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(0,0,0,.6); color: #fff; font-size: 12.5px; font-weight: 600; }
+  .cam-status { position: absolute; top: var(--s3); left: var(--s3); display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(0,0,0,.6); color: #fff; font-size: 13.5px; font-weight: 600; }
   .cam-status.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3CC27A; }
   .cam-controls { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s3); }
   .cam-controls .select { flex: 1; }
@@ -32,7 +32,7 @@
   .file-item { display: flex; align-items: center; gap: var(--s3); padding: 8px var(--s3); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-sm); font-size: 14px; }
   .file-item i.lead { color: var(--ink-3); }
   .file-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .file-source { font-size: 12.5px; color: var(--ink-3); }
+  .file-source { font-size: 13.5px; color: var(--ink-3); }
 
   .setup-submit { margin-top: var(--s5); display: flex; flex-direction: column; gap: var(--s3); }
   .message-box { display: none; }
@@ -46,7 +46,7 @@
   .sr-value.sr-empty { color: var(--ink-3); font-weight: 400; }
   .checklist { display: flex; flex-direction: column; gap: var(--s3); }
   .checklist-item { display: flex; align-items: center; gap: var(--s3); font-size: 14px; color: var(--ink-2); }
-  .ci-dot { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; font-size: 11px; color: transparent; }
+  .ci-dot { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 1.5px solid var(--control); display: grid; place-items: center; font-size: 12px; color: transparent; }
   .checklist-item.done { color: var(--ink); }
   .checklist-item.done .ci-dot { background: var(--ok); border-color: var(--ok); color: #fff; }
   .modal-details { margin-top: var(--s3); padding: var(--s3) var(--s4); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-sm); font-size: 14px; }
@@ -221,8 +221,18 @@
 <div class="modal" id="rubricWarnBackdrop" data-static role="dialog" aria-modal="true" aria-labelledby="rwTitle">
   <div class="modal-box">
     <div class="modal-head"><h2 class="modal-title" id="rwTitle">Check the total marks</h2></div>
-    <div class="modal-body"><div class="callout callout-warn"><i class="fa-solid fa-triangle-exclamation"></i><span id="rubricWarnText"></span></div></div>
-    <div class="modal-foot"><button class="btn btn-primary" onclick="continueAfterSetup()">Continue</button></div>
+    <div class="modal-body">
+      <div class="callout callout-warn"><i class="fa-solid fa-triangle-exclamation"></i><span id="rubricWarnText"></span></div>
+      <p class="mt-4">The exam is saved. Choose how to continue:</p>
+      <div class="callout callout-bad mt-4 hidden" id="rubricFixError" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span></span></div>
+    </div>
+    <div class="modal-foot" style="justify-content:space-between">
+      <button class="btn btn-ghost" onclick="editAfterWarning()"><i class="fa-solid fa-pen"></i> Go back and edit</button>
+      <span class="row" style="gap:var(--s2);flex-wrap:wrap">
+        <button class="btn btn-secondary" id="keepTotalBtn" onclick="continueAfterSetup()">Keep and continue</button>
+        <button class="btn btn-primary hidden" id="useSuggestedBtn" onclick="useSuggestedTotal()"></button>
+      </span>
+    </div>
   </div>
 </div>
 {% endblock %}
@@ -409,6 +419,7 @@ function buildFormData(extras = {}) {
     fd.append(k, el(id).value.trim());
   });
   fd.append('rubric_text', el('f_rubric_text').value);
+  if (savedFolder) fd.append('replaces', savedFolder);
   for (const [k, v] of Object.entries(extras)) fd.append(k, v);
   store.qp.forEach(f => fd.append('question_papers[]', f, f.name));
   store.rubric.forEach(f => fd.append('rubrics[]', f, f.name));
@@ -426,15 +437,57 @@ function showDuplicateModal(data) {
 }
 function hideModal() { EM.closeModal('modalBackdrop'); }
 
+let suggestedTotal = null;
+let savedFolder = '';   // the exam saved just before "Go back and edit"
+function fmtMarks(n) { return Number.isInteger(+n) ? String(+n) : String(+n); }
 function afterSetupSuccess(result, delayMs) {
+  if (result && result.exam_folder) savedFolder = result.exam_folder;
   if (result && result.rubric_warning) {
     el('rubricWarnText').textContent = result.rubric_warning;
+    suggestedTotal = result.rubric_suggested_total;
+    const entered = el('f_total_marks').value.trim();
+    el('keepTotalBtn').textContent = `Keep ${entered} and continue`;
+    const use = el('useSuggestedBtn');
+    use.classList.toggle('hidden', !suggestedTotal);
+    if (suggestedTotal) use.textContent = `Use ${fmtMarks(suggestedTotal)} marks`;
+    el('rubricFixError').classList.add('hidden');
+    hideMsg();
     EM.openModal('rubricWarnBackdrop');
     return;
   }
   setTimeout(() => location.href = '/choose-method', delayMs);
 }
 function continueAfterSetup() { EM.closeModal('rubricWarnBackdrop'); location.href = '/choose-method'; }
+
+/* The exam was saved; the form still holds everything, so the teacher can
+   correct any field and press Save again — that updates the same exam. */
+function editAfterWarning() {
+  EM.closeModal('rubricWarnBackdrop');
+  resetBtn();
+  showMsg('Your exam is saved. Correct anything you need, then press Save and continue again.', 'success');
+  const f = el('f_total_marks');
+  f.focus(); f.select();
+}
+
+async function useSuggestedTotal() {
+  const btn = el('useSuggestedBtn');
+  btn.disabled = true;
+  try {
+    const r = await fetch('/api/session/total-marks', {
+      method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ total_marks: suggestedTotal }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok || !d.success) throw new Error(d.message || 'Could not change the total.');
+    el('f_total_marks').value = d.total_marks; updateSummary();
+    EM.toast(`Total marks changed to ${d.total_marks}`);
+    continueAfterSetup();
+  } catch (e) {
+    const box = el('rubricFixError');
+    box.querySelector('span').textContent = e.message;
+    box.classList.remove('hidden');
+    btn.disabled = false;
+  }
+}
 
 function cancelOverwrite() {
   hideModal(); pendingFormData = null; resetBtn();

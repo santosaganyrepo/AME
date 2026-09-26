@@ -9,7 +9,7 @@
 {% block content_class %}content-narrow{% endblock %}
 
 {% block head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="{{ asset('vendor/jszip.min.js') }}" defer></script>
 <style>
   @media (max-width: 640px) { .hide-sm { display: none; } }
   .view { display: none; } .view.active { display: block; }
@@ -23,7 +23,7 @@
   .example { font-family: var(--mono); font-size: 13px; background: var(--sunken); border: 1px solid var(--line); border-radius: var(--r-sm); padding: var(--s3) var(--s4); line-height: 1.7; color: var(--ink-2); white-space: pre; overflow-x: auto; }
   .msg-box { display: none; margin-top: var(--s4); } .msg-box.show { display: flex; }
   .loading { text-align: center; padding: var(--s10) var(--s5); }
-  .loading .spinner { width: 32px; height: 32px; border-width: 3px; color: var(--primary); }
+  .loading .spinner { width: 32px; height: 32px; border-width: 3px; color: var(--primary-text); }
 
   .review-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-bottom: var(--s5); }
   .rstat { padding: var(--s4) var(--s5); }

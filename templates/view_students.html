@@ -15,22 +15,25 @@
   .search .input { padding-left: 38px; padding-right: 40px; }
   .search-clear { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); display: none; }
   .search-clear.show { display: inline-grid; }
+  .filter-select { width: auto; min-width: 150px; flex: 0 1 190px; }
+  @media (max-width: 640px) { .filter-select { flex: 1 1 140px; min-width: 0; } }
   .results-tabs { margin-bottom: var(--s4); }
 
   .sess { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); scroll-margin-top: 80px; }
   .sess + .sess { margin-top: var(--s3); }
-  .sess.open { border-color: var(--line-strong); }
+  .sess.open { border-color: var(--control); }
   .sess-head { display: grid; grid-template-columns: 28px minmax(0, 1.6fr) minmax(150px, 1fr) 90px 176px; gap: var(--s4); align-items: center; padding: var(--s4) var(--s5); cursor: pointer; border-radius: var(--r-md); }
   .sess-head:hover { background: var(--surface-2); }
   .sess.open .sess-head { border-bottom: 1px solid var(--line); border-radius: var(--r-md) var(--r-md) 0 0; }
-  .sess-caret { color: var(--ink-3); transition: transform var(--t); width: 28px; height: 28px; display: grid; place-items: center; }
+  .sess-caret { color: var(--ink-2); transition: transform var(--t); width: 36px; height: 36px; margin: -4px; display: grid; place-items: center; border: 0; background: none; border-radius: var(--r-sm); cursor: pointer; font-size: 18px; }
+  .sess-caret:hover { background: var(--hover); color: var(--ink); }
   .sess.open .sess-caret { transform: rotate(90deg); }
   .sess-name { font-weight: 650; font-size: 15.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .sess-meta { font-size: 13.5px; color: var(--ink-3); margin-top: 2px; }
   .sess-prog small { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
   .sess-prog .progress { margin-bottom: 5px; }
   .sess-avg { text-align: right; }
-  .sess-avg small { display: block; font-size: 12.5px; color: var(--ink-3); }
+  .sess-avg small { display: block; font-size: 13px; color: var(--ink-3); }
   .sess-actions { display: flex; align-items: center; gap: var(--s2); justify-content: flex-end; }
   .sess-flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
   .sess-body { display: none; }
@@ -46,12 +49,13 @@
   .status-reason { font-size: 13px; color: var(--ink-2); margin-top: 4px; max-width: 42ch; }
   .th-score, .td-score { text-align: right; width: 110px; }
   .td-actions { text-align: right; width: 150px; white-space: nowrap; }
-  .edited { display: inline-flex; margin-left: 6px; color: var(--primary); font-size: 11px; vertical-align: middle; cursor: help; }
-  .edit-input { width: 100%; min-height: 36px; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: var(--r-sm); background: var(--surface); font-size: 14.5px; }
+  .edited { display: inline-flex; margin-left: 6px; color: var(--primary-text); font-size: 14px; vertical-align: middle; cursor: help; }
+  .edit-input { width: 100%; min-height: 36px; padding: 6px 10px; border: 1px solid var(--control); border-radius: var(--r-sm); background: var(--surface); font-size: 14.5px; }
   .edit-input:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus); }
   .edit-input.marks { width: 80px; text-align: right; }
   .sess-empty { padding: var(--s6) var(--s5); color: var(--ink-3); font-size: 14px; text-align: center; }
-  @media (max-width: 640px) { .hide-sm { display: none; } .td-actions { width: auto; } }
+  .show-sm { display: none; }
+  @media (max-width: 640px) { .hide-sm { display: none; } .show-sm { display: block; } .td-actions { width: auto; } }
 
   /* Session report */
   .back { margin-bottom: var(--s4); }
@@ -61,7 +65,7 @@
   .report-doc-sub { color: var(--ink-2); margin-top: 4px; }
   .report-section-label { font-size: 15px; font-weight: 650; margin: var(--s6) 0 var(--s3); }
   .report-text { font-size: 15px; line-height: 1.7; color: var(--ink-2); max-width: 75ch; }
-  .report-review { background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); border-radius: var(--r-sm); padding: var(--s3) var(--s4); color: var(--ink); }
+  .report-review { background: var(--warn-soft); border: 1px solid var(--warn-line); border-radius: var(--r-sm); padding: var(--s3) var(--s4); color: var(--ink); }
   .report-review div + div { margin-top: 6px; }
   .stat-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r-sm); }
   .stat-box { padding: var(--s4); }
@@ -73,12 +77,12 @@
   .hist-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; }
   .hist-bar { width: 100%; max-width: 72px; background: var(--primary); border-radius: 4px 4px 0 0; }
   .hist-count { font-size: 13.5px; font-weight: 650; font-variant-numeric: tabular-nums; }
-  .hist-label { font-size: 12.5px; color: var(--ink-3); padding-bottom: var(--s2); }
+  .hist-label { font-size: 13.5px; color: var(--ink-3); padding-bottom: var(--s2); }
 
   /* Student report ("paper") */
   .paper-doc { position: relative; max-width: 820px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s8); }
   .paper-dl { position: absolute; top: var(--s5); right: var(--s5); }
-  .paper-flag { background: var(--warn-soft); color: var(--ink); border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent); border-radius: var(--r-sm); padding: var(--s3) var(--s4); margin-bottom: var(--s5); font-weight: 600; font-size: 14px; }
+  .paper-flag { background: var(--warn-soft); color: var(--ink); border: 1px solid var(--warn-line); border-radius: var(--r-sm); padding: var(--s3) var(--s4); margin-bottom: var(--s5); font-weight: 600; font-size: 14px; }
   .paper-head { padding-bottom: var(--s5); border-bottom: 1px solid var(--line); margin-bottom: var(--s2); }
   .paper-school { font-size: 13.5px; color: var(--ink-3); }
   .paper-name { font-size: 24px; font-weight: 700; letter-spacing: -.015em; margin-top: 4px; padding-right: 48px; }
@@ -101,9 +105,9 @@
   .col-checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s4); }
   @media (max-width: 480px) { .col-checklist { grid-template-columns: 1fr; } }
   .choice-row { display: flex; flex-direction: column; gap: var(--s3); }
-  .choice-option { display: flex; gap: var(--s4); align-items: center; padding: var(--s4); border: 1px solid var(--line-strong); border-radius: var(--r-md); color: var(--ink); }
+  .choice-option { display: flex; gap: var(--s4); align-items: center; padding: var(--s4); border: 1px solid var(--control); border-radius: var(--r-md); color: var(--ink); }
   .choice-option:hover { border-color: var(--primary); background: var(--primary-soft); text-decoration: none; }
-  .choice-option-icon { width: 40px; height: 40px; flex: none; border-radius: var(--r-sm); display: grid; place-items: center; background: var(--sunken); color: var(--primary); }
+  .choice-option-icon { width: 40px; height: 40px; flex: none; border-radius: var(--r-sm); display: grid; place-items: center; background: var(--sunken); color: var(--primary-text); }
   .choice-option-title { font-weight: 650; }
   .choice-option-desc { font-size: 14px; color: var(--ink-2); }
   .view { display: none; } .view.active { display: block; }
@@ -130,6 +134,13 @@
       <input class="input" id="searchInput" type="search" placeholder="Search subject, class or student" oninput="onSearch(this.value)" autocomplete="off" />
       <button class="icon-btn icon-btn-sm search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search"><i class="fa-solid fa-xmark"></i></button>
     </div>
+    <label class="sr-only" for="fTerm">Term</label>
+    <select class="select filter-select" id="fTerm" onchange="setFacet('term', this.value)"><option value="">All terms</option></select>
+    <label class="sr-only" for="fClass">Class</label>
+    <select class="select filter-select" id="fClass" onchange="setFacet('cls', this.value)"><option value="">All classes</option></select>
+    <label class="sr-only" for="fSubject">Subject</label>
+    <select class="select filter-select" id="fSubject" onchange="setFacet('subject', this.value)"><option value="">All subjects</option></select>
+    <button class="btn btn-ghost btn-sm hidden" id="clearFilters" onclick="clearFacets()">Clear filters</button>
   </div>
   <div class="tabs results-tabs" role="tablist" id="filterTabs">
     <button class="tab" role="tab" data-filter="all" aria-selected="true">All <span class="count" id="c-all"></span></button>
@@ -241,12 +252,14 @@
 <script>
 /* ── State ─────────────────────────────────────────────────────────────── */
 const S = {
-  sessions: [], query: '', filter: 'all', open: new Set(), limit: 30,
+  sessions: [], query: '', filter: 'all', open: new Set(), limit: 30, sort: {},
+  facets: { term: '', cls: '', subject: '' },
   currentSessionId: null, currentStudentUid: null,
   pendingOverride: null,
   overrides: loadOverrides(),
 };
 const PAGE_SIZE = 30;
+try { Object.assign(S.facets, JSON.parse(sessionStorage.getItem('em_results_facets') || '{}')); } catch (e) {}
 function ovKey(sid, studentId) { return `${sid}::${studentId}`; }
 function loadOverrides() { try { return JSON.parse(localStorage.getItem('edumark_overrides') || '{}'); } catch { return {}; } }
 function saveOverridesLS() { try { localStorage.setItem('edumark_overrides', JSON.stringify(S.overrides)); } catch {} }
@@ -281,6 +294,7 @@ async function loadSessions() {
     const data = await res.json();
     S.sessions = Array.isArray(data) ? data : (data.sessions || []);
     applyOverridesToSessions();
+    fillFacets();
     setStatus('live');
     updateSummary();
     render();
@@ -347,20 +361,48 @@ document.getElementById('filterTabs').addEventListener('click', e => {
   render();
 });
 
+const termOf = s => [s.term, s.year].filter(Boolean).join(' ');
+const classOf = s => [s.class, s.stream].filter(Boolean).join(' ');
+function matchesFacets(s) {
+  const f = S.facets;
+  return (!f.term || termOf(s) === f.term) && (!f.cls || classOf(s) === f.cls) && (!f.subject || s.subject === f.subject);
+}
+function setFacet(k, v) { S.facets[k] = v; S.limit = PAGE_SIZE; saveFacets(); render(); }
+function clearFacets() { S.facets = { term: '', cls: '', subject: '' }; saveFacets(); fillFacets(); render(); }
+function saveFacets() { try { sessionStorage.setItem('em_results_facets', JSON.stringify(S.facets)); } catch (e) {} }
+function fillFacets() {
+  const uniq = (fn, sorter) => [...new Set(S.sessions.filter(s => s.subject).map(fn).filter(Boolean))].sort(sorter);
+  // newest term first: "Term 3 2025" before "Term 1 2025"
+  const termKey = t => { const m = t.match(/(\d)\D*(\d{4})$/); return m ? +m[2] * 10 + +m[1] : 0; };
+  const fill = (id, values, key, all) => {
+    const el = document.getElementById(id);
+    el.innerHTML = `<option value="">${all}</option>` + values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    if (!values.includes(S.facets[key])) S.facets[key] = '';
+    el.value = S.facets[key];
+  };
+  fill('fTerm', uniq(termOf, (a, b) => termKey(b) - termKey(a)), 'term', 'All terms');
+  fill('fClass', uniq(classOf, (a, b) => a.localeCompare(b, undefined, { numeric: true })), 'cls', 'All classes');
+  fill('fSubject', uniq(s => s.subject, (a, b) => a.localeCompare(b)), 'subject', 'All subjects');
+}
+
 function matchesQuery(sess) {
   if (!S.query) return true;
-  const hay = [sess.name, sess.subject, sess.class, sess.stream, sess.term, sess.year, sess.exam_type,
+  const hay = [sess.subject, sess.class, sess.stream, sess.term, sess.year, sess.exam_type,
     ...(sess.students || []).map(s => s.name + ' ' + s.id)].join(' ').toLowerCase();
   return hay.includes(S.query);
 }
 
 /* ── Render list ───────────────────────────────────────────────────────── */
+/* A row id is `${sid}_s${index}`; the sid itself may contain "_s" (for
+   example C:\\Users\\santos\\… becomes _santos), so read the number after the LAST "_s". */
+function rowIndex(uid) { return parseInt(uid.slice(uid.lastIndexOf('_s') + 2), 10); }
 function sidOf(sess, idx) { return (sess.id || sess.session_id || `s${idx}`).replace(/[^a-z0-9]/gi, '_'); }
 function findSession(sidSanitized) { return S.sessions.find((s, i) => sidOf(s, i) === sidSanitized); }
 
 function render() {
   const wrap = document.getElementById('sessionsWrap');
-  const searched = S.sessions.map((s, i) => [s, i]).filter(([s]) => matchesQuery(s) && (s.subject || (s.students || []).length));
+  const searched = S.sessions.map((s, i) => [s, i]).filter(([s]) => matchesQuery(s) && matchesFacets(s) && (s.subject || (s.students || []).length));
+  document.getElementById('clearFilters').classList.toggle('hidden', !(S.facets.term || S.facets.cls || S.facets.subject));
   const counts = { all: searched.length, attention: 0, progress: 0, complete: 0 };
   searched.forEach(([s]) => counts[sessInfo(s).group]++);
   Object.keys(counts).forEach(k => document.getElementById('c-' + k).textContent = counts[k]);
@@ -380,6 +422,7 @@ function render() {
 }
 
 function renderEmpty() {
+  if (S.facets.term || S.facets.cls || S.facets.subject) return `<div class="panel empty"><div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div><div class="empty-title">No sessions match these filters</div><p class="empty-desc">Try a different term, class or subject.</p><button class="btn btn-secondary" onclick="clearFacets()">Clear filters</button></div>`;
   if (S.query) return `<div class="panel empty"><div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div><div class="empty-title">No matches</div><p class="empty-desc">Nothing matched “${esc(S.query)}”. Try a subject, class, or a student's name or ID.</p></div>`;
   if (S.filter === 'attention') return `<div class="panel empty"><div class="empty-icon"><i class="fa-solid fa-check"></i></div><div class="empty-title">Nothing needs attention</div><p class="empty-desc">Flagged and failed results will appear here.</p></div>`;
   if (S.filter !== 'all') return `<div class="panel empty"><div class="empty-title">No sessions here</div></div>`;
@@ -411,9 +454,8 @@ function renderSession(sess, idx, autoOpen) {
 
   return `
   <article class="sess ${open ? 'open' : ''}" id="sb-${sid}">
-    <div class="sess-head" onclick="toggleSession('${sid}', event)" role="button" tabindex="0" aria-expanded="${open}"
-         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSession('${sid}', event)}">
-      <span class="sess-caret"><i class="fa-solid fa-chevron-right"></i></span>
+    <div class="sess-head" onclick="toggleSession('${sid}', event)">
+      <button class="sess-caret" aria-expanded="${open}" aria-controls="sbody-${sid}" aria-label="Show students: ${esc(subject)}${sess.exam_type ? ' (' + esc(sess.exam_type) + ')' : ''}, ${esc(meta)}"><i class="fa-solid fa-chevron-right"></i></button>
       <div style="min-width:0">
         <div class="sess-name">${esc(subject)}${sess.exam_type ? ` (${esc(sess.exam_type)})` : ''}</div>
         <div class="sess-meta">${esc(meta)}</div>
@@ -437,16 +479,16 @@ function renderSession(sess, idx, autoOpen) {
         </div>
       </div>
     </div>
-    <div class="sess-body">${open ? renderStudentsTable(sess.students || [], sid) : ''}</div>
+    <div class="sess-body" id="sbody-${sid}">${open ? renderStudentsTable(sess.students || [], sid) : ''}</div>
   </article>`;
 }
 
 function toggleSession(sid, ev) {
-  if (ev && ev.target.closest('.sess-actions')) return;
+  if (ev && ev.target.closest('.sess-actions, .sess-body')) return;
   const el = document.getElementById('sb-' + sid);
   const open = !el.classList.contains('open');
   el.classList.toggle('open', open);
-  el.querySelector('.sess-head').setAttribute('aria-expanded', open);
+  el.querySelector('.sess-caret').setAttribute('aria-expanded', open);
   if (open) {
     S.open.add(sid);
     const sess = findSession(sid);
@@ -466,13 +508,50 @@ function toggleKebab(sid, ev) {
 document.addEventListener('click', () => document.querySelectorAll('.menu.show').forEach(m => m.classList.remove('show')));
 
 /* ── Students table ────────────────────────────────────────────────────── */
+function sortedIndexed(students, sid) {
+  const order = S.sort[sid] || { key: null, dir: 1 };
+  const list = students.map((s, i) => [s, i]);
+  if (order.key === 'name') list.sort((a, b) => order.dir * String(a[0].name || '').localeCompare(String(b[0].name || ''), undefined, { sensitivity: 'base' }));
+  if (order.key === 'score') list.sort((a, b) => {
+    const x = computePct(a[0]), y = computePct(b[0]);
+    if (isNaN(x) && isNaN(y)) return 0; if (isNaN(x)) return 1; if (isNaN(y)) return -1;   // unmarked always last
+    return order.dir * (x - y);
+  });
+  return list;
+}
+function sortHeader(sid, key, label, cls) {
+  const o = S.sort[sid] || {};
+  const active = o.key === key;
+  const icon = !active ? 'fa-chevron-down' : (o.dir === 1 ? 'fa-chevron-down' : 'fa-chevron-down" style="transform:rotate(180deg)');
+  return `<th class="${cls || ''}" ${active ? `aria-sort="${o.dir === 1 ? 'ascending' : 'descending'}"` : ''}>
+    <button class="sort" onclick="sortBy('${sid}','${key}')">${label} <i class="fa-solid ${icon}"></i></button></th>`;
+}
+function sortBy(sid, key) {
+  const o = S.sort[sid] || {};
+  // Score sorts highest first on the first click; name sorts A–Z.
+  S.sort[sid] = { key, dir: o.key === key ? -o.dir : (key === 'score' ? -1 : 1) };
+  const el = document.getElementById('sb-' + sid);
+  el.querySelector('.sess-body').innerHTML = renderStudentsTable(findSession(sid).students || [], sid);
+}
 function renderStudentsTable(students, sid) {
   if (!students.length) return `<div class="sess-empty">No students in this session yet. Use <strong>Add students</strong> in the menu.</div>`;
   const q = S.query;
-  const rows = students.map((s, i) => renderStudentRow(s, `${sid}_s${i}`, sid, q)).join('');
+  const sess = findSession(sid);
+  const total = sess ? (sess.total_marks || 100) : 100;
+  const rows = sortedIndexed(students, sid).map(([s, i]) => renderStudentRow(s, `${sid}_s${i}`, sid, q, total)).join('');
   return `<div class="table-wrap"><table class="table students-table">
-      <thead><tr><th>Student</th><th class="hide-sm">Status</th><th class="th-score">Score</th><th class="td-actions"><span class="sr-only">Actions</span></th></tr></thead>
+      <thead><tr>${sortHeader(sid, 'name', 'Student')}<th class="hide-sm">Status</th><th class="right hide-sm">Marks</th>${sortHeader(sid, 'score', 'Score', 'th-score')}<th class="td-actions"><span class="sr-only">Actions</span></th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;
+}
+
+function marksCell(s, total) {
+  if (s.status !== 'marked' && !s._overridden) return '<span class="muted">—</span>';
+  let raw = s.raw_score;
+  if (s._overridden || raw === undefined || raw === null) {
+    const pct = parseFloat(s.total_score);
+    raw = isNaN(pct) ? null : Math.round(pct / 100 * total * 10) / 10;
+  }
+  return raw === null ? '<span class="muted">—</span>' : `${esc(String(raw))} <span class="muted">/ ${esc(String(total))}</span>`;
 }
 
 function statusCell(s) {
@@ -482,7 +561,7 @@ function statusCell(s) {
   return `<span class="chip"><i class="fa-regular fa-clock"></i> Waiting</span>`;
 }
 
-function renderStudentRow(s, uid, sid, q) {
+function renderStudentRow(s, uid, sid, q, total) {
   const pct = computePct(s);
   const name = s.name || 'Unknown', id = s.id || s.student_id || '';
   const hit = q && (name + ' ' + id).toLowerCase().includes(q);
@@ -490,12 +569,14 @@ function renderStudentRow(s, uid, sid, q) {
     ? `<span class="edited" title="Edited by a teacher. AI mark: ${esc(String(s._ai_score))}%"><i class="fa-solid fa-pen"></i><span class="sr-only">Edited</span></span>` : '';
   return `
     <tr id="row-${uid}" ${hit ? 'style="background:var(--primary-soft)"' : ''}>
-      <td><div class="cell-main" data-field="name">${esc(name)}</div><div class="cell-sub" data-field="id">${esc(id)}</div></td>
+      <td><div class="cell-main" data-field="name">${esc(name)}</div><div class="cell-sub" data-field="id">${esc(id)}</div>
+        ${s.status !== 'marked' || s.needs_review || s.failed ? `<div class="show-sm mt-2">${statusCell(s)}</div>` : ''}</td>
       <td class="hide-sm">${statusCell(s)}</td>
+      <td class="right hide-sm num">${marksCell(s, total)}</td>
       <td class="td-score"><span class="score ${scoreBand(pct)}" data-field="score">${isNaN(pct) ? '—' : pct + '%'}${edited}</span></td>
       <td class="td-actions"><div class="row-actions" id="actions-${uid}">
         <button class="btn btn-ghost btn-sm" onclick="openStudentReport('${sid}','${uid}')">Report</button>
-        <button class="btn btn-ghost btn-sm" onclick="startEdit('${sid}','${uid}')" aria-label="Edit ${esc(name)}"><i class="fa-solid fa-pen"></i> Edit</button>
+        <button class="btn btn-ghost btn-sm" onclick="startEdit('${sid}','${uid}')" aria-label="Edit ${esc(name)}"><i class="fa-solid fa-pen"></i><span class="hide-sm"> Edit</span></button>
       </div></td>
     </tr>`;
 }
@@ -576,22 +657,32 @@ function openAllReportsModal(sid) {
   document.getElementById('allReportsCount').textContent = sess ? (sess.students || []).length : 0;
   openModal('allReportsModal');
 }
-function printWindow(title, bodyHtml, css) {
+const PRINT_FONT = `@font-face { font-family: 'Public Sans'; font-weight: 400 700; src: url('${location.origin}/static/fonts/public-sans-latin.woff2') format('woff2'); }`;
+function openPrintWindow() {
   const win = window.open('', '_blank');
-  if (!win) { toast('Allow pop-ups for this site to print reports', true); return; }
-  win.document.write(`<!DOCTYPE html><html><head><title>${esc(title)}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>${css}</style></head><body>${bodyHtml}</body></html>`);
+  if (!win) { toast('Allow pop-ups for this site to print reports', true); return null; }
+  win.document.write('<!DOCTYPE html><title>Preparing…</title><p style="font-family:sans-serif;padding:24px">Preparing the report…</p>');
+  return win;
+}
+function printWindow(title, bodyHtml, css, win) {
+  win = win || openPrintWindow();
+  if (!win) return;
+  win.document.open();
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
+    <style>${PRINT_FONT}${css}</style></head><body>${bodyHtml}</body></html>`);
   win.document.close();
   setTimeout(() => { win.focus(); win.print(); }, 500);
 }
-function exportAllReports() {
+async function exportAllReports() {
   const sess = findSession(allReportsSid);
   if (!sess) { toast('Session not found', true); return; }
   closeModal('allReportsModal');
   const students = sess.students || [];
   if (!students.length) { toast('No students to print', true); return; }
-  printWindow('Student reports', students.map(st => buildStudentPaperHtml(sess, st, false)).join('<div style="page-break-after:always;"></div>'), printPaperStyles());
+  const win = openPrintWindow();          // opened now, while the click still counts, so it isn't blocked
+  if (!win) return;
+  if (!(await ensureFull(sess))) { win.close(); return; }
+  printWindow('Student reports', students.map(st => buildStudentPaperHtml(sess, st, false)).join('<div style="page-break-after:always;"></div>'), printPaperStyles(), win);
 }
 
 /* ── Session report ────────────────────────────────────────────────────── */
@@ -602,7 +693,7 @@ async function openSessionReport(sid) {
   S.currentSessionId = sid;
   showView('view-session-report', 'Class report');
   const wrap = document.getElementById('sessionReportWrap');
-  wrap.innerHTML = `<div class="panel empty"><span class="spinner" style="color:var(--primary)"></span><p class="mt-2">Building report…</p></div>`;
+  wrap.innerHTML = `<div class="panel empty"><span class="spinner" style="color: var(--primary-text)"></span><p class="mt-2">Building report…</p></div>`;
 
   const students = sess.students || [];
   const marked = students.filter(s => s.status === 'marked');
@@ -616,7 +707,7 @@ async function openSessionReport(sid) {
 
   let aiReport = sess.report || null;
   if (!aiReport) {
-    try { const r = await fetch(`/api/sessions/${encodeURIComponent(sess.id || sess.session_id)}/report`); aiReport = (await r.json()).report; } catch {}
+    try { const r = await fetch(`/api/session/report?session_id=${encodeURIComponent(sess.id || sess.session_id)}`, { credentials: 'same-origin' }); aiReport = (await r.json()).report; } catch {}
   }
   const bins = computeHistogramBins(scores);
   const f = v => v === null ? '—' : (Math.round(v * 10) / 10) + '%';
@@ -692,14 +783,38 @@ function printSessionReportStyles() {
 }
 
 /* ── Student report ────────────────────────────────────────────────────── */
-function openStudentReport(sid, uid) {
+/* Feedback and stage marks aren't in the list data (it stays small and
+   fast); they're fetched once per session the first time a report opens. */
+async function ensureFull(sess) {
+  if (sess._full) return true;
+  try {
+    const r = await fetch(`/api/session?session_id=${encodeURIComponent(sess.id || sess.session_id)}`, { credentials: 'same-origin' });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const byId = new Map((d.students || []).map(st => [String(st.id), st]));
+    (sess.students || []).forEach(st => {
+      const full = byId.get(String(st.id));
+      if (full) ['feedback', 'questions', 'stage_scores', 'strengths', 'areas_for_improvement'].forEach(k => { st[k] = full[k]; });
+    });
+    sess._full = true;
+    return true;
+  } catch (e) {
+    toast("Couldn't load the report details. Check the connection and try again.", true);
+    return false;
+  }
+}
+
+async function openStudentReport(sid, uid) {
   const sess = findSession(sid);
   if (!sess) { toast('Session not found', true); return; }
-  const student = (sess.students || [])[parseInt(uid.split('_s')[1], 10)];
+  const student = (sess.students || [])[rowIndex(uid)];
   if (!student) { toast('Student not found', true); return; }
   S.currentSessionId = sid; S.currentStudentUid = uid;
   showView('view-student-report', 'Student report');
-  document.getElementById('studentReportWrap').innerHTML = buildStudentPaperHtml(sess, student, true);
+  const wrap = document.getElementById('studentReportWrap');
+  wrap.innerHTML = `<div class="panel empty"><span class="spinner" style="color:var(--primary-text)"></span><p class="mt-2">Loading report…</p></div>`;
+  if (!(await ensureFull(sess))) { goToList(); return; }
+  wrap.innerHTML = buildStudentPaperHtml(sess, student, true);
 }
 
 function buildStudentPaperHtml(sess, student, withDownloadBtn) {
@@ -786,7 +901,7 @@ function printPaperStyles() {
 /* ── Editing a mark ────────────────────────────────────────────────────── */
 function startEdit(sid, uid) {
   const sess = findSession(sid);
-  const student = (sess.students || [])[parseInt(uid.split('_s')[1], 10)];
+  const student = (sess.students || [])[rowIndex(uid)];
   if (!student) return;
   const row = document.getElementById(`row-${uid}`);
   const nameCell = row.querySelector('[data-field="name"]'), idCell = row.querySelector('[data-field="id"]');
@@ -809,7 +924,7 @@ function cancelEdit(sid, uid) {
 }
 function saveEdit(sid, uid) {
   const sess = findSession(sid);
-  const student = (sess.students || [])[parseInt(uid.split('_s')[1], 10)];
+  const student = (sess.students || [])[rowIndex(uid)];
   if (!student) return;
   const newName = document.getElementById(`ei-name-${uid}`).value.trim();
   const newId = document.getElementById(`ei-id-${uid}`).value.trim();
@@ -831,7 +946,7 @@ async function confirmMarkOverride() { closeModal('markConfirmModal'); if (S.pen
 
 async function applyOverride(ov) {
   const sess = findSession(ov.sid);
-  const student = (sess.students || [])[parseInt(ov.uid.split('_s')[1], 10)];
+  const student = (sess.students || [])[rowIndex(ov.uid)];
   if (!student) return;
   const sessionId = sess.id || sess.session_id, studentId = student.id || student.student_id;
   let res;
@@ -882,6 +997,7 @@ document.getElementById('sessionsWrap').innerHTML = [0, 1, 2, 3].map(() =>
   await loadSessions();
   const want = new URLSearchParams(location.search).get('session');
   if (want) {
+    S.facets = { term: '', cls: '', subject: '' }; fillFacets();
     const idx = S.sessions.findIndex(s => (s.id || s.session_id) === want);
     if (idx >= 0) {
       const sid = sidOf(S.sessions[idx], idx);

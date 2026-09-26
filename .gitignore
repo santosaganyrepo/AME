@@ -17,3 +17,7 @@ __pycache__/
 .DS_Store
 uploads/exams/_batch_staging/
 *.partial
+
+# Student data — answer scripts, results and names never go into git
+uploads/
+archive/

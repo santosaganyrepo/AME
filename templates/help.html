@@ -8,15 +8,15 @@
 <style>
   .help-steps { counter-reset: step; display: flex; flex-direction: column; gap: var(--s5); }
   .help-step { display: grid; grid-template-columns: 32px 1fr; gap: var(--s3); }
-  .help-step::before { counter-increment: step; content: counter(step); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); font-weight: 700; font-size: 14px; }
+  .help-step::before { counter-increment: step; content: counter(step); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary-text); font-weight: 700; font-size: 14px; }
   .help-step h3 { font-size: 15.5px; margin-bottom: 4px; }
   .help-step p, .help-text { color: var(--ink-2); font-size: 14.5px; max-width: 68ch; }
   details { border-top: 1px solid var(--line); }
   details:first-of-type { border-top: 0; }
   summary { list-style: none; cursor: pointer; padding: var(--s4) var(--s5); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: var(--s3); }
   summary::-webkit-details-marker { display: none; }
-  summary::after { content: "\f078"; font-family: "Font Awesome 6 Free"; font-weight: 900; font-size: 12px; color: var(--ink-3); transition: transform var(--t); }
-  details[open] summary::after { transform: rotate(180deg); }
+  summary > i { font-size: 18px; color: var(--ink-3); transition: transform var(--t); }
+  details[open] summary > i { transform: rotate(180deg); }
   details > div { padding: 0 var(--s5) var(--s5); color: var(--ink-2); font-size: 14.5px; max-width: 72ch; }
   .legend { display: grid; grid-template-columns: auto 1fr; gap: var(--s3) var(--s4); align-items: center; font-size: 14.5px; }
 </style>
@@ -58,11 +58,11 @@
 
 <section class="panel">
   <div class="panel-head"><h2 class="panel-title">Common questions</h2></div>
-  <details><summary>Can I change a mark the AI gave?</summary><div>Yes. In Results, open the session and choose <strong>Edit</strong> on the student's row. Your mark becomes the final mark everywhere — reports and spreadsheets — and the AI's original mark is kept alongside it. A student with a teacher's mark is never re-marked by the AI.</div></details>
-  <details><summary>What files can I upload?</summary><div>JPG, PNG and WEBP photos, and PDF files. For the best results, photograph pages flat, in good light, with the whole page in view. Blurry or very dark pages are rejected before upload so they can be retaken.</div></details>
-  <details><summary>How long does marking take?</summary><div>Usually under a minute per script. Several scripts are marked at the same time. When the AI service is busy, ExamManager waits and retries automatically — you don't need to do anything.</div></details>
-  <details><summary>A student shows “Failed”. What should I do?</summary><div>Read the reason next to their name. If the pages were unreadable, upload them again. If the AI service was busy or its daily limit was reached, use <strong>Retry failed</strong> on the session later.</div></details>
-  <details><summary>How do I add more students to an exam I already set up?</summary><div>In Results, open the session's menu and choose <strong>Add students</strong>. You don't need to upload the question paper or marking scheme again.</div></details>
-  <details><summary>Where is my data stored?</summary><div>On the computer running ExamManager, in the <code>uploads</code> folder. Your administrator can make a backup at any time with <code>python tools/backup.py</code>.</div></details>
+  <details><summary>Can I change a mark the AI gave? <i class="fa-solid fa-chevron-down"></i></summary><div>Yes. In Results, open the session and choose <strong>Edit</strong> on the student's row. Your mark becomes the final mark everywhere — reports and spreadsheets — and the AI's original mark is kept alongside it. A student with a teacher's mark is never re-marked by the AI.</div></details>
+  <details><summary>What files can I upload? <i class="fa-solid fa-chevron-down"></i></summary><div>JPG, PNG and WEBP photos, and PDF files. For the best results, photograph pages flat, in good light, with the whole page in view. Blurry or very dark pages are rejected before upload so they can be retaken.</div></details>
+  <details><summary>How long does marking take? <i class="fa-solid fa-chevron-down"></i></summary><div>Usually under a minute per script. Several scripts are marked at the same time. When the AI service is busy, ExamManager waits and retries automatically — you don't need to do anything.</div></details>
+  <details><summary>A student shows “Failed”. What should I do? <i class="fa-solid fa-chevron-down"></i></summary><div>Read the reason next to their name. If the pages were unreadable, upload them again. If the AI service was busy or its daily limit was reached, use <strong>Retry failed</strong> on the session later.</div></details>
+  <details><summary>How do I add more students to an exam I already set up? <i class="fa-solid fa-chevron-down"></i></summary><div>In Results, open the session's menu and choose <strong>Add students</strong>. You don't need to upload the question paper or marking scheme again.</div></details>
+  <details><summary>Where is my data stored? <i class="fa-solid fa-chevron-down"></i></summary><div>On the computer running ExamManager, in the <code>uploads</code> folder. Your administrator can make a backup at any time with <code>python tools/backup.py</code>.</div></details>
 </section>
 {% endblock %}

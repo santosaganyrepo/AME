@@ -22,6 +22,7 @@
     document.querySelectorAll("[data-theme-choice]").forEach(function (b) {
       b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === t ? "true" : "false");
     });
+    document.querySelectorAll("[data-theme-switch]").forEach(function (c) { c.checked = t === "dark"; });
     document.dispatchEvent(new CustomEvent("em:theme", { detail: t }));
   }
 
@@ -85,6 +86,9 @@
     document.querySelectorAll("[data-theme-toggle]").forEach(function (b) { b.addEventListener("click", toggleTheme); });
     document.querySelectorAll("[data-theme-choice]").forEach(function (b) {
       b.addEventListener("click", function () { setTheme(b.getAttribute("data-theme-choice")); });
+    });
+    document.querySelectorAll("[data-theme-switch]").forEach(function (c) {
+      c.addEventListener("change", function () { setTheme(c.checked ? "dark" : "light"); });
     });
     var mb = document.getElementById("menuBtn"); if (mb) mb.addEventListener("click", openNav);
     var ov = document.getElementById("navOverlay"); if (ov) ov.addEventListener("click", closeNav);
