@@ -1,3 +1,4 @@
+import gzip
 import os
 import re
 import time
@@ -19,7 +20,7 @@ from key_rotator import key_rotator
 from image_validator import ImageValidator
 from storage import read_json, update_json, write_json_atomic, load_metadata_cached
 from page_prep import is_pdf_bytes, pdf_to_page_images, convert_pdf_pages_in_folder
-from rubric_check import rubric_total_warning
+from rubric_check import rubric_total_check
 import batch_processor
 import users_store
 
@@ -29,8 +30,45 @@ app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
+    # Static files are linked with ?v=<modified time> (see asset() below), so
+    # browsers may keep them for a year; any change gets a new URL.
+    SEND_FILE_MAX_AGE_DEFAULT=31536000,
 )
 settings_manager = SettingsManager(Config.BASE_DIR)
+
+_STATIC_DIR = Path(app.static_folder)
+
+
+@app.context_processor
+def _asset_helper():
+    def asset(filename: str) -> str:
+        try:
+            version = int((_STATIC_DIR / filename).stat().st_mtime)
+        except OSError:
+            version = 0
+        return url_for("static", filename=filename, v=version)
+    return {"asset": asset}
+
+
+_COMPRESSIBLE = ("text/html", "text/css", "text/plain", "application/json", "application/javascript", "text/javascript")
+
+
+@app.after_request
+def _compress_response(resp):
+    """gzip pages and JSON (waitress does not). Pages shrink ~5x, which is
+    what makes the app quick on a phone over school Wi-Fi."""
+    if (resp.direct_passthrough or resp.status_code < 200 or resp.status_code >= 300
+            or resp.headers.get("Content-Encoding")
+            or resp.mimetype not in _COMPRESSIBLE
+            or "gzip" not in request.headers.get("Accept-Encoding", "")):
+        return resp
+    data = resp.get_data()
+    if len(data) < 1024:
+        return resp
+    resp.set_data(gzip.compress(data, compresslevel=6))
+    resp.headers["Content-Encoding"] = "gzip"
+    resp.headers["Vary"] = "Accept-Encoding"
+    return resp
 
 # ── Staging area for batch-ZIP uploads — cleared per-batch after confirm/discard ──
 BATCH_STAGING_ROOT = Config.UPLOAD_FOLDER / "_batch_staging"
@@ -568,6 +606,14 @@ def setup_session():
             shutil.move(str(exam_folder), str(backup))
             exam_folder = get_exam_folder(year, term, class_name, stream, subject, exam_type)
 
+        # "Go back and edit" after the total-marks check: the exam saved a
+        # moment ago is replaced. If the edit moved it to a different
+        # class/subject folder, the earlier one is removed — only when it
+        # still has no students, so nothing real can be lost.
+        replaced = _session_folder(data.get("replaces", ""))
+        if replaced is not None and replaced.resolve() != exam_folder.resolve() and not get_students(replaced):
+            shutil.rmtree(replaced, ignore_errors=True)
+
         init_exam_meta(exam_folder, {
             "year": year, "term": term, "class": class_name,
             "stream": stream, "subject": subject, "exam_type": exam_type,
@@ -629,9 +675,9 @@ def setup_session():
 
         # ── D3.3 — do the readable rubric stage marks add up to the total
         #    entered? A warning only; setup has already completed. ────────
-        rubric_warning = None
+        rubric = {"warning": None, "suggested_total": None}
         try:
-            rubric_warning = rubric_total_warning(exam_folder, rubric_text, total_marks)
+            rubric = rubric_total_check(exam_folder, rubric_text, total_marks)
         except Exception as e:
             print(f"rubric check skipped: {e}")
 
@@ -646,7 +692,9 @@ def setup_session():
             ),
             "files_saved": {"question_papers": len(saved_qps), "rubrics": len(saved_rubrics)},
             "total_marks": total_marks,
-            "rubric_warning": rubric_warning,
+            "exam_folder":  str(exam_folder),
+            "rubric_warning": rubric["warning"],
+            "rubric_suggested_total": rubric["suggested_total"],
         })
 
     except Exception as e:
@@ -654,9 +702,67 @@ def setup_session():
         return jsonify({"success": False, "message": "Setup failed. Please try again."}), 500
 
 
+def _active_exam():
+    """
+    The exam this browser is adding scripts to, or None. If its folder was
+    moved or deleted, the stale session is dropped — otherwise an upload
+    would quietly create a new, empty exam with no question paper.
+    """
+    info = session.get("exam_session")
+    if not info:
+        return None
+    folder = _session_folder(info.get("exam_folder", ""))
+    if folder is None:
+        session.pop("exam_session", None)
+        return None
+    return info
+
+
+_SESSION_GONE = {"success": False, "message": "This exam session is no longer available. Set it up again, or pick it from Results."}
+
+
+@app.context_processor
+def _current_exam_context():
+    """The sidebar's "Current session" card — only while that exam still exists."""
+    if request.endpoint in PUBLIC_ENDPOINTS or not session.get("user"):
+        return {"current_exam": None}
+    return {"current_exam": _active_exam()}
+
+
+@app.route("/api/session/total-marks", methods=["POST"])
+def api_session_total_marks():
+    """Correct the total marks of the exam just set up (before anyone is marked)."""
+    info = _active_exam()
+    if info is None:
+        return jsonify(_SESSION_GONE), 400
+    payload = request.get_json(silent=True) or {}
+    try:
+        total = float(payload.get("total_marks"))
+    except (TypeError, ValueError):
+        return jsonify({"success": False, "message": "Enter the total marks as a number."}), 400
+    if not (0 < total <= 10000):
+        return jsonify({"success": False, "message": "Total marks must be more than 0."}), 400
+    if total == int(total):
+        total = int(total)
+    outcome = {}
+
+    def mutate(data):
+        if any(s.get("marked") for s in data.get("students", [])):
+            outcome["blocked"] = True
+            return
+        data.setdefault("exam_info", {})["total_marks"] = total
+
+    _update_meta(Path(info["exam_folder"]), mutate)
+    if outcome.get("blocked"):
+        return jsonify({"success": False, "message": "Some students are already marked with the old total, so it can't be changed here."}), 409
+    info = dict(info, total_marks=total)
+    session["exam_session"] = info
+    return jsonify({"success": True, "total_marks": total})
+
+
 @app.route("/upload-student")
 def upload_student():
-    if "exam_session" not in session:
+    if _active_exam() is None:
         return redirect(url_for("setup_start"))
     return render_template("upload_student.html", exam_data=session["exam_session"])
 
@@ -669,14 +775,14 @@ def upload_student():
 def choose_method():
     """Shown right after /setup succeeds — lets the teacher pick between
     marking students one at a time or uploading a whole class as a ZIP."""
-    if "exam_session" not in session:
+    if _active_exam() is None:
         return redirect(url_for("setup_start"))
     return render_template("choose_method.html", exam_data=session["exam_session"])
 
 
 @app.route("/batch-upload")
 def batch_upload_page():
-    if "exam_session" not in session:
+    if _active_exam() is None:
         return redirect(url_for("setup_start"))
     return render_template("batch_upload.html", exam_data=session["exam_session"])
 
@@ -693,8 +799,8 @@ def api_batch_upload():
     folder. Nothing is queued for marking yet — the teacher reviews the
     manifest first and explicitly confirms via /api/batch/confirm.
     """
-    if "exam_session" not in session:
-        return jsonify({"success": False, "message": "Session expired. Please set up a new marking session."}), 400
+    if _active_exam() is None:
+        return jsonify(_SESSION_GONE), 400
 
     f = request.files.get("batch_zip")
     if not f or not f.filename:
@@ -752,8 +858,8 @@ def api_batch_confirm():
     uploads use. Students with no valid pages ('error') are left out, and so
     is a student whose ID already belongs to a different student here.
     """
-    if "exam_session" not in session:
-        return jsonify({"success": False, "message": "Session expired. Please set up a new marking session."}), 400
+    if _active_exam() is None:
+        return jsonify(_SESSION_GONE), 400
 
     data = request.get_json(force=True, silent=True) or {}
     batch_id = (data.get("batch_id") or "").strip()
@@ -844,8 +950,8 @@ def upload_batch():
     the student for AI marking via the background queue. Returns instantly —
     the browser resets right away and the teacher can process the next student.
     """
-    if "exam_session" not in session:
-        return jsonify({"success": False, "message": "Session expired. Please set up a new marking session."}), 400
+    if _active_exam() is None:
+        return jsonify(_SESSION_GONE), 400
 
     info        = session["exam_session"]
     exam_folder = Path(info["exam_folder"])
@@ -1204,19 +1310,70 @@ def generate_excel():
 
 
 def _review_flags(student: dict) -> dict:
-    """
-    Additive fields the results page uses for Needs review / Failed badges
-    and the stage breakdown — only sent when they apply, so an ordinary
-    student's entry (and the response size) is unchanged.
-    """
+    """Needs review / Failed fields — only sent when they apply."""
     out = {}
     if student.get("status") == "Needs review":
         out.update(needs_review=True, review_reason=student.get("review_reason", ""))
     elif student.get("status") == "Failed":
         out.update(failed=True, failure_reason=student.get("failure_reason", ""))
-    if student.get("stage_scores"):
-        out["stage_scores"] = student["stage_scores"]
     return out
+
+
+def _student_row(student: dict, total_marks) -> dict:
+    """
+    The fields the Overview and Results lists need for one student. Long
+    text (feedback, stage marks) is left out — it is only needed when a
+    report is opened, and fetched then from /api/sessions/<id>. Sending it
+    for every student of every session made /api/sessions over 1 MB.
+    """
+    overridden = bool(student.get("overridden"))
+    row = {
+        "id":          student.get("id", ""),
+        "name":        student.get("student_name", "Unknown"),
+        "pages":       student.get("total_pages", 0),
+        "status":      "marked" if student.get("marked") else "pending",
+        "total_score": student.get("total_score", 0),
+        "raw_score":   student.get("raw_score"),
+        "max_score":   student.get("max_score", total_marks),
+        **_review_flags(student),
+    }
+    if overridden:
+        row.update(_overridden=True, _ai_score=student.get("ai_score"))
+    return row
+
+
+def _student_full(student: dict, total_marks) -> dict:
+    """Everything a student report needs (feedback, stage marks …)."""
+    row = _student_row(student, total_marks)
+    row.update({
+        "feedback":              student.get("overall_feedback", ""),
+        "questions":             student.get("questions", {}),
+        "stage_scores":          student.get("stage_scores", []),
+        "strengths":             student.get("strengths", []),
+        "areas_for_improvement": student.get("areas_for_improvement", []),
+    })
+    return row
+
+
+def _session_fields(meta_file: Path, data: dict, st) -> dict:
+    exam_info = data.get("exam_info", {}) or {}
+    students  = data.get("students", []) or []
+    return {
+        "id":             str(meta_file.parent),
+        "session_id":     str(meta_file.parent),
+        "subject":        exam_info.get("subject", ""),
+        "class":          exam_info.get("class", ""),
+        "stream":         exam_info.get("stream", ""),
+        "term":           exam_info.get("term", ""),
+        "year":           exam_info.get("year", ""),
+        "exam_type":      exam_info.get("exam_type", ""),
+        "total_marks":    exam_info.get("total_marks", 100),
+        "date":           datetime.fromtimestamp(st.st_mtime).isoformat(timespec="seconds"),
+        "total_students": len(students),
+        "marked_count":   sum(1 for s in students if s.get("marked")),
+        "failed_count":   sum(1 for s in students if s.get("status") == "Failed"),
+        "review_count":   sum(1 for s in students if s.get("status") == "Needs review"),
+    }
 
 
 # Built session summaries, keyed on the metadata file's mtime + size, so an
@@ -1234,72 +1391,18 @@ def _session_summary(meta_file: Path) -> dict:
     data = load_metadata_cached(meta_file, None, copy_result=False)
     if not isinstance(data, dict):
         raise ValueError("unreadable metadata")
-
-    exam_info = data.get("exam_info", {})
-    students  = data.get("students", [])
-    total_marks_for_paper = exam_info.get("total_marks", 100)
-
-    session_data = {
-        "id":            str(meta_file.parent),
-        "session_id":    str(meta_file.parent),
-        "name":          f"{exam_info.get('subject','Unknown')} - {exam_info.get('exam_type','Exam')}",
-        "subject":       exam_info.get("subject", ""),
-        "class":         exam_info.get("class", ""),
-        "grade":         exam_info.get("class", ""),
-        "stream":        exam_info.get("stream", ""),
-        "term":          exam_info.get("term", ""),
-        "year":          exam_info.get("year", ""),
-        "exam_type":     exam_info.get("exam_type", ""),
-        "total_marks":   total_marks_for_paper,
-        "date":          datetime.fromtimestamp(st.st_mtime).isoformat(),
-        "created_at":    datetime.fromtimestamp(st.st_mtime).isoformat(),
-        "total_marks_possible": total_marks_for_paper,
-        "total_students": len(students),
-        "marked_count":  sum(1 for s in students if s.get("marked")),
-        "failed_count":  sum(1 for s in students if s.get("status") == "Failed"),
-        "review_count":  sum(1 for s in students if s.get("status") == "Needs review"),
-        "students":      [],
-        "report":        None,
-        "report_generating": False,
-    }
-
-    for student in students:
-        overridden = bool(student.get("overridden"))
-        session_data["students"].append({
-            "id":                    student.get("id", ""),
-            "student_id":            student.get("id", ""),
-            "name":                  student.get("student_name", "Unknown"),
-            "pages":                 student.get("total_pages", 1),
-            "num_pages":             student.get("total_pages", 1),
-            "status":                "marked" if student.get("marked") else "pending",
-            "score":                 student.get("total_score", 0),
-            "total_score":           student.get("total_score", 0),
-            "raw_score":             student.get("raw_score", 0),
-            "max_score":             student.get("max_score", total_marks_for_paper),
-            "total":                 100,
-            "diagnostic":            student.get("overall_feedback", ""),
-            "comment":               student.get("overall_feedback", ""),
-            "feedback":              student.get("overall_feedback", ""),
-            "questions":             student.get("questions", {}),
-            "strengths":             student.get("strengths", []),
-            "areas_for_improvement": student.get("areas_for_improvement", []),
-            "_overridden":           overridden,
-            "_ai_score":             student.get("ai_score") if overridden else None,
-            "_ai_name":              student.get("ai_name") if overridden else None,
-            "_ai_id":                student.get("ai_id") if overridden else None,
-            **_review_flags(student),
-        })
-
+    session_data = _session_fields(meta_file, data, st)
+    session_data["students"] = [_student_row(s, session_data["total_marks"]) for s in data.get("students", []) or []]
     _session_summary_cache[key] = ((st.st_mtime_ns, st.st_size), session_data)
     return session_data
 
 
-_sessions_response_cache = {"key": None, "body": None}
+_sessions_response_cache = {"key": None, "body": None, "gz": None}
 
 
 @app.route("/api/sessions")
 def api_sessions():
-    """Return all exam sessions for the dashboard."""
+    """All exam sessions, newest first, with a light row per student."""
     meta_files = _all_meta_files()
     stats = []
     for meta_file in meta_files:
@@ -1309,67 +1412,57 @@ def api_sessions():
         except OSError:
             pass
     key = tuple(sorted(stats))
-    if _sessions_response_cache["key"] == key:     # nothing changed since the last call
-        return app.response_class(_sessions_response_cache["body"], mimetype="application/json")
+    if _sessions_response_cache["key"] != key:
+        sessions_out = []
+        for meta_file in meta_files:
+            try:
+                sessions_out.append(_session_summary(meta_file))
+            except Exception as e:
+                print(f"Error loading session {meta_file}: {e}")
+        sessions_out.sort(key=lambda x: x.get("date", ""), reverse=True)
+        body = app.json.dumps({"sessions": sessions_out, "total": len(sessions_out)}, separators=(",", ":"))
+        _sessions_response_cache.update(key=key, body=body.encode("utf-8"), gz=None)
+    return _cached_json(_sessions_response_cache)
 
-    sessions_out = []
-    for meta_file in meta_files:
-        try:
-            sessions_out.append(_session_summary(meta_file))
-        except Exception as e:
-            print(f"Error loading session {meta_file}: {e}")
 
-    sessions_out.sort(key=lambda x: x.get("date", ""), reverse=True)
-    body = app.json.dumps({"sessions": sessions_out, "total": len(sessions_out)}, separators=(",", ":"))
-    _sessions_response_cache.update(key=key, body=body)
-    return app.response_class(body, mimetype="application/json")
+def _cached_json(cache: dict):
+    """A cached JSON body, gzip-compressed once and reused while unchanged."""
+    resp = app.response_class(cache["body"], mimetype="application/json")
+    if "gzip" in request.headers.get("Accept-Encoding", ""):
+        if cache.get("gz") is None:
+            cache["gz"] = gzip.compress(cache["body"], compresslevel=6)
+        resp.set_data(cache["gz"])
+        resp.headers["Content-Encoding"] = "gzip"
+    resp.headers["Vary"] = "Accept-Encoding"
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
+
+@app.route("/api/session")
+def api_session_detail_q():
+    """Same as /api/sessions/<id>, with the folder passed as ?session_id= —
+    safer for Windows paths and avoids a redirect for the leading slash."""
+    return api_session_detail(request.args.get("session_id", ""))
+
+
+@app.route("/api/session/report")
+def api_session_report_q():
+    return api_session_report(request.args.get("session_id", ""))
 
 
 @app.route("/api/sessions/<path:session_id>")
 def api_session_detail(session_id):
+    """One session with every student's full report data (feedback, stage marks)."""
     target_path = _session_folder(session_id)
     if target_path is None:
         return jsonify({"error": "Session not found"}), 404
-
     try:
-        data = load_metadata_cached(_meta_path(target_path), {}, copy_result=False)
-
-        exam_info = data.get("exam_info", {})
-        students  = data.get("students", [])
-        total_marks_for_paper = exam_info.get("total_marks", 100)
-
-        students_data = []
-        for student in students:
-            overridden = bool(student.get("overridden"))
-            students_data.append({
-                "id":           student.get("id", ""),
-                "student_id":   student.get("id", ""),
-                "name":         student.get("student_name", "Unknown"),
-                "pages":        student.get("total_pages", 1),
-                "status":       "marked" if student.get("marked") else "pending",
-                "score":        student.get("total_score", 0),
-                "total_score":  student.get("total_score", 0),
-                "raw_score":    student.get("raw_score", 0),
-                "max_score":    student.get("max_score", total_marks_for_paper),
-                "total":        100,
-                "diagnostic":   student.get("overall_feedback", ""),
-                "questions":    student.get("questions", {}),
-                "_overridden":  overridden,
-                "_ai_score":    student.get("ai_score") if overridden else None,
-                **_review_flags(student),
-            })
-
-        return jsonify({
-            "id":             session_id,
-            "name":           f"{exam_info.get('subject','Exam')} - {exam_info.get('exam_type','')}",
-            "subject":        exam_info.get("subject", ""),
-            "class":          exam_info.get("class", ""),
-            "total_marks":    total_marks_for_paper,
-            "students":       students_data,
-            "total_students": len(students),
-            "marked_count":   sum(1 for s in students if s.get("marked")),
-        })
-    except Exception as e:
+        meta_file = _meta_path(target_path)
+        data = load_metadata_cached(meta_file, {}, copy_result=False)
+        out = _session_fields(meta_file, data, meta_file.stat())
+        out["students"] = [_student_full(s, out["total_marks"]) for s in data.get("students", []) or []]
+        return jsonify(out)
+    except Exception:
         return jsonify({"error": "Could not load session details."}), 500
 
 

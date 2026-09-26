@@ -60,22 +60,32 @@ def _fmt(n: float) -> str:
     return str(int(n)) if float(n).is_integer() else f"{n:g}"
 
 
-def rubric_total_warning(exam_folder: Path, rubric_text: str, total_marks: float) -> Optional[str]:
+def rubric_total_check(exam_folder: Path, rubric_text: str, total_marks: float) -> dict:
+    """
+    {"warning": str | None, "suggested_total": float | None}. `suggested_total`
+    is the total the marking scheme itself points to (its stated total, or
+    the sum of its stage marks) so setup can offer it as a one-click fix.
+    """
     text = readable_rubric_text(exam_folder, rubric_text)
     allocs, declared = rubric_stage_marks(text)
 
     if declared is not None:
         if abs(declared - float(total_marks)) > 0.01:
-            return (f"The marking scheme states a total of {_fmt(declared)} marks, but the total "
-                    f"marks entered for this paper is {_fmt(total_marks)}. Percentages are "
-                    f"calculated from the total you entered — please check it is correct.")
-        return None
+            return {"warning": (f"The marking scheme states a total of {_fmt(declared)} marks, but you entered "
+                                f"{_fmt(total_marks)}. Percentages are calculated from the total you enter."),
+                    "suggested_total": declared}
+        return {"warning": None, "suggested_total": None}
 
     if len(allocs) < MIN_ALLOCATIONS:
-        return None
+        return {"warning": None, "suggested_total": None}
     s = sum(allocs)
     if abs(s - float(total_marks)) > 0.01:
-        return (f"The stage marks readable in the marking scheme add up to {_fmt(s)}, but the "
-                f"total marks entered for this paper is {_fmt(total_marks)}. If the paper has "
-                f"optional questions this can be expected; otherwise please check the total.")
-    return None
+        return {"warning": (f"The marks readable in the marking scheme add up to {_fmt(s)}, but you entered "
+                            f"{_fmt(total_marks)}. If students only answer some of the questions (for example "
+                            f"\"answer any three\"), this can be expected. Otherwise, correct the total."),
+                "suggested_total": s}
+    return {"warning": None, "suggested_total": None}
+
+
+def rubric_total_warning(exam_folder: Path, rubric_text: str, total_marks: float) -> Optional[str]:
+    return rubric_total_check(exam_folder, rubric_text, total_marks)["warning"]

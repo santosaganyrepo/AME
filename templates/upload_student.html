@@ -20,7 +20,7 @@
   .camera-view { position: relative; aspect-ratio: 3 / 4; max-height: 62vh; margin: 0 auto; background: #000; border-radius: var(--r-lg); overflow: hidden; transition: opacity var(--t-fast); }
   @media (min-width: 900px) { .camera-view { aspect-ratio: 4 / 3; } }
   .camera-view video { width: 100%; height: 100%; object-fit: contain; }
-  .cam-status-badge { position: absolute; top: var(--s3); left: var(--s3); display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(0,0,0,.6); color: #fff; font-size: 12.5px; font-weight: 600; }
+  .cam-status-badge { position: absolute; top: var(--s3); left: var(--s3); display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 99px; background: rgba(0,0,0,.6); color: #fff; font-size: 13.5px; font-weight: 600; }
   .cam-status-badge.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3CC27A; }
   .cam-controls-row { display: flex; justify-content: center; margin-top: var(--s4); }
   .shutter-btn { width: 68px; height: 68px; border-radius: 50%; border: 4px solid var(--surface); outline: 2px solid var(--primary); background: var(--primary); color: #fff; font-size: 22px; cursor: pointer; }
@@ -32,10 +32,10 @@
   .thumb { position: relative; aspect-ratio: 3 / 4; border-radius: var(--r-sm); overflow: hidden; border: 1.5px solid var(--line); background: var(--sunken); }
   .thumb img { width: 100%; height: 100%; object-fit: cover; }
   .thumb.flagged { border-color: var(--bad); }
-  .thumb-num { position: absolute; left: 6px; top: 6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; background: rgba(0,0,0,.65); color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .thumb-num { position: absolute; left: 6px; top: 6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; background: rgba(0,0,0,.65); color: #fff; font-size: 12.5px; font-weight: 700; display: grid; place-items: center; }
   .thumb-del { position: absolute; right: 4px; top: 4px; width: 28px; height: 28px; border-radius: 50%; border: 0; background: rgba(0,0,0,.65); color: #fff; cursor: pointer; display: grid; place-items: center; }
   .thumb-del:hover { background: var(--bad); }
-  .thumb-checking, .thumb-quality-badge { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 6px; font-size: 11.5px; font-weight: 600; text-align: center; }
+  .thumb-checking, .thumb-quality-badge { position: absolute; left: 0; right: 0; bottom: 0; padding: 4px 6px; font-size: 12.5px; font-weight: 600; text-align: center; }
   .thumb-checking { background: rgba(0,0,0,.6); color: #fff; }
   .thumb-quality-badge { background: var(--bad); color: #fff; }
   .thumb-pdf { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink-2); font-size: 13px; font-weight: 600; }
@@ -56,10 +56,10 @@
   .qp-job-item { display: flex; align-items: center; gap: var(--s3); padding: 10px var(--s5); border-top: 1px solid var(--line); }
   .qp-job-info { flex: 1; min-width: 0; }
   .qp-job-title { font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .qp-job-sub { font-size: 12.5px; color: var(--ink-3); }
+  .qp-job-sub { font-size: 13.5px; color: var(--ink-3); }
   .qp-job-sub.bad { color: var(--bad); } .qp-job-sub.warn { color: var(--warn); }
   .qp-job-right { display: flex; align-items: center; gap: var(--s2); }
-  .qp-job-status-icon.processing, .qp-job-status-icon.retrying { color: var(--primary); }
+  .qp-job-status-icon.processing, .qp-job-status-icon.retrying { color: var(--primary-text); }
   .qp-job-status-icon.pending { color: var(--ink-3); }
   .qp-job-status-icon.completed { color: var(--ok); }
   .qp-job-status-icon.failed { color: var(--bad); }
